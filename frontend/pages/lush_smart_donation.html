@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lush Archive | Smart Donation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift-only {
+            border: none !important;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#a8afa2",
+                        "surface-container-high": "#dce6d4",
+                        "surface-container-highest": "#d6e0cd",
+                        "on-secondary-container": "#882100",
+                        "inverse-surface": "#0a1008",
+                        "surface-bright": "#f2f9ea",
+                        "surface-tint": "#176a21",
+                        "surface-dim": "#ccd8c4",
+                        "error-dim": "#b92902",
+                        "on-background": "#2a3127",
+                        "surface-container": "#e2ebda",
+                        "secondary-dim": "#972500",
+                        "primary-fixed": "#9df197",
+                        "on-tertiary-fixed-variant": "#003c61",
+                        "inverse-on-surface": "#989f92",
+                        "primary-container": "#9df197",
+                        "tertiary-container": "#5fb7ff",
+                        "on-tertiary-fixed": "#00192d",
+                        "on-surface-variant": "#575e52",
+                        "on-secondary": "#ffefec",
+                        "on-tertiary-container": "#003353",
+                        "secondary-fixed": "#ffc4b4",
+                        "secondary-container": "#ffc4b4",
+                        "secondary": "#ac2c00",
+                        "surface-variant": "#d6e0cd",
+                        "primary-fixed-dim": "#90e28a",
+                        "on-primary-fixed-variant": "#12661e",
+                        "on-primary-fixed": "#00460e",
+                        "primary-dim": "#025d16",
+                        "tertiary-fixed": "#5fb7ff",
+                        "on-error": "#ffefec",
+                        "error": "#b02500",
+                        "surface-container-low": "#ebf3e3",
+                        "on-secondary-fixed-variant": "#992600",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#72796d",
+                        "on-error-container": "#520c00",
+                        "secondary-fixed-dim": "#ffb19b",
+                        "surface": "#f2f9ea",
+                        "on-surface": "#2a3127",
+                        "background": "#f2f9ea",
+                        "error-container": "#f95630",
+                        "tertiary": "#006096",
+                        "on-tertiary": "#ebf3ff",
+                        "tertiary-dim": "#005483",
+                        "inverse-primary": "#9df197",
+                        "primary": "#176a21",
+                        "on-primary": "#d1ffc8",
+                        "on-secondary-fixed": "#671600",
+                        "on-primary-container": "#005c15",
+                        "tertiary-fixed-dim": "#46aaf5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Sidebar (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex flex-col h-full py-8 px-4 shadow-[0_20px_40px_rgba(23,106,33,0.06)] z-50">
+<div class="mb-10 flex items-center gap-3 px-4">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">eco</span>
+<div>
+<h1 class="text-2xl font-black text-emerald-900 dark:text-emerald-50 leading-none">Greenhouse</h1>
+<p class="text-[10px] font-bold tracking-widest uppercase text-primary/60">Eco-Manager</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 text-emerald-900 dark:text-emerald-100 font-bold border-l-4 border-orange-600 pl-4 py-2 bg-emerald-100/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="eco">eco</span>
+<span class="font-manrope tracking-tight font-semibold">Greenhouse</span>
+</a>
+<a class="flex items-center gap-4 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="psychology_alt">psychology_alt</span>
+<span class="font-manrope tracking-tight font-semibold">My Garden</span>
+</a>
+<a class="flex items-center gap-4 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-manrope tracking-tight font-semibold">Eco-Tasks</span>
+</a>
+<a class="flex items-center gap-4 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="insert_chart">insert_chart</span>
+<span class="font-manrope tracking-tight font-semibold">Analytics</span>
+</a>
+<a class="flex items-center gap-4 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-manrope tracking-tight font-semibold">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-transform active:scale-95">
+<span class="material-symbols-outlined">add_circle</span>
+                New Initiative
+            </button>
+</div>
+</aside>
+<!-- Top Navigation (Shared Component) -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex justify-between items-center px-8 w-full tonal-shift-only">
+<div class="flex items-center gap-8">
+<h2 class="text-xl font-bold text-emerald-900 dark:text-emerald-50">Lush Archive</h2>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-highest border-none rounded-full text-sm focus:ring-2 focus:ring-primary/20 w-64" placeholder="Search archive..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="flex items-center gap-6">
+<a class="text-emerald-700/70 dark:text-emerald-400/70 text-sm font-medium hover:text-emerald-900 transition-colors" href="#">Overview</a>
+<a class="text-emerald-900 dark:text-emerald-50 text-sm font-bold border-b-2 border-orange-600 pb-1 transition-colors" href="#">Resources</a>
+<a class="text-emerald-700/70 dark:text-emerald-400/70 text-sm font-medium hover:text-emerald-900 transition-colors" href="#">Community</a>
+</nav>
+<div class="flex items-center gap-3 ml-4">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">account_circle</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-12 pb-16 min-h-screen">
+<!-- Header & Stepper Section -->
+<section class="max-w-5xl mx-auto mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+<div class="max-w-xl">
+<span class="inline-block px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-black tracking-widest uppercase mb-4">Smart Donation Flow</span>
+<h1 class="text-4xl md:text-5xl font-black text-on-surface tracking-tighter leading-none mb-4">Give your items a <span class="text-primary italic">lush</span> new life.</h1>
+<p class="text-on-surface-variant text-lg">Our AI-powered archive analyzes your items to find the most impactful local NGOs for your specific contribution.</p>
+</div>
+<!-- Colorful Stepper -->
+<div class="flex items-center gap-4 bg-surface-container-low p-2 rounded-2xl">
+<div class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl font-bold shadow-lg shadow-primary/20">
+<span class="w-6 h-6 flex items-center justify-center bg-on-primary/20 rounded-full text-xs">1</span>
+<span>Upload</span>
+</div>
+<div class="w-8 h-[2px] bg-outline-variant/30"></div>
+<div class="flex items-center gap-2 px-4 py-2 text-outline font-bold">
+<span class="w-6 h-6 flex items-center justify-center bg-outline-variant/20 rounded-full text-xs">2</span>
+<span>Categorize</span>
+</div>
+<div class="w-8 h-[2px] bg-outline-variant/30"></div>
+<div class="flex items-center gap-2 px-4 py-2 text-outline font-bold">
+<span class="w-6 h-6 flex items-center justify-center bg-outline-variant/20 rounded-full text-xs">3</span>
+<span>Donate</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid Content -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Upload Area (Large Left) -->
+<div class="col-span-12 lg:col-span-7 bg-surface-container-lowest p-8 rounded-xl relative overflow-hidden group shadow-[0_20px_40px_rgba(23,106,33,0.04)]">
+<div class="relative z-10">
+<div class="flex items-start justify-between mb-8">
+<div>
+<h3 class="text-2xl font-bold text-on-surface mb-2">Snap &amp; Scan</h3>
+<p class="text-on-surface-variant text-sm max-w-xs">Upload photos of the items you wish to donate. Our AI handles the inventorying.</p>
+</div>
+<span class="material-symbols-outlined text-secondary text-4xl" style="font-variation-settings: 'FILL' 1;">add_a_photo</span>
+</div>
+<div class="aspect-video rounded-lg border-2 border-dashed border-outline-variant flex flex-col items-center justify-center gap-4 bg-surface-container/30 hover:bg-surface-container-high transition-colors cursor-pointer group-hover:scale-[1.01] duration-300">
+<div class="w-16 h-16 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center text-3xl">
+<span class="material-symbols-outlined">cloud_upload</span>
+</div>
+<div class="text-center">
+<p class="font-bold text-on-surface">Drag images here</p>
+<p class="text-xs text-on-surface-variant">JPG, PNG or HEIC up to 10MB</p>
+</div>
+</div>
+<div class="mt-8 flex gap-3 overflow-hidden">
+<div class="w-20 h-20 rounded-lg overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="close-up of a premium minimalist white watch on a clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDxQj_pLmVEgCZkWpK1JcX_KCUA2Lii3ed2HYRLigGvQvD-s13BUXOlOaSIqXMfK8dVQOAYASZi3jdV9PPLkok4Et_MmzXxrhfdC9ALGm3BibXsvivJ7Ft9b92e6vpwXh5_3-_G8OYOkjwv3BjvUZLYWTnDc5AGxfLZuBe6-N_WxGTqW1iM-lYHQ23lK9pxUeqSV2-KeiqjwsnobtyI91UczRvpWqyR-mantMqY8iJhuEwHxzHyyeI7nMXr9rCcQX0GTIWztWa7J4"/>
+</div>
+<div class="w-20 h-20 rounded-lg overflow-hidden bg-surface-container flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="vibrant red athletic sneaker isolated on a soft neutral studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIpIx1jRpCLQ_iK0sQ_cpP4ck1N4n_zJtK_xCsTKp8O5wX-8_Tbxs4-3wuAeCo5OkwEX1NE9ArlpA2CXzQ9k9UHeZGg5MiIgOPvTQ3heA4xbrPsJRG15l-kTmOgnlo_ea88SO0tSwBTpXerOmXgXosaRemwYS2aTWQvsPiWlEAZ4f50lYihRNfODqG-VvsVu2aQkDTGspP-2R7wYyjxx59GdO8IqM_ZOHPLmcZ570L3ME2tWDpNX_ZZMwqYd-aIEeJtrWCEWt1RcA"/>
+</div>
+<div class="w-20 h-20 rounded-lg overflow-hidden border-2 border-primary-container flex items-center justify-center text-primary-dim bg-primary-container/20 flex-shrink-0">
+<span class="material-symbols-outlined">add</span>
+</div>
+</div>
+</div>
+<!-- Decorative Background Graphic -->
+<div class="absolute -right-12 -bottom-12 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+</div>
+<!-- Category Selection (Compact Right) -->
+<div class="col-span-12 lg:col-span-5 flex flex-col gap-6">
+<div class="bg-tertiary-container text-on-tertiary-container p-8 rounded-xl flex-1 relative overflow-hidden shadow-lg shadow-tertiary/10">
+<div class="relative z-10">
+<h3 class="text-2xl font-black tracking-tight mb-6">Select a Category</h3>
+<div class="grid grid-cols-2 gap-3">
+<button class="bg-surface-container-lowest/40 hover:bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-2 transition-all group">
+<span class="material-symbols-outlined text-tertiary text-2xl">apparel</span>
+<span class="font-bold text-sm">Clothing</span>
+</button>
+<button class="bg-surface-container-lowest/40 hover:bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-2 transition-all">
+<span class="material-symbols-outlined text-tertiary text-2xl">home_max</span>
+<span class="font-bold text-sm">Homeware</span>
+</button>
+<button class="bg-surface-container-lowest/40 hover:bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-2 transition-all">
+<span class="material-symbols-outlined text-tertiary text-2xl">laptop_mac</span>
+<span class="font-bold text-sm">Tech</span>
+</button>
+<button class="bg-surface-container-lowest/40 hover:bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-2 transition-all">
+<span class="material-symbols-outlined text-tertiary text-2xl">menu_book</span>
+<span class="font-bold text-sm">Books</span>
+</button>
+</div>
+</div>
+<div class="absolute -right-4 top-4 opacity-20">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'wght' 200;">category</span>
+</div>
+</div>
+<!-- Small Impact Tile -->
+<div class="bg-secondary p-8 rounded-xl text-on-secondary flex items-center justify-between shadow-xl shadow-secondary/20">
+<div>
+<h4 class="text-3xl font-black leading-none">8.4k</h4>
+<p class="text-xs font-bold uppercase tracking-widest opacity-80">Items archived today</p>
+</div>
+<span class="material-symbols-outlined text-4xl">celebration</span>
+</div>
+</div>
+<!-- NGO Recommendations (Full Width) -->
+<div class="col-span-12 bg-surface-container-low p-10 rounded-xl">
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+<div>
+<h3 class="text-3xl font-black text-on-surface tracking-tight">NGO Recommendations</h3>
+<p class="text-on-surface-variant max-w-lg">Based on your items, these organizations can create the maximum social impact in your immediate area.</p>
+</div>
+<button class="flex items-center gap-2 text-tertiary font-bold hover:underline">
+                            View local map
+                            <span class="material-symbols-outlined">map</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- NGO Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl group transition-all hover:scale-[1.02] hover:shadow-xl shadow-secondary/5 border-l-4 border-secondary">
+<div class="h-40 rounded-lg overflow-hidden mb-4">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="smiling children in a colorful classroom setting with warm sun rays streaming through a window" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCW8_jSH4JjDzTMThc2s-nYRj4rvvzPtbZrbkDWySqL2DJCAYirzsWIf3soneUAyUF18EwXBRUrI6R0uPcQD8WiSMEzdGixSmC9KuS7fe7LfwfWjfl3kQgh1MoNDJJsxV40EtuHDU3XytuzQ4LiN4slyTXOZj3Rg-sotVPVreTEpOoGkMgzte5LRa4gL5YL_rAEHi3J4R4V9AM6UdGrjc5NbEz9o_oTAz8P5ecwrl2XWR6BK3M5WyqHQ8bka1EaGmBZWgibbb9GHqE"/>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="px-2 py-0.5 bg-tertiary-container text-on-tertiary-container text-[10px] font-black uppercase rounded-full">Top Match</span>
+<span class="text-[10px] text-on-surface-variant font-bold uppercase">2.4 miles away</span>
+</div>
+<h4 class="text-xl font-bold text-on-surface mb-2">The Archive Collective</h4>
+<p class="text-sm text-on-surface-variant mb-6">Redistributing professional attire to youth entering the workforce.</p>
+<button class="w-full py-3 bg-surface-container-high text-on-surface font-bold rounded-xl hover:bg-secondary hover:text-on-secondary transition-colors">Select NGO</button>
+</div>
+<!-- NGO Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl group transition-all hover:scale-[1.02] hover:shadow-xl shadow-tertiary/5 border-l-4 border-tertiary">
+<div class="h-40 rounded-lg overflow-hidden mb-4">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="overhead view of community garden with lush green vegetables and volunteers working together in soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJSH--0MMGtGopQzCzTK73h8fyGoGvmnKYkA_1vfnEkxgdHQIEzrv1BzliZrAFbMllWajOR4fUT60HuCNR0SThc-DSNJk_HlV993fP24mBo5Qgvkg_QZrfalBTlG4NXH-qIF9ocigf0Ck_RRD-M6GCUcxKkfN3jmeio1ORNGoYzdocws2X23xXCAPj6Y-CHao3_IjnltcMkVkrP7KUJLGhEsVWw3agtbGQ0yROTOcpV69QAe9zmMjKE5I-HkGe9YUoqZAI_LsAm6A"/>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-black uppercase rounded-full">Urgent Need</span>
+<span class="text-[10px] text-on-surface-variant font-bold uppercase">5.1 miles away</span>
+</div>
+<h4 class="text-xl font-bold text-on-surface mb-2">Urban Roots Hub</h4>
+<p class="text-sm text-on-surface-variant mb-6">Converting unused tech and tools into community gardening resources.</p>
+<button class="w-full py-3 bg-surface-container-high text-on-surface font-bold rounded-xl hover:bg-tertiary hover:text-on-tertiary transition-colors">Select NGO</button>
+</div>
+<!-- NGO Card 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl group transition-all hover:scale-[1.02] hover:shadow-xl shadow-primary/5 border-l-4 border-primary">
+<div class="h-40 rounded-lg overflow-hidden mb-4">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="warmly lit indoor space with shelves of books and comfortable seating area for community reading" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG6D9UK1acR09oGmCgmtbsokVgdF-cw69plSAyMFC2J2ItlJ1Es0DeOtXRp4tcMUewjiTvL7N5eL_9De1ToYDkwByK_g2nL6aax2bA1IqibNAIjLLjb44mn721eStzzU68YnaXSZMJtbDYPLVnZzHovaqjPVuCEWQRtqXK9sKOrVJhaRcPgbPU_lQGoDWNNYEE_TpUEVZOWVsf05ykmHBhXLWbW2-nUxs4GCdJSiYYLQa2fgxH1C2iFvj8Qw1k682tJdR0K9Dze8Q"/>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="px-2 py-0.5 bg-surface-container-high text-on-surface-variant text-[10px] font-black uppercase rounded-full">Community Rated</span>
+<span class="text-[10px] text-on-surface-variant font-bold uppercase">1.2 miles away</span>
+</div>
+<h4 class="text-xl font-bold text-on-surface mb-2">Second Chapter Books</h4>
+<p class="text-sm text-on-surface-variant mb-6">Empowering local libraries and street-side archives through literature.</p>
+<button class="w-full py-3 bg-surface-container-high text-on-surface font-bold rounded-xl hover:bg-primary hover:text-on-primary transition-colors">Select NGO</button>
+</div>
+</div>
+</div>
+<!-- Footer Summary / Next Step -->
+<div class="col-span-12 flex flex-col md:flex-row items-center justify-between bg-white/40 backdrop-blur-md p-8 rounded-xl border-t-0">
+<div class="flex items-center gap-6 mb-6 md:mb-0">
+<div class="flex -space-x-4">
+<img class="w-12 h-12 rounded-full border-4 border-surface shadow-sm object-cover" data-alt="portrait of a man with a friendly expression in a brightly lit setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9SYufszPd9BnGha1xoG03qxRxHkWWgXNmGo_MdI5_p1EqRFX8tw8y45HSDB13mKIzUd9pB-oJPZgRChNNHQv3JB1XPSTmyDGwURAVlqkpHXxqZxZ5E1QIgORdBlzJQCfoxdKe6FTlgKFkNHtYgeKI-fz4W9R_9Ffq9-d4Vkacmf0ujuQM87y1wAe-czgJDmOFE1q5JDleky0PEzQj4YzNYLURyq40IdNGp5iKYVBsiy0mkH9pbZpv6A2fec1l53CcuvrAh2GzeEE"/>
+<img class="w-12 h-12 rounded-full border-4 border-surface shadow-sm object-cover" data-alt="portrait of a woman with a joyful smile in natural daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9G807utgOO9jbbqPd68b4Y6abrZgkrCFATHY4nfJIgJuOPMahqkhJaaAJ9HXTslQH6xP8vYoz_-AwwWx0GzuCUZOsuj_9pCadiJIsZuyrT10xKX8VVwmNrj1hJWCxauR1feaaYss90tovxYOpN1HrG44cgX3ShSillh4ZpF05DDmLMUf3CYTbqajBeQfEdLvugWCRN2qaqYAuFN3kNOcOMHm7SrEEAzqmAUZNd7Mg3O03y-qdAUw5MfdskTVlhoB_Z_QxQ_56CQQ"/>
+<img class="w-12 h-12 rounded-full border-4 border-surface shadow-sm object-cover" data-alt="portrait of a person with a warm smile in an outdoor setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBERXe4i-sEfVNxXZ-xR1sgsCLjCRwtzak-wD2HzPWP-q4yzHKfYsXJK0G1yzzlWb9t2qg8VJKuzxTXqcAltaYEppqQo7JkAsCg_qSR55BG6A5wfhpdHxWLLjsRYoKZDvSmCXi5A9ulVDCH9FX8u4THwwJ4CnckK2fcomIZcoLiOUkpVY2MbnB_OzXzBXDVT4UXMfgBjV35mDIxsmR33x_zv9R_zf5wBF5tjCpJgxbE3aRDUt2lSUj-W9-UaEEo7nlGkcCuMXktip8"/>
+</div>
+<p class="text-sm font-medium text-on-surface-variant"><span class="text-primary font-bold">12 friends</span> have already donated this week</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-8 py-4 bg-surface-container text-on-surface font-bold rounded-xl hover:bg-surface-container-high transition-transform active:scale-95">Save for Later</button>
+<button class="px-10 py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-black rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.05] transition-all active:scale-95 flex items-center gap-3">
+                            Confirm Donation
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button (Shared Component Contextual) -->
+<button class="fixed bottom-8 right-8 w-16 h-16 bg-secondary text-on-secondary rounded-full flex items-center justify-center shadow-2xl shadow-secondary/40 z-50 hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</body></html>

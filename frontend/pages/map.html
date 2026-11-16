@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+
+<meta charset="utf-8"/>
+
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+<title>Eco Map  EcoCircle</title>
+
+<meta name="description" content="Find nearby recycling centres, repair shops and eco facilities on the EcoCircle map."/>
+
+<!-- Performance: early connection hints -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+
+<link rel="preconnect" href="https://cdn.tailwindcss.com"/>
+
+<link rel="dns-prefetch" href="https://unpkg.com"/>
+
+<link rel="preconnect" href="https://a.tile.openstreetmap.org" crossorigin/>
+
+<link rel="preconnect" href="https://cartodb-basemaps-a.global.ssl.fastly.net" crossorigin/>
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<script id="tailwind-config">
+
+  tailwind.config = {
+
+    darkMode: "class",
+
+    theme: {
+
+      extend: {
+
+        colors: {
+
+          "primary": "#176a21","on-primary": "#d1ffc8","primary-container": "#9df197",
+
+          "on-primary-container": "#005c15","secondary": "#ac2c00","on-secondary": "#ffefec",
+
+          "secondary-container": "#ffc4b4","tertiary": "#006096","on-tertiary": "#ebf3ff",
+
+          "tertiary-container": "#5fb7ff","surface": "#f2f9ea","on-surface": "#2a3127",
+
+          "surface-variant": "#d6e0cd","on-surface-variant": "#575e52","surface-container-lowest": "#ffffff",
+
+          "surface-container-low": "#ebf3e3","surface-container": "#e2ebda",
+
+          "surface-container-high": "#dce6d4","surface-container-highest": "#d6e0cd",
+
+          "outline": "#72796d","outline-variant": "#a8afa2","background": "#f2f9ea",
+
+          "on-background": "#2a3127","inverse-surface": "#0a1008","error": "#b02500",
+
+          "primary-dim": "#025d16","secondary-dim": "#972500","tertiary-dim": "#005483",
+
+        },
+
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" },
+
+        fontFamily: { headline: ["Manrope"], body: ["Manrope"], label: ["Manrope"] }
+
+      },
+
+    },
+
+  }
+
+</script>
+
+<!-- Leaflet CSS  served via jsDelivr (faster CDN than unpkg) -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" crossorigin=""/>
+
+<style>
+
+  body { font-family: 'Manrope', sans-serif; }
+
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+  .map-mesh {
+
+    background-image: radial-gradient(circle at 2px 2px, rgba(23,106,33,0.08) 1px, transparent 0);
+
+    background-size: 24px 24px;
+
+  }
+
+  .facility-card { transition: all 0.25s ease; }
+
+  .facility-card:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(23,106,33,0.12); }
+
+  .filter-btn.active { background: #176a21; color: #d1ffc8; }
+
+  .filter-btn { transition: all 0.2s ease; }
+
+  /* Map marker pulse */
+
+  @keyframes markerPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
+
+  .map-marker { animation: markerPulse 2.5s ease infinite; }
+
+  /* Spinner used by location buttons */
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  button:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  /* Leaflet map container */
+
+  #leaflet-map {
+
+    height: 480px;
+
+    width: 100%;
+
+    border-radius: 0;
+
+    z-index: 1;
+
+  }
+
+  /* Override Leaflet popup styles to match design */
+
+  .leaflet-popup-content-wrapper {
+
+    border-radius: 0.75rem;
+
+    font-family: 'Manrope', sans-serif;
+
+    font-size: 13px;
+
+    box-shadow: 0 8px 24px rgba(23,106,33,0.15);
+
+  }
+
+  .leaflet-popup-content { margin: 12px 14px; }
+
+  .popup-title { font-weight: 800; color: #2a3127; margin-bottom: 2px; }
+
+  .popup-sub { color: #575e52; font-size: 11px; }
+
+  .popup-link {
+
+    display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 700;
+
+    color: #176a21; text-decoration: none;
+
+  }
+
+  .popup-link:hover { text-decoration: underline; }
+
+</style>
+
+<link rel="stylesheet" href="../css/style.css"/>
+
+<script src="../js/config.js"></script>
+
+<script src="../js/api.js"></script>
+
+<script src="../js/nav.js"></script>
+
+</head>
+
+<body class="bg-background text-on-surface">
+
+<!--  SIDEBAR  -->
+
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex flex-col py-8 px-4 z-50">
+
+  <div class="mb-10 px-4">
+
+    <h1 class="text-2xl font-black text-emerald-900 tracking-tight">EcoCircle</h1>
+
+    <p class="text-xs font-semibold tracking-widest uppercase text-emerald-800/60 mt-1">Eco Manager</p>
+
+  </div>
+
+  <nav class="flex-1 space-y-1">
+
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="dashboard.html">
+
+      <span class="material-symbols-outlined">dashboard</span><span>Dashboard</span>
+
+    </a>
+
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="products.html">
+
+      <span class="material-symbols-outlined">inventory_2</span><span>My Items</span>
+
+    </a>
+
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="ai-engine.html">
+
+      <span class="material-symbols-outlined">psychology</span><span>AI Engine</span>
+
+    </a>
+
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="donate.html">
+
+      <span class="material-symbols-outlined">favorite</span><span>Donate</span>
+
+    </a>
+
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="marketplace.html">
+
+      <span class="material-symbols-outlined">storefront</span><span>Marketplace</span>
+
+    </a>
+
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="repair.html">
+
+      <span class="material-symbols-outlined">build</span><span>Repair</span>
+
+    </a>
+
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="recycling.html">
+
+      <span class="material-symbols-outlined">recycling</span><span>Recycling</span>
+
+    </a>
+
+    <a class="flex items-center gap-3 text-emerald-900 font-bold border-l-4 border-emerald-600 pl-4 py-2.5 bg-emerald-100/60 rounded-r-xl" href="map.html">
+
+      <span class="material-symbols-outlined text-emerald-700">map</span><span>Map</span>
+
+    </a>
+
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="profile.html">
+
+      <span class="material-symbols-outlined">person</span><span>Profile</span>
+
+    </a>
+
+  </nav>
+
+  <div class="mt-auto px-2">
+
+    <a href="products.html" class="w-full py-3 px-4 bg-gradient-to-br from-emerald-700 to-emerald-500 text-white font-bold rounded-xl shadow flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all text-sm mb-6">
+
+      <span class="material-symbols-outlined text-sm">add</span> Add New Item
+
+    </a>
+
+    <div class="flex items-center gap-3 pt-4 border-t border-emerald-900/10">
+
+      <div id="sb-avatar" class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-800 font-black text-sm flex-shrink-0">EA</div>
+
+      <div class="overflow-hidden flex-1">
+
+        <p class="text-sm font-bold text-emerald-900 truncate" id="sb-user-name">Eco Steward</p>
+
+        <p class="text-[9px] font-bold tracking-widest text-emerald-800/50 mt-0.5" id="sb-user-id"></p>
+
+      </div>
+
+      <button id="nav-logout" class="p-1 hover:bg-emerald-100 rounded-full transition-colors" title="Logout">
+
+        <span class="material-symbols-outlined text-emerald-700/60 text-lg">logout</span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</aside>
+
+<!--  TOP NAV  -->
+
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 backdrop-blur-xl flex justify-between items-center px-8 border-b border-emerald-100/60">
+
+  <div class="flex items-center gap-3">
+
+    <span class="material-symbols-outlined text-emerald-700">map</span>
+
+    <div>
+
+      <h2 class="text-lg font-black text-on-surface leading-tight">Eco Facility Map</h2>
+
+      <p class="text-xs text-on-surface-variant">Find nearby recycling centres, repair shops &amp; NGOs</p>
+
+    </div>
+
+  </div>
+
+  <div class="flex items-center gap-3">
+
+    <span class="text-xs font-bold bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full flex items-center gap-1">
+
+      <span class="material-symbols-outlined text-sm">public</span> OpenStreetMap  Free
+
+    </span>
+
+    <button onclick="requestLocation()" id="locate-btn" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-emerald-700 to-emerald-500 text-white font-bold rounded-full text-sm hover:scale-[1.02] transition-all shadow">
+
+      <span class="material-symbols-outlined text-sm">my_location</span> Use My Location
+
+    </button>
+
+  </div>
+
+</header>
+
+<!--  MAIN CONTENT  -->
+
+<main class="ml-64 pt-20 px-8 pb-12 min-h-screen">
+
+  <!-- Location banner -->
+
+  <div id="location-banner" class="mb-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-4">
+
+    <span class="text-3xl"></span>
+
+    <div class="flex-1">
+
+      <p class="font-bold text-emerald-900 text-sm">Share your location for nearby results</p>
+
+      <p class="text-xs text-on-surface-variant">We'll find recycling centres, repair shops and donation NGOs near you directly on the map.</p>
+
+    </div>
+
+    <button onclick="requestLocation()" class="bg-emerald-700 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-emerald-800 transition-colors flex-shrink-0">
+
+       Use My Location
+
+    </button>
+
+  </div>
+
+  <!-- Map + Side panel -->
+
+  <div class="grid grid-cols-12 gap-6 mb-8">
+
+    <!-- Map area -->
+
+    <div class="col-span-12 lg:col-span-8">
+
+      <!-- Search bar -->
+
+      <div class="flex gap-2 mb-4">
+
+        <div class="flex-1 flex items-center gap-2 bg-white border border-emerald-200 rounded-xl px-4 py-2.5 shadow-sm">
+
+          <span class="material-symbols-outlined text-emerald-600 text-xl">search</span>
+
+          <input id="map-search-input" type="text" placeholder="Search nearby e.g. repair shop, recycling"
+
+            class="flex-1 bg-transparent text-sm text-on-surface outline-none placeholder-on-surface-variant/60"
+
+            onkeydown="if(event.key==='Enter') doTextSearch()"/>
+
+        </div>
+
+        <button onclick="doTextSearch()" class="px-5 py-2.5 bg-emerald-700 text-white rounded-xl font-bold text-sm hover:bg-emerald-800 transition-colors shadow-sm">
+
+          Search
+
+        </button>
+
+      </div>
+
+      <!-- Leaflet interactive map -->
+
+      <div class="rounded-2xl overflow-hidden shadow-lg border border-emerald-100 mb-4 relative">
+
+        <div id="leaflet-map"></div>
+
+        <!-- Overlay shown before location -->
+
+        <div id="map-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-emerald-50/90 backdrop-blur-sm z-10 rounded-2xl text-center p-8">
+
+          <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mb-4 mx-auto">
+
+            <span class="material-symbols-outlined text-emerald-600 text-4xl" style="font-variation-settings:'FILL' 1;">location_on</span>
+
+          </div>
+
+          <h3 class="text-xl font-black text-on-surface mb-2">Find Nearby Facilities</h3>
+
+          <p class="text-sm text-on-surface-variant max-w-sm mb-6">Enable location to instantly discover recycling centres, repair shops, and NGOs near you  powered by OpenStreetMap.</p>
+
+          <button onclick="requestLocation()" class="bg-gradient-to-br from-emerald-700 to-emerald-500 text-white px-6 py-3 rounded-full font-bold text-sm hover:scale-[1.02] transition-all shadow-lg flex items-center gap-2 mx-auto">
+
+            <span class="material-symbols-outlined text-sm">my_location</span> Enable Location
+
+          </button>
+
+          <div class="absolute top-1/4 left-1/3 map-marker pointer-events-none">
+
+            <div class="bg-primary p-2 rounded-full shadow-lg"><span class="material-symbols-outlined text-white text-sm" style="font-variation-settings:'FILL' 1;">eco</span></div>
+
+          </div>
+
+          <div class="absolute bottom-1/3 left-1/2 map-marker pointer-events-none" style="animation-delay:0.8s">
+
+            <div class="bg-tertiary p-2 rounded-full shadow-lg"><span class="material-symbols-outlined text-white text-sm" style="font-variation-settings:'FILL' 1;">devices</span></div>
+
+          </div>
+
+        </div>
+
+        <!-- Permission denied help panel (hidden by default) -->
+        <div id="loc-denied-panel" class="absolute inset-0 flex flex-col items-center justify-center bg-white/95 backdrop-blur-sm z-10 rounded-2xl text-center p-8 hidden">
+          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4 mx-auto">
+            <span class="material-symbols-outlined text-red-500 text-3xl" style="font-variation-settings:'FILL' 1;">location_off</span>
+          </div>
+          <h3 class="text-lg font-black text-on-surface mb-2">Location Access Denied</h3>
+          <p class="text-sm text-on-surface-variant max-w-xs mb-4">Your browser is blocking location access. To enable it:</p>
+          <ol class="text-left text-xs text-on-surface-variant space-y-2 mb-6 max-w-xs">
+            <li class="flex items-start gap-2"><span class="font-black text-emerald-700 mt-0.5">1.</span><span>Click the <strong>lock / info icon</strong> in the browser address bar</span></li>
+            <li class="flex items-start gap-2"><span class="font-black text-emerald-700 mt-0.5">2.</span><span>Set <strong>Location</strong> to &ldquo;Allow&rdquo;</span></li>
+            <li class="flex items-start gap-2"><span class="font-black text-emerald-700 mt-0.5">3.</span><span>Click the button below to try again</span></li>
+          </ol>
+          <div class="flex gap-3">
+            <button onclick="hideDeniedPanel()" class="px-4 py-2 border border-emerald-300 text-emerald-700 rounded-full text-sm font-bold hover:bg-emerald-50 transition-colors">
+              Cancel
+            </button>
+            <button onclick="retryAfterDenied()" class="bg-gradient-to-br from-emerald-700 to-emerald-500 text-white px-5 py-2 rounded-full font-bold text-sm hover:scale-[1.02] transition-all shadow flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">refresh</span> Try Again
+            </button>
+          </div>
+        </div>
+
+        <!-- Search loading overlay -->
+
+        <div id="search-loading" class="absolute inset-0 flex items-center justify-center bg-white/70 backdrop-blur-sm z-20 rounded-2xl hidden">
+
+          <div class="bg-white rounded-2xl shadow-xl px-8 py-6 flex items-center gap-4">
+
+            <div class="w-8 h-8 border-3 border-emerald-200 border-t-emerald-600 rounded-full" style="border-width:3px;animation:spin 0.8s linear infinite"></div>
+
+            <span class="font-bold text-on-surface text-sm" id="search-loading-text">Searching nearby</span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Category quick-search pills -->
+
+      <div class="flex flex-wrap gap-2 mb-4">
+
+        <button onclick="searchOverpass('recycling')" class="flex items-center gap-1.5 px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-bold hover:bg-emerald-200 transition-colors">
+
+           Recycling Centres
+
+        </button>
+
+        <button onclick="searchOverpass('repair')" class="flex items-center gap-1.5 px-4 py-2 bg-amber-100 text-amber-800 rounded-full text-sm font-bold hover:bg-amber-200 transition-colors">
+
+           Repair Shops
+
+        </button>
+
+        <button onclick="searchOverpass('ewaste')" class="flex items-center gap-1.5 px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-bold hover:bg-blue-200 transition-colors">
+
+           E-Waste
+
+        </button>
+
+        <button onclick="searchOverpass('ngo')" class="flex items-center gap-1.5 px-4 py-2 bg-red-100 text-red-800 rounded-full text-sm font-bold hover:bg-red-200 transition-colors">
+
+           NGO / Donation
+
+        </button>
+
+      </div>
+
+      <!-- Search results list -->
+
+      <div id="search-results" class="hidden">
+
+        <div class="flex items-center justify-between mb-3">
+
+          <h3 class="font-black text-on-surface flex items-center gap-2">
+
+            <span class="material-symbols-outlined text-emerald-600">location_on</span>
+
+            <span id="results-title">Nearby Results</span>
+
+          </h3>
+
+          <span class="text-xs bg-emerald-100 text-emerald-700 font-bold px-3 py-1 rounded-full" id="results-count"></span>
+
+        </div>
+
+        <div id="results-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+
+      </div>
+
+    </div>
+
+    <!-- Side panel -->
+
+    <aside class="col-span-12 lg:col-span-4 flex flex-col gap-4">
+
+      <!-- Status card -->
+
+      <div class="bg-surface-container-highest p-6 rounded-2xl border-l-4 border-primary">
+
+        <div class="flex items-center gap-3 mb-3">
+
+          <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+
+            <span class="material-symbols-outlined text-primary">my_location</span>
+
+          </div>
+
+          <p class="font-bold text-sm text-on-surface">Location & Search</p>
+
+        </div>
+
+        <p class="text-xs text-on-surface-variant leading-relaxed mb-3" id="ai-route-text">
+
+          Enable location then tap a category to find real places near you on the map.
+
+        </p>
+
+        <button onclick="requestLocation()" class="text-sm font-bold text-primary flex items-center gap-1 hover:underline">
+
+          Enable location <span class="material-symbols-outlined text-sm">arrow_forward</span>
+
+        </button>
+
+      </div>
+
+      <!-- Action Bento Grid -->
+
+      <div class="grid grid-cols-2 gap-3">
+
+        <button onclick="searchOverpass('recycling')" class="bg-primary-container p-5 rounded-2xl text-left flex flex-col justify-between h-36 hover:scale-[1.02] transition-transform shadow-sm">
+
+          <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings:'FILL' 1;">recycling</span>
+
+          <div>
+
+            <p class="text-[10px] uppercase tracking-widest font-bold text-on-primary-container/60 mb-0.5">Find</p>
+
+            <p class="text-sm font-bold text-on-primary-container leading-tight">Recycling Centres</p>
+
+          </div>
+
+        </button>
+
+        <button onclick="searchOverpass('ewaste')" class="bg-tertiary-container p-5 rounded-2xl text-left flex flex-col justify-between h-36 hover:scale-[1.02] transition-transform shadow-sm">
+
+          <span class="material-symbols-outlined text-on-tertiary-container text-3xl" style="font-variation-settings:'FILL' 1;">devices</span>
+
+          <div>
+
+            <p class="text-[10px] uppercase tracking-widest font-bold text-on-tertiary-container/60 mb-0.5">Drop-off</p>
+
+            <p class="text-sm font-bold text-on-tertiary-container leading-tight">E-Waste Hub</p>
+
+          </div>
+
+        </button>
+
+        <button onclick="searchOverpass('repair')" class="bg-amber-100 p-5 rounded-2xl text-left flex flex-col justify-between h-36 hover:scale-[1.02] transition-transform shadow-sm">
+
+          <span class="material-symbols-outlined text-amber-700 text-3xl" style="font-variation-settings:'FILL' 1;">build</span>
+
+          <div>
+
+            <p class="text-[10px] uppercase tracking-widest font-bold text-amber-700/60 mb-0.5">Service</p>
+
+            <p class="text-sm font-bold text-amber-900 leading-tight">Repair Shops</p>
+
+          </div>
+
+        </button>
+
+        <button onclick="searchOverpass('ngo')" class="bg-red-50 p-5 rounded-2xl text-left flex flex-col justify-between h-36 hover:scale-[1.02] transition-transform shadow-sm">
+
+          <span class="material-symbols-outlined text-red-500 text-3xl" style="font-variation-settings:'FILL' 1;">favorite</span>
+
+          <div>
+
+            <p class="text-[10px] uppercase tracking-widest font-bold text-red-500/60 mb-0.5">Donate</p>
+
+            <p class="text-sm font-bold text-red-900 leading-tight">NGO Centres</p>
+
+          </div>
+
+        </button>
+
+      </div>
+
+      <!-- Eco stats -->
+
+      <div class="bg-gradient-to-br from-emerald-800 to-emerald-600 rounded-2xl p-5 text-white">
+
+        <p class="text-xs font-black text-emerald-300 uppercase tracking-widest mb-3">Your Eco Stats</p>
+
+        <div class="grid grid-cols-2 gap-3">
+
+          <div class="bg-white/10 rounded-xl p-3">
+
+            <p class="text-[10px] font-bold text-white/60 uppercase">Eco Score</p>
+
+            <p class="text-xl font-black" id="map-eco-score"></p>
+
+          </div>
+
+          <div class="bg-white/10 rounded-xl p-3">
+
+            <p class="text-[10px] font-bold text-white/60 uppercase">CO Saved</p>
+
+            <p class="text-xl font-black" id="map-co2"></p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </aside>
+
+  </div>
+
+</main>
+
+<!-- Leaflet JS  served via jsDelivr (faster CDN than unpkg) -->
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js" crossorigin=""></script>
+
+<script>
+// Wrap in IIFE so const/let variables don't conflict on SPA re-navigation
+(function() {
+'use strict';
+
+if(!Auth.requireLogin()) return;
+
+initNavbar();
+
+//  Sidebar user info 
+
+const sidebarUser = Auth.user();
+
+if(sidebarUser) {
+
+  const initials = (sidebarUser.name||'EA').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+
+  const sbName = document.getElementById('sb-user-name');
+
+  const sbAvatar = document.getElementById('sb-avatar');
+
+  const sbId = document.getElementById('sb-user-id');
+
+  if (sbName) sbName.textContent = sidebarUser.name || 'Eco Steward';
+
+  if (sbAvatar) sbAvatar.textContent = initials;
+
+  if (sbId) sbId.textContent = sidebarUser.user_number ? 'ID: ' + sidebarUser.user_number : '';
+
+  const ecoEl = document.getElementById('map-eco-score');
+
+  const co2El = document.getElementById('map-co2');
+
+  if (ecoEl) ecoEl.textContent = sidebarUser.eco_score || 0;
+
+  if (co2El) co2El.textContent = ((sidebarUser.eco_score||0)*0.2).toFixed(1) + 'kg';
+
+}
+
+//  Leaflet map setup 
+
+const DEFAULT_LAT = 12.9716;
+
+const DEFAULT_LNG = 77.5946;
+
+const DEFAULT_ZOOM = 12;
+
+window._ecoLeafletMap = L.map('leaflet-map', {
+
+  zoomControl: true,
+
+  preferCanvas: true,
+
+  fadeAnimation: false,
+
+  zoomAnimation: true,
+
+}).setView([DEFAULT_LAT, DEFAULT_LNG], DEFAULT_ZOOM);
+
+const map = window._ecoLeafletMap;
+
+//  FREE tile layer: OpenStreetMap standard  no API key ever needed 
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+
+  maxZoom: 19,
+
+  updateWhenIdle: false,
+
+  keepBuffer: 4,
+
+}).addTo(map);
+
+// Fix blank tiles after SPA nav
+
+requestAnimationFrame(() => map.invalidateSize({ animate: false }));
+
+//  Custom marker icons 
+
+function makeIcon(color, label) {
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="28" height="42">
+
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 24 12 24S24 21 24 12C24 5.373 18.627 0 12 0z" fill="${color}" stroke="white" stroke-width="1.5"/>
+
+    <circle cx="12" cy="12" r="5" fill="white"/>
+
+  </svg>`;
+
+  return L.divIcon({ html: svg, className: '', iconSize: [28,42], iconAnchor: [14,42], popupAnchor: [0,-42] });
+
+}
+
+const icons = {
+
+  recycling: makeIcon('#176a21'),
+
+  repair:    makeIcon('#b45309'),
+
+  ewaste:    makeIcon('#006096'),
+
+  ngo:       makeIcon('#e11d48'),
+
+  user:      makeIcon('#4f46e5'),
+
+  search:    makeIcon('#7c3aed'),
+
+};
+
+// Active search layer (cleared on each new search)
+
+let searchLayer = L.layerGroup().addTo(map);
+
+let userMarker  = null;
+
+let userLat = null, userLng = null;
+
+//  Distance helper 
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+
+  const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+}
+
+function fmtDist(km) { return km < 1 ? Math.round(km*1000)+'m' : km.toFixed(1)+'km'; }
+
+//  Search loading UI 
+
+function setSearchLoading(on, text='Searching nearby') {
+
+  const el = document.getElementById('search-loading');
+
+  const tx = document.getElementById('search-loading-text');
+
+  if (!el) return;
+
+  if (on) { el.classList.remove('hidden'); if(tx) tx.textContent = text; }
+
+  else     { el.classList.add('hidden'); }
+
+}
+
+//  Overpass API search 
+
+// Queries real OpenStreetMap data within radius of user's location.
+
+const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+
+const SEARCH_RADIUS = 8000; // 8km radius
+
+const OVERPASS_QUERIES = {
+
+  recycling: (lat, lng, r) => `[out:json][timeout:30];
+
+    (node["amenity"="recycling"](around:${r},${lat},${lng});
+
+     node["recycling_type"="centre"](around:${r},${lat},${lng});
+
+     node["shop"="second_hand"](around:${r},${lat},${lng});
+
+    );out body;`,
+
+  repair: (lat, lng, r) => `[out:json][timeout:30];
+
+    (node["shop"="mobile_phone"](around:${r},${lat},${lng});
+
+     node["repair"](around:${r},${lat},${lng});
+
+     node["craft"="electronics_repair"](around:${r},${lat},${lng});
+
+     node["shop"="electronics"](around:${r},${lat},${lng});
+
+     node["shop"="computer"](around:${r},${lat},${lng});
+
+    );out body;`,
+
+  ewaste: (lat, lng, r) => `[out:json][timeout:30];
+
+    (node["amenity"="recycling"]["recycling:electronics"="yes"](around:${r},${lat},${lng});
+
+     node["amenity"="recycling"]["recycling:computer"="yes"](around:${r},${lat},${lng});
+
+     node["amenity"="recycling"]["recycling:mobile_phones"="yes"](around:${r},${lat},${lng});
+
+     node["shop"="electronics"]["second_hand"="yes"](around:${r},${lat},${lng});
+
+    );out body;`,
+
+  ngo: (lat, lng, r) => `[out:json][timeout:30];
+
+    (node["office"="ngo"](around:${r},${lat},${lng});
+
+     node["office"="charity"](around:${r},${lat},${lng});
+
+     node["office"="association"](around:${r},${lat},${lng});
+
+     node["amenity"="social_facility"](around:${r},${lat},${lng});
+
+     node["amenity"="charity"](around:${r},${lat},${lng});
+
+    );out body;`,
+
+};
+
+const CATEGORY_META = {
+
+  recycling: { label: ' Recycling Centres', emoji: '', icon: 'recycling', color: '#176a21' },
+
+  repair:    { label: ' Repair Shops',       emoji: '', icon: 'repair',    color: '#b45309' },
+
+  ewaste:    { label: ' E-Waste Hubs',        emoji: '', icon: 'ewaste',   color: '#006096' },
+
+  ngo:       { label: ' NGO / Donation',     emoji: '', icon: 'ngo',      color: '#e11d48' },
+
+};
+
+async function searchOverpass(category) {
+
+  if (!userLat) {
+
+    showToast(' Please enable your location first, then search.', 'error');
+
+    requestLocation();
+
+    return;
+
+  }
+
+  const meta = CATEGORY_META[category];
+
+  const queryFn = OVERPASS_QUERIES[category];
+
+  if (!queryFn) return;
+
+  setSearchLoading(true, `Searching ${meta.label} nearby`);
+
+  searchLayer.clearLayers();
+
+  try {
+
+    const query = queryFn(userLat, userLng, SEARCH_RADIUS);
+
+    const resp = await fetch(OVERPASS_URL, {
+
+      method: 'POST',
+
+      body: 'data=' + encodeURIComponent(query),
+
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+
+    });
+
+    const data = await resp.json();
+
+    const elements = (data.elements || []).filter(e => e.lat && e.lon);
+
+    setSearchLoading(false);
+
+    renderSearchResults(elements, meta, userLat, userLng);
+
+  } catch(e) {
+
+    setSearchLoading(false);
+
+    showToast('Search failed. Check your internet connection.', 'error');
+
+  }
+
+}
+
+//  Free text search using Nominatim 
+
+// Make sure we know where the user is (asks for location if needed)
+function ensureUserLocation() {
+  if (userLat && userLng) return Promise.resolve({ lat: userLat, lng: userLng });
+  return new Promise((resolve, reject) => {
+    const ok = (lat, lng) => { showLocationResults(lat, lng); resolve({ lat, lng }); };
+    if (window.GlobalLocation) {
+      window.GlobalLocation.get(false).then(pos => ok(pos.lat, pos.lng)).catch(reject);
+    } else if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => ok(pos.coords.latitude, pos.coords.longitude), reject,
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+    } else reject(new Error('Location is not supported on this device.'));
+  });
+}
+
+// One Nominatim query restricted to a box of +/- radiusKm around the user
+async function nominatimNear(query, lat, lng, radiusKm) {
+  const dLat = radiusKm / 111;
+  const dLng = radiusKm / (111 * Math.max(0.2, Math.cos(lat * Math.PI / 180)));
+  const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) +
+    '&format=json&limit=40&addressdetails=1&bounded=1' +
+    '&viewbox=' + (lng - dLng) + ',' + (lat + dLat) + ',' + (lng + dLng) + ',' + (lat - dLat);
+  const resp = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+  if (!resp.ok) throw new Error('Search service returned ' + resp.status);
+  const data = await resp.json();
+  // the box is a square - keep only places really within the radius
+  return data.filter(it => haversineKm(lat, lng, parseFloat(it.lat), parseFloat(it.lon)) <= radiusKm);
+}
+
+async function doTextSearch() {
+  const input = document.getElementById('map-search-input');
+  const query = input ? input.value.trim() : '';
+  if (!query) { showToast('Please type something to search.', 'error'); return; }
+
+  setSearchLoading(true, 'Getting your location\u2026');
+  try {
+    await ensureUserLocation();
+  } catch (e) {
+    setSearchLoading(false);
+    showToast('Allow location access so we can search near you.', 'error');
+    return;
+  }
+
+  setSearchLoading(true, 'Searching "' + query + '" near you');
+  searchLayer.clearLayers();
+  try {
+    // Search close to the user first, then widen step by step - never worldwide
+    let data = [], usedKm = 0;
+    for (const km of [10, 30, 80]) {
+      data = await nominatimNear(query, userLat, userLng, km);
+      usedKm = km;
+      if (data.length) break;
+    }
+    setSearchLoading(false);
+    if (!data.length) {
+      showToast('Nothing found for "' + query + '" within 80 km of you. Try another word.', 'error');
+      return;
+    }
+    const elements = data.map(item => ({
+      lat: parseFloat(item.lat), lon: parseFloat(item.lon),
+      tags: { name: item.name || item.display_name.split(',')[0], 'addr:full': item.display_name }
+    }));
+    renderSearchResults(elements, { label: '"' + query + '" within ' + usedKm + ' km', emoji: '', icon: 'search' }, userLat, userLng);
+  } catch (e) {
+    setSearchLoading(false);
+    showToast('Search failed. Check your connection and try again.', 'error');
+  }
+}
+
+//  Render results on map + list 
+
+function renderSearchResults(elements, meta, fromLat, fromLng) {
+
+  const resultsEl  = document.getElementById('search-results');
+
+  const listEl     = document.getElementById('results-list');
+
+  const titleEl    = document.getElementById('results-title');
+
+  const countEl    = document.getElementById('results-count');
+
+  // Sort by distance from user
+
+  if (fromLat) {
+
+    elements.sort((a, b) =>
+
+      haversineKm(fromLat, fromLng, a.lat, a.lon) - haversineKm(fromLat, fromLng, b.lat, b.lon)
+
+    );
+
+  }
+
+  const top = elements.slice(0, 20);
+
+  if (!top.length) {
+
+    showToast(`No ${meta.label} found within 8 km. Try zooming out.`, 'error');
+
+    return;
+
+  }
+
+  // Add markers to map
+
+  const bounds = [];
+
+  top.forEach((el, i) => {
+
+    const name = el.tags?.name || el.tags?.['addr:full'] || `${meta.emoji} Place ${i+1}`;
+
+    const dist = fromLat ? `  ${fmtDist(haversineKm(fromLat, fromLng, el.lat, el.lon))}` : '';
+
+    const osmUrl = `https://www.openstreetmap.org/?mlat=${el.lat}&mlon=${el.lon}#map=18/${el.lat}/${el.lon}`;
+
+    const marker = L.marker([el.lat, el.lon], { icon: icons[meta.icon] || icons.search })
+
+      .addTo(searchLayer)
+
+      .bindPopup(`
+
+        <div class="popup-title">${meta.emoji} ${name}</div>
+
+        <div class="popup-sub">${dist ? dist.slice(3) : ''} away</div>
+
+        ${el.tags?.phone ? `<div class="popup-sub"> ${el.tags.phone}</div>` : ''}
+
+        <a href="${osmUrl}" target="_blank" class="popup-link">View on OpenStreetMap </a>
+
+      `);
+
+    bounds.push([el.lat, el.lon]);
+
+  });
+
+  // Fit map to results
+
+  if (bounds.length) {
+
+    try { map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 }); } catch(e) {}
+
+  }
+
+  // Render cards
+
+  if (titleEl) titleEl.textContent = `Nearby ${meta.label}`;
+
+  if (countEl) countEl.textContent = `${top.length} found`;
+
+  if (resultsEl) resultsEl.classList.remove('hidden');
+
+  if (listEl) {
+
+    listEl.innerHTML = top.map((el, i) => {
+
+      const name    = el.tags?.name || `${meta.emoji} Place ${i+1}`;
+
+      const address = el.tags?.['addr:street']
+
+        ? `${el.tags['addr:housenumber']||''} ${el.tags['addr:street']}, ${el.tags['addr:city']||''}`.trim()
+
+        : (el.tags?.['addr:full'] || '');
+
+      const phone   = el.tags?.phone || el.tags?.['contact:phone'] || '';
+
+      const dist    = fromLat ? haversineKm(fromLat, fromLng, el.lat, el.lon) : null;
+
+      const osmUrl  = `https://www.openstreetmap.org/?mlat=${el.lat}&mlon=${el.lon}#map=18/${el.lat}/${el.lon}`;
+
+      return `<div class="facility-card bg-white rounded-2xl border border-emerald-50 shadow-sm p-4 cursor-pointer hover:border-emerald-300 transition-all"
+
+                   onclick="map.setView([${el.lat},${el.lon}],17); searchLayer.getLayers()[${i}]?.openPopup();">
+
+        <div class="flex items-start justify-between mb-2">
+
+          <div class="flex items-center gap-2">
+
+            <span class="text-xl">${meta.emoji}</span>
+
+            <h3 class="font-black text-on-surface text-sm leading-tight">${name}</h3>
+
+          </div>
+
+          ${dist !== null ? `<span class="text-xs font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full flex-shrink-0">${fmtDist(dist)}</span>` : ''}
+
+        </div>
+
+        ${address ? `<p class="text-xs text-on-surface-variant mb-1"> ${address}</p>` : ''}
+
+        ${phone   ? `<p class="text-xs text-on-surface-variant mb-2"> ${phone}</p>` : ''}
+
+        <div class="flex gap-2 mt-2">
+
+          ${phone ? `<a href="tel:${phone}" onclick="event.stopPropagation()" class="flex-1 text-center py-1.5 border border-emerald-300 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-50 transition-colors"> Call</a>` : ''}
+
+          <a href="${osmUrl}" target="_blank" onclick="event.stopPropagation()" class="flex-1 text-center py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-100 transition-colors"> Map</a>
+
+        </div>
+
+      </div>`;
+
+    }).join('');
+
+  }
+
+  // Scroll to results
+
+  resultsEl?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  showToast(` Found ${top.length} ${meta.label} nearby`);
+
+}
+
+//  Location 
+
+function _setLocBtnsLoading(loading) {
+  const allBtns = [
+    document.getElementById('locate-btn'),
+    ...Array.from(document.querySelectorAll('button[onclick="requestLocation()"]'))
+  ].filter(Boolean);
+  allBtns.forEach(b => {
+    if (loading) {
+      b.disabled = true;
+      b._origHTML = b._origHTML || b.innerHTML;
+      b.innerHTML = `<span class="material-symbols-outlined text-sm" style="animation:spin 0.8s linear infinite;display:inline-block">refresh</span> Locating…`;
+    } else {
+      b.disabled = false;
+      if (b._origHTML) { b.innerHTML = b._origHTML; delete b._origHTML; }
+    }
+  });
+}
+
+function showDeniedPanel() {
+  document.getElementById('map-overlay')?.classList.add('hidden');
+  document.getElementById('loc-denied-panel')?.classList.remove('hidden');
+}
+
+function hideDeniedPanel() {
+  document.getElementById('loc-denied-panel')?.classList.add('hidden');
+  document.getElementById('map-overlay')?.classList.remove('hidden');
+}
+
+function retryAfterDenied() {
+  document.getElementById('loc-denied-panel')?.classList.add('hidden');
+  requestLocation();
+}
+
+function requestLocation() {
+  // Always show overlay while requesting
+  document.getElementById('loc-denied-panel')?.classList.add('hidden');
+  _setLocBtnsLoading(true);
+
+  const doGeo = (forceRefresh) => {
+    if (window.GlobalLocation) {
+      window.GlobalLocation.get(forceRefresh).then(pos => {
+        _setLocBtnsLoading(false);
+        showLocationResults(pos.lat, pos.lng);
+      }).catch(err => {
+        _setLocBtnsLoading(false);
+        const msg = err.message || '';
+        if (msg.toLowerCase().includes('denied') || (err.code === 1)) {
+          showDeniedPanel();
+          showToast('⚠️ Location denied — see instructions on the map.', 'error');
+        } else {
+          showToast(msg || 'Could not get location. Try again.', 'error');
+        }
+      });
+    } else {
+      // Fallback if config.js not loaded
+      navigator.geolocation.getCurrentPosition(
+        pos => { _setLocBtnsLoading(false); showLocationResults(pos.coords.latitude, pos.coords.longitude); },
+        err => {
+          _setLocBtnsLoading(false);
+          if (err.code === 1) showDeniedPanel();
+          else showToast('Could not get location. Try again.', 'error');
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    }
+  };
+
+  // Always force a fresh geolocation call on user tap; use cache only on auto-init
+  doGeo(true);
+}
+
+function showLocationResults(lat, lng) {
+  userLat = lat; userLng = lng;
+
+  document.getElementById('location-banner')?.classList.add('hidden');
+  document.getElementById('map-overlay')?.classList.add('hidden');
+  document.getElementById('loc-denied-panel')?.classList.add('hidden');
+
+  map.setView([lat, lng], 14);
+  requestAnimationFrame(() => map.invalidateSize({ animate: false }));
+
+  if (userMarker) map.removeLayer(userMarker);
+  userMarker = L.marker([lat, lng], { icon: icons.user })
+    .addTo(map)
+    .bindPopup('<div class="popup-title">📍 You are here</div>')
+    .openPopup();
+
+  const aiEl = document.getElementById('ai-route-text');
+  if (aiEl) aiEl.textContent = 'Location enabled! Tap a category button to find real nearby facilities on the map.';
+
+  showToast('📍 Location found! Now tap a category to search nearby.');
+}
+
+// — Auto-request location on every map page load —
+// Uses cached location for this login session if available;
+// otherwise triggers the browser geolocation prompt.
+(function autoInitLocation() {
+  const hasCached = window.GlobalLocation && window.GlobalLocation.lat && window.GlobalLocation.lng;
+  if (hasCached) {
+    // Restore location silently from session cache (no browser prompt needed)
+    _setLocBtnsLoading(true);
+    window.GlobalLocation.get(false).then(pos => {
+      _setLocBtnsLoading(false);
+      showLocationResults(pos.lat, pos.lng);
+    }).catch(() => {
+      _setLocBtnsLoading(false);
+    });
+  } else {
+    // No cache — request fresh location (triggers browser permission prompt)
+    setTimeout(() => { requestLocation(); }, 400);
+  }
+})();
+
+// Expose functions used by HTML onclick attributes as window globals
+// (necessary because the IIFE scope hides them from onclick="...")
+window.requestLocation   = requestLocation;
+window.showDeniedPanel   = showDeniedPanel;
+window.hideDeniedPanel   = hideDeniedPanel;
+window.retryAfterDenied  = retryAfterDenied;
+window.searchOverpass    = searchOverpass;
+window.doTextSearch      = doTextSearch;
+
+})(); // end IIFE
+</script>
+
+</body>
+
+</html>
+

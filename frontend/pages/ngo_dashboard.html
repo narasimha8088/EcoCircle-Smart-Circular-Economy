@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGO Dashboard  EcoCircle</title>
+  <meta name="description" content="NGO Partner Dashboard: manage your donation needs board, track incoming pledges, and confirm item deliveries on EcoCircle." />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet  served via jsDelivr (faster CDN than unpkg) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" crossorigin=""/>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js" crossorigin=""></script>
+
+  <style>
+    :root {
+      --color-bg:        #0d1a0f;
+      --color-surface:   #121f14;
+      --color-surface2:  #1a2d1c;
+      --color-surface3:  #213525;
+      --color-primary:   #4ade80;
+      --color-primary2:  #22c55e;
+      --color-on-primary:#0a1a0c;
+      --color-accent:    #34d399;
+      --color-amber:     #fbbf24;
+      --color-red:       #f87171;
+      --color-blue:      #60a5fa;
+      --color-text:      #e2f4e5;
+      --color-muted:     #7fa887;
+      --color-border:    #2a3f2e;
+      --radius:          14px;
+      --shadow:          0 4px 24px rgba(0,0,0,0.45);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /*  Scrollbar  */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--color-surface); }
+    ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 99px; }
+
+    /*  Top Nav  */
+    .topnav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .topnav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+    .topnav-logo span.material-symbols-outlined { font-size: 28px; }
+    .topnav-badge {
+      background: var(--color-surface2);
+      border: 1px solid var(--color-border);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--color-muted);
+    }
+    .topnav-badge.verified { color: var(--color-primary); border-color: var(--color-primary2); }
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--color-border);
+      color: var(--color-muted);
+      border-radius: 8px;
+      padding: 6px 16px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--color-red); color: var(--color-red); }
+
+    /*  Login Gate  */
+    #login-gate {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .login-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow);
+    }
+    .login-card h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: var(--color-primary);
+    }
+    .login-card p { color: var(--color-muted); font-size: 0.9rem; margin-bottom: 1.75rem; }
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--color-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-control {
+      width: 100%;
+      background: var(--color-surface2);
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      color: var(--color-text);
+      font-family: inherit;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-control:focus { border-color: var(--color-primary2); }
+    .form-control::placeholder { color: var(--color-muted); opacity: 0.6; }
+
+    .btn-primary {
+      width: 100%;
+      background: linear-gradient(135deg, var(--color-primary2), var(--color-accent));
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      color: var(--color-on-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      margin-top: 0.5rem;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .login-divider { text-align: center; color: var(--color-muted); font-size: 0.82rem; margin: 1rem 0; }
+    .link { color: var(--color-primary2); cursor: pointer; font-weight: 600; }
+    .link:hover { text-decoration: underline; }
+    .form-error { color: var(--color-red); font-size: 0.82rem; margin-top: 0.5rem; min-height: 1rem; }
+
+    /*  Register extras  */
+    .tag-select { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .tag-chip {
+      border: 1px solid var(--color-border);
+      border-radius: 99px;
+      padding: 4px 14px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: var(--color-muted);
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .tag-chip.active { background: var(--color-primary2); border-color: var(--color-primary2); color: var(--color-on-primary); font-weight: 600; }
+
+    /*  Main Dashboard  */
+    #dashboard { display: none; flex: 1; flex-direction: column; }
+
+    /*  Stats Bar  */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding: 1.5rem 2rem;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .stat-card {
+      background: var(--color-surface2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .stat-icon.green  { background: rgba(74,222,128,0.12); color: var(--color-primary); }
+    .stat-icon.amber  { background: rgba(251,191,36,0.12);  color: var(--color-amber); }
+    .stat-icon.blue   { background: rgba(96,165,250,0.12);  color: var(--color-blue); }
+    .stat-value { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+    .stat-label { font-size: 0.8rem; color: var(--color-muted); font-weight: 500; margin-top: 2px; }
+
+    /*  Main Content  */
+    .dashboard-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      padding: 1.5rem 2rem;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /*  Panel  */
+    .panel {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .panel-header h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-header h2 span.material-symbols-outlined { font-size: 20px; color: var(--color-primary2); }
+    .panel-body { padding: 1.25rem 1.5rem; flex: 1; overflow-y: auto; max-height: 420px; }
+
+    .btn-sm {
+      background: linear-gradient(135deg, var(--color-primary2), var(--color-accent));
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      color: var(--color-on-primary);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: opacity 0.2s;
+    }
+    .btn-sm:hover { opacity: 0.85; }
+    .btn-sm.outline {
+      background: transparent;
+      border: 1px solid var(--color-border);
+      color: var(--color-muted);
+    }
+    .btn-sm.outline:hover { border-color: var(--color-primary2); color: var(--color-primary); }
+    .btn-sm.danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; }
+
+    /*  Needs Board  */
+    .need-item {
+      background: var(--color-surface2);
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 0.75rem;
+      transition: border-color 0.2s;
+    }
+    .need-item:hover { border-color: var(--color-primary2); }
+    .need-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    .need-category { font-weight: 700; font-size: 0.95rem; }
+    .urgency-badge {
+      border-radius: 99px;
+      padding: 3px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .urgency-badge.high   { background: rgba(248,113,113,0.15); color: var(--color-red);   border: 1px solid rgba(248,113,113,0.3); }
+    .urgency-badge.medium { background: rgba(251,191,36,0.15);  color: var(--color-amber); border: 1px solid rgba(251,191,36,0.3); }
+    .urgency-badge.low    { background: rgba(100,116,139,0.15); color: #94a3b8;            border: 1px solid rgba(100,116,139,0.3); }
+
+    .progress-bar-wrap { height: 6px; background: var(--color-surface3); border-radius: 99px; margin: 0.6rem 0; overflow: hidden; }
+    .progress-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--color-primary2), var(--color-accent)); transition: width 0.4s; }
+
+    .need-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--color-muted);
+    }
+    .need-actions { display: flex; gap: 6px; margin-top: 0.75rem; }
+
+    /*  Pledge items  */
+    .pledge-item {
+      background: var(--color-surface2);
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+    .pledge-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .pledge-name { font-weight: 600; font-size: 0.9rem; }
+    .pledge-meta { font-size: 0.78rem; color: var(--color-muted); margin-bottom: 0.75rem; display: flex; gap: 16px; flex-wrap: wrap; }
+    .pledge-meta span { display: flex; align-items: center; gap: 4px; }
+    .pledge-meta .material-symbols-outlined { font-size: 14px; }
+    .status-badge {
+      border-radius: 99px;
+      padding: 3px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .status-badge.pledged    { background: rgba(251,191,36,0.15);  color: var(--color-amber); border: 1px solid rgba(251,191,36,0.3); }
+    .status-badge.in_transit { background: rgba(96,165,250,0.15);  color: var(--color-blue);  border: 1px solid rgba(96,165,250,0.3); }
+    .status-badge.delivered  { background: rgba(74,222,128,0.15);  color: var(--color-primary); border: 1px solid rgba(74,222,128,0.3); }
+    .status-badge.cancelled  { background: rgba(100,116,139,0.15); color: #94a3b8;  border: 1px solid rgba(100,116,139,0.3); }
+    .pledge-actions { display: flex; gap: 6px; }
+
+    /*  Empty state  */
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--color-muted);
+    }
+    .empty-state .material-symbols-outlined { font-size: 48px; opacity: 0.4; display: block; margin-bottom: 10px; }
+    .empty-state p { font-size: 0.88rem; }
+
+    /*  Modal  */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.hidden { display: none; }
+    .modal {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: var(--shadow);
+      position: relative;
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn { from { opacity:0; transform:scale(0.96) translateY(8px); } to { opacity:1; transform:none; } }
+    .modal h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--color-primary); }
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--color-muted);
+      cursor: pointer;
+      font-size: 20px;
+      padding: 4px;
+    }
+    .modal-close:hover { color: var(--color-text); }
+
+    /*  Toast  */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--color-surface2);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow);
+      z-index: 9999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.success { border-color: var(--color-primary2); }
+    #toast.error   { border-color: var(--color-red); }
+    #toast .material-symbols-outlined { font-size: 18px; }
+    #toast.success .material-symbols-outlined { color: var(--color-primary); }
+    #toast.error   .material-symbols-outlined { color: var(--color-red); }
+
+    /*  Loading  */
+    .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /*  Staleness indicator  */
+    .staleness-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+    .staleness-dot.fresh  { background: var(--color-primary); }
+    .staleness-dot.aging  { background: var(--color-amber); }
+    .staleness-dot.stale  { background: var(--color-red); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .dashboard-body { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .topnav { padding: 0 1rem; }
+      .dashboard-body { padding: 1rem; }
+      .stats-bar { padding: 1rem; }
+    }
+
+    /*  Select & Textarea  */
+    select.form-control { appearance: none; }
+    textarea.form-control { resize: vertical; min-height: 70px; }
+
+    /* Map on dashboard */
+    #ngo-map { height: 220px; border-radius: 10px; border: 1px solid var(--color-border); overflow: hidden; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+
+<!--  Top Nav  -->
+<nav class="topnav">
+  <a href="donate.html" class="topnav-logo">
+    <span class="material-symbols-outlined">recycling</span>
+    EcoCircle NGO
+  </a>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span id="ngo-badge" class="topnav-badge">Not logged in</span>
+    <button id="btn-logout" class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<!--  Login / Register Gate  -->
+<div id="login-gate">
+  <!-- LOGIN -->
+  <div id="login-view" class="login-card">
+    <h1>NGO Partner Login</h1>
+    <p>Access your donation needs board and pledge management portal.</p>
+
+    <div class="form-group">
+      <label for="login-regno">Registration Number</label>
+      <input class="form-control" id="login-regno" type="text" placeholder="e.g. SRN-MH-2019-0034521" />
+    </div>
+    <div class="form-group">
+      <label for="login-password">Password</label>
+      <input class="form-control" id="login-password" type="password" placeholder="" />
+    </div>
+    <div class="form-error" id="login-error"></div>
+    <button class="btn-primary" id="btn-login" onclick="doLogin()">
+      <span id="login-spinner" class="spinner" style="display:none"></span>
+      Login to Portal
+    </button>
+    <div class="login-divider"> or </div>
+    <p style="text-align:center;font-size:0.85rem;color:var(--color-muted)">
+      New NGO partner? <span class="link" onclick="showRegister()">Register here </span>
+    </p>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="register-view" class="login-card" style="display:none;max-width:540px;">
+    <h1>Register Your NGO</h1>
+    <p>Join EcoCircle's donation network. Admin review usually takes 24 h.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-group" style="grid-column:1/-1">
+        <label>NGO / Organisation Name</label>
+        <input class="form-control" id="reg-name" placeholder="e.g. Smiles Foundation" />
+      </div>
+      <div class="form-group">
+        <label>Registration Number</label>
+        <input class="form-control" id="reg-regno" placeholder="Societies Act / Sec-8" />
+      </div>
+      <div class="form-group">
+        <label>Contact Phone</label>
+        <input class="form-control" id="reg-phone" placeholder="+91 98765 XXXXX" />
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label>Address</label>
+        <input class="form-control" id="reg-address" placeholder="Full address for geocoding & map pin" />
+      </div>
+      <div class="form-group">
+        <label>Contact Email</label>
+        <input class="form-control" id="reg-email" type="email" placeholder="ngo@example.org" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input class="form-control" id="reg-password" type="password" placeholder="Choose a strong password" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Accepted Item Categories</label>
+      <div class="tag-select" id="cat-tags">
+        <span class="tag-chip" onclick="toggleTag(this,'Clothes')">Clothes</span>
+        <span class="tag-chip" onclick="toggleTag(this,'Books')">Books</span>
+        <span class="tag-chip" onclick="toggleTag(this,'Electronics')">Electronics</span>
+        <span class="tag-chip" onclick="toggleTag(this,'Furniture')">Furniture</span>
+        <span class="tag-chip" onclick="toggleTag(this,'Toys')">Toys</span>
+        <span class="tag-chip" onclick="toggleTag(this,'Food')">Food</span>
+        <span class="tag-chip" onclick="toggleTag(this,'General')">General</span>
+      </div>
+    </div>
+    <div class="form-error" id="reg-error"></div>
+    <button class="btn-primary" id="btn-register" onclick="doRegister()">Register NGO</button>
+    <div class="login-divider"> or </div>
+    <p style="text-align:center;font-size:0.85rem;color:var(--color-muted)">
+      Already registered? <span class="link" onclick="showLogin()">Login </span>
+    </p>
+  </div>
+</div>
+
+<!--  Dashboard  -->
+<div id="dashboard">
+
+  <!-- Stats -->
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-card">
+      <div class="stat-icon green"><span class="material-symbols-outlined">format_list_bulleted</span></div>
+      <div>
+        <div class="stat-value" id="stat-open-needs"></div>
+        <div class="stat-label">Open Needs</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon amber"><span class="material-symbols-outlined">pending_actions</span></div>
+      <div>
+        <div class="stat-value" id="stat-pending"></div>
+        <div class="stat-label">Pending Pledges</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon blue"><span class="material-symbols-outlined">check_circle</span></div>
+      <div>
+        <div class="stat-value" id="stat-delivered"></div>
+        <div class="stat-label">Total Delivered</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="dashboard-body">
+
+    <!-- Needs Board Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2><span class="material-symbols-outlined">inventory_2</span>Needs Board</h2>
+        <button class="btn-sm" onclick="openAddNeedModal()">
+          <span class="material-symbols-outlined" style="font-size:16px">add</span> Add Need
+        </button>
+      </div>
+      <div class="panel-body" id="needs-list">
+        <div class="empty-state">
+          <span class="material-symbols-outlined">inbox</span>
+          <p>Loading needs</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pledges Panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2><span class="material-symbols-outlined">local_shipping</span>Incoming Pledges</h2>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-sm outline" id="filter-all" onclick="filterPledges('')" style="border-color:var(--color-primary2);color:var(--color-primary)">All</button>
+          <button class="btn-sm outline" id="filter-pledged" onclick="filterPledges('pledged')">Pledged</button>
+          <button class="btn-sm outline" id="filter-transit" onclick="filterPledges('in_transit')">In Transit</button>
+        </div>
+      </div>
+      <div class="panel-body" id="pledges-list">
+        <div class="empty-state">
+          <span class="material-symbols-outlined">local_shipping</span>
+          <p>Loading pledges</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- NGO Location Map (full-width) -->
+    <div class="panel" style="grid-column:1/-1;">
+      <div class="panel-header">
+        <h2><span class="material-symbols-outlined">location_on</span>NGO Location</h2>
+        <span id="map-address" style="font-size:0.8rem;color:var(--color-muted)"></span>
+      </div>
+      <div class="panel-body" style="max-height:none;">
+        <div id="ngo-map"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!--  Add Need Modal  -->
+<div class="modal-overlay hidden" id="add-need-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('add-need-modal')">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <h3>Add Donation Need</h3>
+    <div class="form-group">
+      <label>Item Category</label>
+      <select class="form-control" id="need-category">
+        <option value=""> select </option>
+        <option>Clothes</option><option>Books</option><option>Electronics</option>
+        <option>Furniture</option><option>Toys</option><option>Food</option><option>General</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Quantity Needed</label>
+      <input class="form-control" id="need-qty" type="number" min="1" value="10" />
+    </div>
+    <div class="form-group">
+      <label>Urgency</label>
+      <select class="form-control" id="need-urgency">
+        <option value="high">High </option>
+        <option value="medium" selected>Medium </option>
+        <option value="low">Low </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Condition Accepted</label>
+      <select class="form-control" id="need-condition">
+        <option value="any" selected>Any</option>
+        <option value="used-good">Used  Good Condition</option>
+        <option value="new">New Only</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Notes (optional)</label>
+      <textarea class="form-control" id="need-notes" placeholder="e.g. Winter jackets preferred, sizes M-XL"></textarea>
+    </div>
+    <div class="form-error" id="need-error"></div>
+    <button class="btn-primary" onclick="submitAddNeed()">Save Need</button>
+  </div>
+</div>
+
+<!--  Edit Need Modal  -->
+<div class="modal-overlay hidden" id="edit-need-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('edit-need-modal')">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <h3>Edit Need</h3>
+    <input type="hidden" id="edit-need-id" />
+    <div class="form-group">
+      <label>Quantity Needed</label>
+      <input class="form-control" id="edit-need-qty" type="number" min="1" />
+    </div>
+    <div class="form-group">
+      <label>Urgency</label>
+      <select class="form-control" id="edit-need-urgency">
+        <option value="high">High </option>
+        <option value="medium">Medium </option>
+        <option value="low">Low </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Condition Accepted</label>
+      <select class="form-control" id="edit-need-condition">
+        <option value="any">Any</option>
+        <option value="used-good">Used  Good Condition</option>
+        <option value="new">New Only</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea class="form-control" id="edit-need-notes"></textarea>
+    </div>
+    <div class="form-error" id="edit-need-error"></div>
+    <button class="btn-primary" onclick="submitEditNeed()">Update Need</button>
+  </div>
+</div>
+
+<!--  Toast  -->
+<div id="toast">
+  <span class="material-symbols-outlined" id="toast-icon">check_circle</span>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+  //  Config 
+  const API = window.location.origin;
+
+  let ngoToken    = localStorage.getItem('ngo_token') || '';
+  let ngoData     = null;
+  let allPledges  = [];
+  let map         = null;
+
+  //  Init 
+  window.addEventListener('DOMContentLoaded', () => {
+    if (ngoToken) tryAutoLogin();
+  });
+
+  async function tryAutoLogin() {
+    try {
+      const resp = await apiFetch('/api/ngo/dashboard');
+      if (resp.ok) {
+        const data = await resp.json();
+        ngoData = data.ngo;
+        renderDashboard(data);
+      } else {
+        ngoToken = '';
+        localStorage.removeItem('ngo_token');
+      }
+    } catch (e) {
+      ngoToken = '';
+    }
+  }
+
+  //  API helper 
+  function apiFetch(path, opts = {}) {
+    return fetch(API + path, {
+      ...opts,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(ngoToken ? { 'Authorization': 'Bearer ' + ngoToken } : {}),
+        ...(opts.headers || {}),
+      },
+    });
+  }
+
+  //  Login / Register 
+  function showLogin()    { document.getElementById('login-view').style.display='';    document.getElementById('register-view').style.display='none'; }
+  function showRegister() { document.getElementById('login-view').style.display='none'; document.getElementById('register-view').style.display=''; }
+
+  let selectedTags = [];
+  function toggleTag(el, cat) {
+    el.classList.toggle('active');
+    if (el.classList.contains('active')) selectedTags.push(cat);
+    else selectedTags = selectedTags.filter(c => c !== cat);
+  }
+
+  async function doLogin() {
+    const reg  = document.getElementById('login-regno').value.trim();
+    const pass = document.getElementById('login-password').value;
+    document.getElementById('login-error').textContent = '';
+    if (!reg || !pass) { document.getElementById('login-error').textContent = 'All fields required.'; return; }
+
+    const btn = document.getElementById('btn-login');
+    btn.disabled = true;
+    document.getElementById('login-spinner').style.display = 'inline-block';
+
+    try {
+      const resp = await fetch(API + '/api/ngo/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ registration_no: reg, password: pass }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) { document.getElementById('login-error').textContent = data.error || 'Login failed.'; return; }
+
+      ngoToken = data.token;
+      localStorage.setItem('ngo_token', ngoToken);
+      await tryAutoLogin();
+    } catch (e) {
+      document.getElementById('login-error').textContent = 'Connection error.';
+    } finally {
+      btn.disabled = false;
+      document.getElementById('login-spinner').style.display = 'none';
+    }
+  }
+
+  async function doRegister() {
+    const f = {
+      name:            document.getElementById('reg-name').value.trim(),
+      registration_no: document.getElementById('reg-regno').value.trim(),
+      address:         document.getElementById('reg-address').value.trim(),
+      contact_phone:   document.getElementById('reg-phone').value.trim(),
+      contact_email:   document.getElementById('reg-email').value.trim(),
+      password:        document.getElementById('reg-password').value,
+      category_tags:   selectedTags,
+    };
+    document.getElementById('reg-error').textContent = '';
+    if (!f.name || !f.registration_no || !f.address || !f.password) {
+      document.getElementById('reg-error').textContent = 'Name, registration no, address and password are required.'; return;
+    }
+
+    const btn = document.getElementById('btn-register');
+    btn.disabled = true;
+    btn.textContent = 'Registering';
+
+    try {
+      const resp = await fetch(API + '/api/ngo/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(f),
+      });
+      const data = await resp.json();
+      if (!resp.ok) { document.getElementById('reg-error').textContent = data.error || 'Registration failed.'; return; }
+
+      ngoToken = data.token;
+      localStorage.setItem('ngo_token', ngoToken);
+      showToast('NGO registered! Awaiting admin verification.', 'success');
+      await tryAutoLogin();
+    } catch (e) {
+      document.getElementById('reg-error').textContent = 'Connection error.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Register NGO';
+    }
+  }
+
+  function logout() {
+    ngoToken = '';
+    localStorage.removeItem('ngo_token');
+    ngoData  = null;
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('login-gate').style.display = 'flex';
+    document.getElementById('ngo-badge').textContent = 'Not logged in';
+    document.getElementById('ngo-badge').classList.remove('verified');
+  }
+
+  //  Render Dashboard 
+  function renderDashboard(data) {
+    ngoData    = data.ngo;
+    allPledges = data.pledges || [];
+
+    document.getElementById('login-gate').style.display = 'none';
+    document.getElementById('dashboard').style.display  = 'flex';
+
+    // Badge
+    const badge = document.getElementById('ngo-badge');
+    badge.textContent = ngoData.name + (ngoData.verified ? ' ' : ' (Pending)');
+    if (ngoData.verified) badge.classList.add('verified');
+
+    // Stats
+    document.getElementById('stat-open-needs').textContent = data.stats.open_needs;
+    document.getElementById('stat-pending').textContent    = data.stats.pending_pledges;
+    document.getElementById('stat-delivered').textContent  = data.stats.total_delivered;
+
+    renderNeeds(data.needs || []);
+    renderPledges(allPledges);
+    initMap(ngoData);
+  }
+
+  //  Needs Board 
+  function renderNeeds(needs) {
+    const container = document.getElementById('needs-list');
+    if (!needs.length) {
+      container.innerHTML = `<div class="empty-state"><span class="material-symbols-outlined">inbox</span><p>No needs posted yet. Add your first donation need above.</p></div>`;
+      return;
+    }
+    container.innerHTML = needs.map(n => {
+      const e = escapeHtml;  // XSS guard
+      const pct         = Math.round((n.quantity_fulfilled / Math.max(1, n.quantity_needed)) * 100);
+      const stale       = n.staleness_factor < 0.7 ? 'stale' : n.staleness_factor < 0.9 ? 'aging' : 'fresh';
+      const lastUpdated = new Date(n.last_updated).toLocaleDateString('en-IN', { day:'numeric', month:'short' });
+      return `
+        <div class="need-item" id="need-${n.need_id}">
+          <div class="need-item-header">
+            <span class="need-category">${e(n.item_category)}</span>
+            <span class="urgency-badge ${n.urgency}">${e(n.urgency)}</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--color-muted);margin-bottom:6px;">
+            ${n.quantity_fulfilled} / ${n.quantity_needed} fulfilled
+            ${n.quantity_pledged > 0 ? ` <span style="color:var(--color-amber)">+${n.quantity_pledged} pledged</span>` : ''}
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+          <div class="need-meta">
+            <span><span class="staleness-dot ${stale}"></span>Updated ${lastUpdated}</span>
+            <span style="font-size:0.75rem;background:var(--color-surface3);padding:2px 8px;border-radius:6px;">${e(n.condition_accepted)}</span>
+          </div>
+          ${n.notes ? `<div style="font-size:0.78rem;color:var(--color-muted);margin-top:6px;font-style:italic">${e(n.notes)}</div>` : ''}
+          <div class="need-actions">
+            <button class="btn-sm outline" onclick="openEditNeedModal(${JSON.stringify(n).replace(/"/g,'&quot;')})">
+              <span class="material-symbols-outlined" style="font-size:14px">edit</span> Edit
+            </button>
+            ${n.status !== 'closed' ? `
+            <button class="btn-sm outline danger" onclick="deleteNeed('${n.need_id}')">
+              <span class="material-symbols-outlined" style="font-size:14px">delete</span>
+            </button>` : `<span style="font-size:0.78rem;color:var(--color-primary);font-weight:600;margin-left:4px"> Fulfilled</span>`}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  //  Pledges 
+  function filterPledges(status) {
+    const filtered = status ? allPledges.filter(p => p.status === status) : allPledges;
+    renderPledges(filtered);
+    document.querySelectorAll('[id^="filter-"]').forEach(b => {
+      b.style.borderColor = '';
+      b.style.color       = '';
+    });
+  }
+
+  function renderPledges(pledges) {
+    const container = document.getElementById('pledges-list');
+    if (!pledges.length) {
+      container.innerHTML = `<div class="empty-state"><span class="material-symbols-outlined">local_shipping</span><p>No pledges yet.</p></div>`;
+      return;
+    }
+    container.innerHTML = pledges.map(p => {
+      const actions = p.status === 'pledged' ? `
+        <button class="btn-sm" onclick="advancePledge('${p.pledge_id}','in_transit')">
+          <span class="material-symbols-outlined" style="font-size:14px">local_shipping</span> In Transit
+        </button>
+        <button class="btn-sm danger" onclick="advancePledge('${p.pledge_id}','cancelled')">
+          <span class="material-symbols-outlined" style="font-size:14px">cancel</span>
+        </button>` : p.status === 'in_transit' ? `
+        <button class="btn-sm" onclick="advancePledge('${p.pledge_id}','delivered')">
+          <span class="material-symbols-outlined" style="font-size:14px">check_circle</span> Confirm Delivery
+        </button>
+        <button class="btn-sm danger" onclick="advancePledge('${p.pledge_id}','cancelled')">
+          <span class="material-symbols-outlined" style="font-size:14px">cancel</span>
+        </button>` : '';
+      const created = new Date(p.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+      const ep = escapeHtml;  // XSS guard for pledge fields
+      return `
+        <div class="pledge-item" id="pledge-${p.pledge_id}">
+          <div class="pledge-header">
+            <span class="pledge-name">${ep(p.item_name || p.item_classification?.category || 'Donated Item')}</span>
+            <span class="status-badge ${p.status}">${ep(p.status.replace('_',' '))}</span>
+          </div>
+          <div class="pledge-meta">
+            <span><span class="material-symbols-outlined">person</span>${ep(p.donor_name || 'Donor')}</span>
+            <span><span class="material-symbols-outlined">inventory</span>Qty: ${p.quantity}</span>
+            <span><span class="material-symbols-outlined">calendar_today</span>${created}</span>
+          </div>
+          ${p.donor_note ? `<div style="font-size:0.78rem;color:var(--color-muted);margin-bottom:0.5rem;font-style:italic">"${ep(p.donor_note)}"</div>` : ''}
+          <div class="pledge-actions">${actions}</div>
+        </div>`;
+    }).join('');
+  }
+
+  //  Add Need Modal 
+  function openAddNeedModal() { openModal('add-need-modal'); }
+
+  async function submitAddNeed() {
+    const cat     = document.getElementById('need-category').value;
+    const qty     = parseInt(document.getElementById('need-qty').value);
+    const urgency = document.getElementById('need-urgency').value;
+    const cond    = document.getElementById('need-condition').value;
+    const notes   = document.getElementById('need-notes').value.trim();
+    document.getElementById('need-error').textContent = '';
+
+    if (!cat) { document.getElementById('need-error').textContent = 'Please select a category.'; return; }
+
+    const resp = await apiFetch('/api/ngo/needs', {
+      method: 'POST',
+      body: JSON.stringify({ item_category: cat, quantity_needed: qty, urgency, condition_accepted: cond, notes }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) { document.getElementById('need-error').textContent = data.error || 'Error adding need.'; return; }
+
+    showToast(`Need for "${cat}" added!`, 'success');
+    closeModal('add-need-modal');
+    refreshDashboard();
+  }
+
+  //  Edit Need Modal 
+  function openEditNeedModal(need) {
+    document.getElementById('edit-need-id').value        = need.need_id;
+    document.getElementById('edit-need-qty').value       = need.quantity_needed;
+    document.getElementById('edit-need-urgency').value   = need.urgency;
+    document.getElementById('edit-need-condition').value = need.condition_accepted;
+    document.getElementById('edit-need-notes').value     = need.notes || '';
+    openModal('edit-need-modal');
+  }
+
+  async function submitEditNeed() {
+    const needId  = document.getElementById('edit-need-id').value;
+    const qty     = parseInt(document.getElementById('edit-need-qty').value);
+    const urgency = document.getElementById('edit-need-urgency').value;
+    const cond    = document.getElementById('edit-need-condition').value;
+    const notes   = document.getElementById('edit-need-notes').value.trim();
+    document.getElementById('edit-need-error').textContent = '';
+
+    const resp = await apiFetch(`/api/ngo/needs/${needId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ quantity_needed: qty, urgency, condition_accepted: cond, notes }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) { document.getElementById('edit-need-error').textContent = data.error || 'Update failed.'; return; }
+
+    showToast('Need updated!', 'success');
+    closeModal('edit-need-modal');
+    refreshDashboard();
+  }
+
+  async function deleteNeed(needId) {
+    if (!confirm('Delete this need? This cannot be undone.')) return;
+    const resp = await apiFetch(`/api/ngo/needs/${needId}`, { method: 'DELETE' });
+    const data = await resp.json();
+    if (!resp.ok) { showToast(data.error || 'Cannot delete.', 'error'); return; }
+    showToast('Need deleted.', 'success');
+    refreshDashboard();
+  }
+
+  //  Pledge actions 
+  async function advancePledge(pledgeId, newStatus) {
+    const label = newStatus === 'delivered' ? 'confirm delivery' : newStatus;
+    if (!confirm(`Mark pledge as "${label}"?`)) return;
+
+    const resp = await apiFetch(`/api/ngo/pledges/${pledgeId}/status`, {
+      method: 'POST',
+      body: JSON.stringify({ status: newStatus }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) { showToast(data.error || 'Error updating pledge.', 'error'); return; }
+
+    const msg = newStatus === 'delivered'
+      ? ' Delivery confirmed! Needs board updated.'
+      : `Pledge marked as ${newStatus}.`;
+    showToast(msg, 'success');
+    refreshDashboard();
+  }
+
+  //  Refresh 
+  async function refreshDashboard() {
+    try {
+      const resp = await apiFetch('/api/ngo/dashboard');
+      const data = await resp.json();
+      renderDashboard(data);
+    } catch (e) {
+      showToast('Could not refresh dashboard.', 'error');
+    }
+  }
+
+  //  Map 
+  function initMap(ngo) {
+    if (!ngo.latitude || !ngo.longitude) {
+      document.getElementById('ngo-map').innerHTML =
+        '<div style="padding:2rem;text-align:center;color:var(--color-muted)">Location not geocoded yet.</div>';
+      return;
+    }
+
+    document.getElementById('map-address').textContent = ngo.address;
+
+    if (map) { map.remove(); map = null; }
+
+    map = L.map('ngo-map', {
+      preferCanvas: true,    // Canvas renderer  faster with multiple markers
+      fadeAnimation: false,  // Tiles appear instantly instead of fading in
+      zoomAnimation: true,
+    }).setView([ngo.latitude, ngo.longitude], 14);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      subdomains: 'abcd',
+      updateWhenIdle: false,  // Load tiles eagerly while panning
+      keepBuffer: 4,          // Pre-load extra tile buffer
+    }).addTo(map);
+
+    // Fix blank tiles after visibility change
+    requestAnimationFrame(() => map && map.invalidateSize({ animate: false }));
+
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="width:36px;height:36px;background:#22c55e;border:3px solid #4ade80;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(74,222,128,0.5)"><span class="material-symbols-outlined" style="font-size:18px;color:#0a1a0c">volunteer_activism</span></div>`,
+      iconSize: [36, 36],
+      iconAnchor: [18, 18],
+    });
+
+    L.marker([ngo.latitude, ngo.longitude], { icon })
+      .addTo(map)
+      .bindPopup(`<strong>${ngo.name}</strong><br>${ngo.address}`)
+      .openPopup();
+  }
+
+  //  Modal helpers 
+  function openModal(id)  { document.getElementById(id).classList.remove('hidden'); }
+  function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+  document.addEventListener('click', e => {
+    if (e.target.classList.contains('modal-overlay')) closeModal(e.target.id);
+  });
+
+  //  Toast 
+  let toastTimer;
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    document.getElementById('toast-icon').textContent = type === 'success' ? 'check_circle' : 'error';
+    t.className = `show ${type}`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.className = ''; }, 3500);
+  }
+
+  // Enter key for login
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('login-gate').style.display !== 'none') {
+      if (document.getElementById('register-view').style.display === 'none') doLogin();
+      else doRegister();
+    }
+  });
+</script>
+</body>
+</html>

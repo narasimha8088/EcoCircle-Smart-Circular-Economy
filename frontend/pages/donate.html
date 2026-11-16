@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Smart Donation &middot; EcoCircle</title>
+  <meta name="description" content="Donate your items to NGOs, charities, and donation centres matched to your item type and location."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preconnect" href="https://cdn.tailwindcss.com"/>
+  <link rel="preconnect" href="https://cartodb-basemaps-a.global.ssl.fastly.net" crossorigin/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" crossorigin=""/>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js" crossorigin=""></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "outline-variant":"#a8afa2","surface-container-high":"#dce6d4",
+            "surface-container-highest":"#d6e0cd","secondary":"#7B5800",
+            "secondary-dim":"#6A4900","secondary-container":"#FFDEA8",
+            "secondary-fixed":"#FFDEA8","secondary-fixed-dim":"#F5BE6B",
+            "on-secondary":"#FFFFFF","on-secondary-container":"#261900",
+            "on-secondary-fixed":"#261900","on-secondary-fixed-variant":"#5D4000",
+            "inverse-surface":"#0a1008","surface-bright":"#f2f9ea",
+            "surface-tint":"#176a21","surface-dim":"#ccd8c4",
+            "error":"#b02500","error-dim":"#b92902","error-container":"#f95630",
+            "on-error":"#ffefec","on-error-container":"#520c00",
+            "on-background":"#2a3127","surface-container":"#e2ebda",
+            "primary-fixed":"#9df197","primary-fixed-dim":"#90e28a",
+            "primary-dim":"#025d16","on-primary-fixed":"#00460e",
+            "on-primary-fixed-variant":"#12661e","on-primary-container":"#005c15",
+            "primary-container":"#9df197","tertiary":"#006096","tertiary-dim":"#005483",
+            "tertiary-container":"#5fb7ff","tertiary-fixed":"#5fb7ff",
+            "tertiary-fixed-dim":"#46aaf5","on-tertiary":"#ebf3ff",
+            "on-tertiary-container":"#003353","on-tertiary-fixed":"#00192d",
+            "on-tertiary-fixed-variant":"#003c61","on-surface-variant":"#575e52",
+            "surface-variant":"#d6e0cd","surface":"#f2f9ea","on-surface":"#2a3127",
+            "background":"#f2f9ea","outline":"#72796d","inverse-on-surface":"#989f92",
+            "inverse-primary":"#9df197","primary":"#176a21","on-primary":"#d1ffc8",
+            "surface-container-low":"#ebf3e3","surface-container-lowest":"#ffffff"
+          },
+          borderRadius:{DEFAULT:"1rem",lg:"2rem",xl:"3rem",full:"9999px"}
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/nav.js"></script>
+  <script src="../js/session_store.js"></script>
+  <style>
+    .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+    body{font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased}
+    /* Category pills */
+    .cat-pill{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:99px;border:2px solid #a8afa2;background:#fff;font-size:.82rem;font-weight:700;cursor:pointer;color:#575e52;transition:all .18s}
+    .cat-pill:hover{border-color:#176a21;color:#176a21;background:#ebf3e3}
+    .cat-pill.active{background:linear-gradient(135deg,#176a21,#2d9c3a);color:#d1ffc8;border-color:transparent;box-shadow:0 4px 14px rgba(23,106,33,.3)}
+    .cat-pill .material-symbols-outlined{font-size:18px}
+    /* Condition btns */
+    .cond-btn{padding:6px 14px;border-radius:99px;border:2px solid #a8afa2;background:#fff;font-size:.78rem;font-weight:700;cursor:pointer;color:#575e52;transition:all .18s}
+    .cond-btn.active{border-color:#176a21;background:#ebf3e3;color:#176a21}
+    /* NGO card */
+    .ngo-card{background:#fff;border-radius:16px;overflow:hidden;border:1px solid #e2ebda;transition:all .22s;box-shadow:0 2px 8px rgba(23,106,33,.05);cursor:pointer}
+    .ngo-card:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(23,106,33,.14);border-color:#176a21}
+    .ngo-body{padding:1.25rem}
+    .ngo-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+    .badge-top{background:#5fb7ff22;color:#006096;border:1px solid #5fb7ff}
+    .badge-urgent{background:#f9563022;color:#b02500;border:1px solid #f95630}
+    .badge-rated{background:#9df19722;color:#176a21;border:1px solid #9df197}
+    .ngo-needs{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+    .ngo-need-tag{background:#ebf3e3;color:#176a21;padding:2px 8px;border-radius:99px;font-size:.70rem;font-weight:700}
+    .urgency-bar{height:4px;background:#e2ebda;border-radius:99px;overflow:hidden;margin-top:10px}
+    .urgency-fill{height:100%;border-radius:99px;transition:width .5s;background:linear-gradient(90deg,#176a21,#9df197)}
+    .ngo-select-btn{width:100%;padding:11px;margin-top:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#176a21,#2d9c3a);color:#fff;font-family:'Manrope',sans-serif;font-weight:800;font-size:.88rem;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+    .ngo-select-btn:hover{opacity:.88}
+    /* Skeleton */
+    @keyframes shimmer{from{background-position:-400px 0}to{background-position:400px 0}}
+    .skeleton{border-radius:12px;background:linear-gradient(90deg,#e2ebda 25%,#ebf3e3 50%,#e2ebda 75%);background-size:400px 100%;animation:shimmer 1.4s infinite}
+    /* Stats chip */
+    .stat-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 24px;border-radius:16px;min-width:110px;text-align:center}
+    /* Tabs */
+    .dtab-btn{padding:8px 22px;border-radius:99px;border:none;background:transparent;font-family:'Manrope',sans-serif;font-size:.88rem;font-weight:700;color:#575e52;cursor:pointer;transition:all .18s}
+    .dtab-btn.active{background:#176a21;color:#d1ffc8;box-shadow:0 4px 14px rgba(23,106,33,.25)}
+    .dtab-panel{display:none}
+    .dtab-panel.active{display:block}
+    /* AI chip */
+    .ai-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:99px;font-size:.72rem;font-weight:800;letter-spacing:.05em;background:rgba(23,106,33,.1);border:1px solid rgba(23,106,33,.3);color:#176a21;animation:fadeIn .3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+    /* Pledge history */
+    .pledge-hist-card{background:#fff;border:1px solid #e2ebda;border-radius:14px;padding:1rem 1.25rem;display:flex;align-items:center;gap:14px}
+    .ph-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#ebf3e3;color:#176a21}
+    .pledge-status{padding:2px 10px;border-radius:99px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+    .status-pledged{background:#5fb7ff22;color:#006096}
+    .status-delivered{background:#9df19722;color:#176a21}
+    .status-cancelled{background:#f9563022;color:#b02500}
+    .status-in_transit{background:#FFDEA822;color:#7B5800}
+    /* Matched needs section */
+    #matched-needs-section{background:#0d1a0f;border-top:1px solid #2a3f2e;padding:2rem 3rem;display:none}
+    #matched-needs-section.visible{display:block}
+    .mn-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+    .mn-header h2{font-size:1.4rem;font-weight:800;color:#e2f4e5}
+    .mn-header p{color:#7fa887;font-size:.88rem;margin-top:4px}
+    .mn-classified-chip{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35);color:#4ade80;border-radius:99px;padding:5px 16px;font-size:.82rem;font-weight:700}
+    .mn-body{display:grid;grid-template-columns:1fr 380px;gap:1.5rem}
+    @media(max-width:900px){.mn-body{grid-template-columns:1fr}}
+    #mn-map{height:420px;border-radius:14px;border:1px solid #2a3f2e;overflow:hidden}
+    .leaflet-popup-content-wrapper{background:#1a2d1c;border:1px solid #2a3f2e;color:#e2f4e5;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+    .leaflet-popup-tip{background:#1a2d1c}
+    .leaflet-popup-content{font-family:'Manrope',sans-serif;font-size:.82rem}
+    #mn-list{max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+    #mn-list::-webkit-scrollbar{width:5px}
+    #mn-list::-webkit-scrollbar-track{background:#121f14}
+    #mn-list::-webkit-scrollbar-thumb{background:#2a3f2e;border-radius:99px}
+    .mn-card{background:#1a2d1c;border:1px solid #2a3f2e;border-radius:12px;padding:1rem 1.1rem;cursor:pointer;transition:all .2s}
+    .mn-card:hover,.mn-card.active{border-color:#22c55e;background:#213525}
+    .mn-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+    .mn-card-name{font-weight:700;font-size:.9rem;color:#e2f4e5}
+    .mn-urgency-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+    .mn-urgency-dot.high{background:#f87171;box-shadow:0 0 6px rgba(248,113,113,.5)}
+    .mn-urgency-dot.medium{background:#fbbf24;box-shadow:0 0 6px rgba(251,191,36,.4)}
+    .mn-urgency-dot.low{background:#94a3b8}
+    .mn-card-meta{font-size:.76rem;color:#7fa887;display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+    .mn-score-bar{height:4px;background:#2a3f2e;border-radius:99px;overflow:hidden}
+    .mn-score-fill{height:100%;background:linear-gradient(90deg,#22c55e,#34d399);border-radius:99px;transition:width .5s}
+    .mn-pledge-btn{width:100%;margin-top:10px;padding:8px;border:none;border-radius:8px;background:linear-gradient(135deg,#22c55e,#34d399);color:#0a1a0c;font-family:'Manrope',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .2s}
+    .mn-pledge-btn:hover{opacity:.88}
+    .mn-pledge-btn:disabled{opacity:.45;cursor:not-allowed}
+    .mn-empty{text-align:center;padding:3rem 1rem;color:#7fa887;font-size:.88rem}
+    /* Pledge modal */
+    #pledge-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:5000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+    #pledge-modal-overlay.open{display:flex}
+    #pledge-modal{background:#121f14;border:1px solid #2a3f2e;border-radius:16px;padding:2rem;max-width:440px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.6);animation:mnPopIn .25s ease}
+    @keyframes mnPopIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+    #pledge-modal h3{font-size:1.1rem;font-weight:800;color:#4ade80;margin-bottom:1rem}
+    .pm-detail{display:flex;justify-content:space-between;font-size:.84rem;margin-bottom:8px;color:#e2f4e5}
+    .pm-detail span:first-child{color:#7fa887}
+    .pm-note{width:100%;background:#1a2d1c;border:1px solid #2a3f2e;border-radius:8px;padding:9px 12px;font-size:.85rem;color:#e2f4e5;font-family:'Manrope',sans-serif;resize:vertical;min-height:60px;outline:none;margin-top:.5rem}
+    .pm-note:focus{border-color:#22c55e}
+    .pm-actions{display:flex;gap:8px;margin-top:1.25rem}
+    .pm-confirm{flex:1;padding:11px;background:linear-gradient(135deg,#22c55e,#34d399);border:none;border-radius:10px;color:#0a1a0c;font-family:'Manrope',sans-serif;font-weight:800;font-size:.9rem;cursor:pointer}
+    .pm-cancel{flex:1;padding:11px;background:transparent;border:1px solid #2a3f2e;border-radius:10px;color:#7fa887;font-family:'Manrope',sans-serif;font-weight:600;font-size:.9rem;cursor:pointer}
+    .pm-cancel:hover{border-color:#f87171;color:#f87171}
+    @keyframes slideIn{from{opacity:0;transform:translateY(1rem)}to{opacity:1;transform:translateY(0)}}
+    @keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+  </style>
+</head>
+<body class="bg-background text-on-surface">
+
+<!-- ===== Sidebar ===== -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-emerald-50/80 backdrop-blur-xl flex flex-col py-8 px-4 z-50">
+  <div class="mb-10 px-4">
+    <h1 class="text-2xl font-black text-emerald-900 tracking-tight">EcoCircle</h1>
+    <p class="text-xs font-semibold tracking-widest uppercase text-emerald-800/60 mt-1">Eco Manager</p>
+  </div>
+  <nav class="flex-1 space-y-1">
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="dashboard.html"><span class="material-symbols-outlined">dashboard</span><span>Dashboard</span></a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="products.html"><span class="material-symbols-outlined">inventory_2</span><span>My Items</span></a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="ai-engine.html"><span class="material-symbols-outlined">psychology</span><span>AI Engine</span></a>
+    <a class="flex items-center gap-3 text-emerald-900 font-bold border-l-4 border-emerald-600 pl-4 py-2.5 bg-emerald-100/60 rounded-r-xl" href="donate.html"><span class="material-symbols-outlined text-emerald-700">favorite</span><span>Donate</span></a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="marketplace.html"><span class="material-symbols-outlined">storefront</span><span>Marketplace</span></a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="repair.html"><span class="material-symbols-outlined">build</span><span>Repair</span></a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="recycling.html"><span class="material-symbols-outlined">recycling</span><span>Recycling</span></a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="map.html"><span class="material-symbols-outlined">map</span><span>Map</span></a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="profile.html"><span class="material-symbols-outlined">person</span><span>Profile</span></a>
+  </nav>
+  <div class="mt-auto px-2">
+    <a href="products.html" class="w-full py-3 px-4 bg-gradient-to-br from-emerald-700 to-emerald-500 text-white font-bold rounded-xl shadow flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all text-sm mb-6">
+      <span class="material-symbols-outlined text-sm">add</span> Add New Item
+    </a>
+    <div class="flex items-center gap-3 pt-4 border-t border-emerald-900/10">
+      <div id="sb-avatar" class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-800 font-black text-sm flex-shrink-0">EA</div>
+      <div class="overflow-hidden flex-1">
+        <p class="text-sm font-bold text-emerald-900 truncate" id="sb-user-name">Eco Steward</p>
+        <p class="text-[9px] font-bold tracking-widest text-emerald-800/50 mt-0.5" id="sb-user-id"></p>
+      </div>
+      <button id="nav-logout" class="p-1 hover:bg-emerald-100 rounded-full transition-colors" title="Logout">
+        <span class="material-symbols-outlined text-emerald-700/60 text-lg">logout</span>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- ===== Top Bar ===== -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 backdrop-blur-xl flex justify-between items-center px-8 border-b border-emerald-100/60">
+  <div class="flex items-center gap-3">
+    <span class="material-symbols-outlined text-emerald-700">favorite</span>
+    <div>
+      <h2 class="text-lg font-black text-on-surface leading-tight">Smart Donation</h2>
+      <p class="text-xs text-on-surface-variant">AI-matched NGOs &middot; Real-time needs &middot; Eco points</p>
+    </div>
+  </div>
+  <div class="flex items-center gap-3">
+    <div id="ws-user-pill" class="flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold opacity-0 transition-opacity duration-500">
+      <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span></span>
+      <span id="ws-user-count"></span> online
+    </div>
+    <a href="profile.html" class="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-full hover:bg-surface-container-high transition-colors">
+      <div id="top-avatar" class="w-6 h-6 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-800 font-black text-xs">EA</div>
+      <span class="text-sm font-medium text-on-surface" id="top-user-name">Profile</span>
+    </a>
+  </div>
+</header>
+
+<!-- ===== Main Content ===== -->
+<main class="ml-64 pt-16 pb-16 min-h-screen">
+
+  <!-- Hero Strip -->
+  <div class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-emerald-600 px-12 py-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div>
+      <span class="inline-block px-3 py-1 bg-white/15 text-white/90 rounded-full text-[10px] font-black tracking-widest uppercase mb-3">Smart Donation Flow</span>
+      <h1 class="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight mb-2">Give your items a <span class="italic text-emerald-200">new life.</span></h1>
+      <p class="text-emerald-100/80 text-sm max-w-md">Personalised NGO matches based on your item type, condition, and location. Updated live from our database.</p>
+    </div>
+    <div class="flex flex-wrap gap-3" id="stats-row">
+      <div class="stat-chip skeleton h-20 w-28"></div>
+      <div class="stat-chip skeleton h-20 w-28"></div>
+      <div class="stat-chip skeleton h-20 w-28"></div>
+    </div>
+  </div>
+
+  <div class="px-8 md:px-12">
+
+    <!-- Tab nav -->
+    <div class="flex items-center gap-2 py-5 border-b border-surface-container-high mb-6">
+      <button class="dtab-btn active" onclick="switchTab('donate',this)">
+        <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;margin-right:4px">volunteer_activism</span>Donate Item
+      </button>
+      <button class="dtab-btn" onclick="switchTab('my-donations',this)">
+        <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;margin-right:4px">history</span>My Donations
+      </button>
+      <div class="ml-auto flex items-center gap-2">
+        <div id="ai-classify-chip" style="display:none"></div>
+        <button id="new-btn" type="button" onclick="startNew()" style="display:none" title="Clear everything and start a new donation"
+          class="flex items-center gap-2 px-4 py-2 bg-white border border-emerald-300 text-emerald-800 font-bold rounded-full text-sm hover:bg-emerald-50 transition-colors">
+          <span class="material-symbols-outlined text-sm">add_circle</span> New
+        </button>
+        <button onclick="toggleMap()" class="flex items-center gap-2 px-4 py-2 bg-surface-container text-on-surface-variant font-bold rounded-full text-sm hover:bg-surface-container-high transition-colors">
+          <span class="material-symbols-outlined text-sm">map</span> NGO Map
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB: Donate Item -->
+    <div id="tab-donate" class="dtab-panel active">
+      <div class="grid grid-cols-12 gap-6 max-w-6xl">
+
+        <!-- Persistent "donation confirmed" card with the NGO's contact details -->
+        <div id="donation-done-card" class="col-span-12 hidden rounded-2xl border-2 border-emerald-400 bg-emerald-50 p-6">
+          <div class="flex items-start gap-4 flex-wrap">
+            <div class="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined">volunteer_activism</span></div>
+            <div class="flex-1 min-w-[240px]">
+              <p class="text-xs font-black uppercase tracking-widest text-emerald-800">Donation confirmed &middot; contact the NGO</p>
+              <h3 class="text-xl font-black text-on-surface mt-0.5" id="dd-ngo">NGO</h3>
+              <p class="text-sm text-on-surface-variant mt-1" id="dd-sub"></p>
+              <div id="dd-contact" class="mt-3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEFT: Configurator -->
+        <div class="col-span-12 lg:col-span-5 flex flex-col gap-5">
+
+          <!-- Category pills -->
+          <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-container">
+            <h3 class="font-black text-on-surface text-lg mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">category</span> What are you donating?
+            </h3>
+            <div class="flex flex-wrap gap-2" id="category-pills">
+              <button class="cat-pill active" data-cat="Clothes" onclick="selectCategory('Clothes',this)"><span class="material-symbols-outlined">apparel</span> Clothes</button>
+              <button class="cat-pill" data-cat="Books" onclick="selectCategory('Books',this)"><span class="material-symbols-outlined">menu_book</span> Books</button>
+              <button class="cat-pill" data-cat="Electronics" onclick="selectCategory('Electronics',this)"><span class="material-symbols-outlined">laptop_mac</span> Electronics</button>
+              <button class="cat-pill" data-cat="Furniture" onclick="selectCategory('Furniture',this)"><span class="material-symbols-outlined">chair</span> Furniture</button>
+              <button class="cat-pill" data-cat="Toys" onclick="selectCategory('Toys',this)"><span class="material-symbols-outlined">toys</span> Toys</button>
+              <button class="cat-pill" data-cat="General" onclick="selectCategory('General',this)"><span class="material-symbols-outlined">category</span> Other</button>
+            </div>
+          </div>
+
+          <!-- Item details -->
+          <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-container">
+            <h3 class="font-black text-on-surface text-base mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">verified</span> Item Details
+            </h3>
+
+            <!-- Suggestion from the AI Engine (shown only when there is a fresh analysis) -->
+            <div id="last-analysis-suggest" class="hidden mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center gap-3 flex-wrap">
+              <span class="material-symbols-outlined text-emerald-700">auto_awesome</span>
+              <span class="flex-1 min-w-[140px]">You just analyzed <b id="last-analysis-name">an item</b>. Donate it?</span>
+              <button type="button" onclick="useLastAnalysis()" class="px-3 py-1.5 rounded-full bg-emerald-700 text-white font-bold">Use it</button>
+            </div>
+
+            <!-- Linked My Items entry -->
+            <div id="item-link-banner" class="hidden mb-4 p-3 rounded-xl bg-primary-container/40 border border-primary/20 text-xs text-on-surface flex items-center gap-3 flex-wrap">
+              <span class="material-symbols-outlined text-primary">inventory_2</span>
+              <span class="flex-1 min-w-[140px]">Donating from My Items: <b id="item-link-name"></b>. Its status will change to <b>Donated</b> automatically.</span>
+              <button type="button" onclick="clearItemLink()" class="px-3 py-1.5 rounded-full border border-outline-variant font-bold text-on-surface-variant hover:bg-surface-container">Unlink</button>
+            </div>
+
+            <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider block mb-2">Pick from My Items <span class="text-primary font-normal normal-case tracking-normal">(optional)</span></label>
+            <select id="my-item-select" onchange="pickMyItem(this.value)"
+              class="w-full px-4 py-3 mb-4 rounded-xl border border-outline-variant bg-surface-container text-on-surface text-sm font-medium focus:outline-none focus:border-primary transition-colors">
+              <option value="">&mdash; Choose an item you already track &mdash;</option>
+            </select>
+
+            <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider block mb-2">Condition</label>
+            <div class="flex flex-wrap gap-2 mb-4" id="cond-buttons">
+              <button class="cond-btn active" data-cond="New" onclick="selectCondition('New',this)">New</button>
+              <button class="cond-btn" data-cond="Good" onclick="selectCondition('Good',this)">Good</button>
+              <button class="cond-btn" data-cond="Fair" onclick="selectCondition('Fair',this)">Fair</button>
+              <button class="cond-btn" data-cond="Poor" onclick="selectCondition('Poor',this)">Poor</button>
+            </div>
+            <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider block mb-2">Brief Description <span class="text-primary font-normal normal-case tracking-normal">(helps AI match better)</span></label>
+            <textarea id="item-desc" rows="2" maxlength="500" placeholder="e.g. Blue winter jacket, size L, barely worn..."
+              class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container text-on-surface text-sm font-medium focus:outline-none focus:border-primary resize-none transition-colors"
+              oninput="onDescInput()"></textarea>
+
+            <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider block mt-4 mb-2">Photos <span class="text-primary font-normal normal-case tracking-normal">(optional &mdash; the AI can read them)</span></label>
+            <div class="flex items-center gap-3 flex-wrap">
+              <label for="photo-input" class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-full border border-dashed border-primary/50 text-primary text-xs font-bold hover:bg-primary-container/40 transition-colors">
+                <span class="material-symbols-outlined text-base">add_photo_alternate</span> Add photos
+              </label>
+              <input id="photo-input" type="file" accept="image/*" multiple class="hidden"/>
+              <span class="text-[11px] text-on-surface-variant" id="photo-count"></span>
+            </div>
+            <div id="photo-strip" class="flex gap-2 flex-wrap mt-2"></div>
+
+            <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider block mt-4 mb-2">Your Location</label>
+            <div class="flex items-center gap-2">
+              <input id="location-input" type="text" placeholder="City or area (e.g. Koramangala, Bengaluru)"
+                class="flex-1 px-4 py-3 rounded-xl border border-outline-variant bg-surface-container text-on-surface text-sm font-medium focus:outline-none focus:border-primary transition-colors"
+                oninput="onLocInput()"/>
+              <button onclick="detectLocation()" title="Detect location" class="p-3 bg-primary-container text-on-primary-container rounded-xl hover:bg-primary hover:text-on-primary transition-colors flex-shrink-0">
+                <span class="material-symbols-outlined text-xl">my_location</span>
+              </button>
+            </div>
+            <p class="text-[11px] text-on-surface-variant mt-1 ml-1" id="location-status"></p>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex flex-col gap-3">
+            <div id="ai-error" class="hidden text-sm rounded-xl px-4 py-3 border bg-red-50 border-red-200 text-red-800 font-semibold"></div>
+            <button onclick="smartClassify()" id="classify-btn"
+              class="w-full py-3.5 bg-gradient-to-r from-emerald-700 to-emerald-500 text-white font-black rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 text-sm">
+              <span class="material-symbols-outlined text-sm">psychology</span> Analyze with AI &amp; Match NGOs
+            </button>
+
+            <!-- AI result -->
+            <div id="ai-result-card" class="hidden rounded-2xl border border-emerald-200 bg-white p-5 shadow-sm">
+              <div class="flex items-start justify-between gap-3 mb-2">
+                <div class="min-w-0">
+                  <p class="text-[10px] font-black uppercase tracking-widest text-emerald-800">AI analysis</p>
+                  <h4 class="text-lg font-black text-on-surface break-words" id="air-name">Item</h4>
+                </div>
+                <div class="text-right flex-shrink-0">
+                  <div class="text-2xl font-black text-primary" id="air-score">0</div>
+                  <div class="text-[10px] font-bold text-on-surface-variant uppercase">eco score</div>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-2 mb-2" id="air-chips"></div>
+              <p class="text-sm text-on-surface-variant" id="air-reason"></p>
+              <p class="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-2 mt-3 hidden" id="air-note"></p>
+              <p class="text-xs text-emerald-800 mt-3 hidden" id="air-saved"></p>
+            </div>
+
+            <a href="map.html" class="w-full py-3 bg-surface-container text-on-surface-variant font-bold rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+              <span class="material-symbols-outlined text-sm">map</span> View Donation Map
+            </a>
+          </div>
+        </div>
+
+        <!-- RIGHT: NGO Cards -->
+        <div class="col-span-12 lg:col-span-7 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-xl font-black text-on-surface" id="ngo-section-title">Recommended NGOs for Clothes</h3>
+              <p class="text-xs text-on-surface-variant mt-0.5" id="ngo-section-sub">Showing best matches for your item category.</p>
+            </div>
+            <span id="ngo-count-badge" class="px-3 py-1 bg-primary-container text-on-primary-container text-xs font-black rounded-full"></span>
+          </div>
+          <div id="ngo-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="skeleton h-64 rounded-2xl"></div>
+            <div class="skeleton h-64 rounded-2xl"></div>
+            <div class="skeleton h-64 rounded-2xl"></div>
+          </div>
+          <div id="ngo-empty" style="display:none" class="py-16 text-center text-on-surface-variant">
+            <span class="material-symbols-outlined text-5xl block mb-3 text-outline-variant">search_off</span>
+            <p class="font-bold text-lg">No NGOs found for this category</p>
+            <p class="text-sm mt-1">Try a different category or location.</p>
+          </div>
+        </div>
+
+        <!-- Confirm CTA (shown after NGO selected) -->
+        <div class="col-span-12 flex flex-col md:flex-row items-center justify-between bg-white/60 backdrop-blur-md p-6 rounded-2xl border border-surface-container gap-4" id="confirm-cta" style="display:none!important">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center">
+              <span class="material-symbols-outlined text-secondary text-2xl">thumb_up</span>
+            </div>
+            <div>
+              <p class="font-black text-on-surface" id="cta-ngo-name">No NGO selected</p>
+              <p class="text-xs text-on-surface-variant" id="cta-ngo-detail">Select an NGO above to confirm your donation</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="cancelSelection()" class="px-6 py-3 bg-surface-container text-on-surface font-bold rounded-xl hover:bg-surface-container-high transition-colors text-sm">Change</button>
+            <button onclick="confirmDonation()" id="confirm-btn"
+              class="px-8 py-3 bg-gradient-to-br from-primary to-emerald-500 text-white font-black rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.05] transition-all active:scale-95 flex items-center gap-2 text-sm">
+              Confirm Donation <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB: My Donations -->
+    <div id="tab-my-donations" class="dtab-panel">
+      <div class="max-w-3xl">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-black text-on-surface">My Donation History</h3>
+          <button onclick="loadMyPledges()" class="text-sm font-bold text-primary flex items-center gap-1 hover:underline">
+            <span class="material-symbols-outlined text-sm">refresh</span> Refresh
+          </button>
+        </div>
+        <div id="pledges-list">
+          <div class="skeleton h-20 rounded-2xl mb-3"></div>
+          <div class="skeleton h-20 rounded-2xl mb-3"></div>
+          <div class="skeleton h-20 rounded-2xl"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Phase 3: Matched needs map (dark section, revealed by category selection or AI classify) -->
+<section id="matched-needs-section">
+  <div class="mn-header" style="max-width:1200px;margin:0 auto">
+    <div>
+      <h2>&#128205; Live Matched NGO Needs</h2>
+      <p>NGOs ranked by proximity, urgency &amp; unmet need &mdash; updated in real time.</p>
+    </div>
+    <span class="mn-classified-chip" id="mn-category-chip">Classified: &mdash;</span>
+  </div>
+  <div class="mn-body" style="max-width:1200px;margin:0 auto">
+    <div id="mn-map"></div>
+    <div id="mn-list"><div class="mn-empty">Classify your item to see matched NGOs</div></div>
+  </div>
+</section>
+
+<!-- Pledge Modal -->
+<div id="pledge-modal-overlay">
+  <div id="pledge-modal">
+    <h3>&#128230; Pledge This Item</h3>
+    <div class="pm-detail"><span>NGO</span><span id="pm-ngo-name"></span></div>
+    <div class="pm-detail"><span>Need</span><span id="pm-category"></span></div>
+    <div class="pm-detail"><span>Urgency</span><span id="pm-urgency"></span></div>
+    <div class="pm-detail"><span>Remaining</span><span id="pm-remaining"></span></div>
+    <label style="font-size:.78rem;color:#7fa887;font-weight:600;display:block;margin-top:.75rem">Note for NGO (optional)</label>
+    <textarea class="pm-note" id="pm-note" placeholder="e.g. Good condition winter jacket, size L"></textarea>
+    <div id="pm-error" style="color:#f87171;font-size:.78rem;min-height:1rem;margin-top:6px"></div>
+    <div class="pm-actions">
+      <button class="pm-confirm" id="pm-confirm-btn" onclick="confirmPledge()">Confirm Pledge</button>
+      <button class="pm-cancel" onclick="closePledgeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Post-Donation Impact Overlay -->
+<div id="donation-impact-overlay" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:2rem;max-width:480px;width:90%;overflow:auto;max-height:92vh;box-shadow:0 40px 80px rgba(0,0,0,.3);animation:popIn .4s cubic-bezier(.34,1.56,.64,1)">
+    <div style="background:linear-gradient(135deg,#176a21,#2d9c3a);padding:2.5rem 2rem 2rem;text-align:center">
+      <div style="font-size:3rem;margin-bottom:.75rem">&#127881;</div>
+      <h2 style="color:#fff;font-size:1.6rem;font-weight:900;margin:0 0 .4rem">Donation Submitted!</h2>
+      <p style="color:rgba(255,255,255,.8);font-size:.875rem;margin:0" id="impact-ngo-name">Your item is on its way.</p>
+    </div>
+    <div style="padding:1.75rem 2rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
+        <div style="background:#f2f9ea;border-radius:1rem;padding:1.25rem;text-align:center;border:1px solid #e2ebda">
+          <div style="font-size:1.75rem;font-weight:900;color:#176a21" id="impact-points">+50</div>
+          <div style="font-size:.7rem;font-weight:700;color:#72796d;text-transform:uppercase;letter-spacing:.1em">Eco Points</div>
+        </div>
+        <div style="background:#ebf3ff;border-radius:1rem;padding:1.25rem;text-align:center;border:1px solid #d0e4ff">
+          <div style="font-size:1.75rem;font-weight:900;color:#006096" id="impact-co2">2.5 kg</div>
+          <div style="font-size:.7rem;font-weight:700;color:#72796d;text-transform:uppercase;letter-spacing:.1em">CO&#8322; Saved</div>
+        </div>
+        <div style="background:#fff8e8;border-radius:1rem;padding:1.25rem;text-align:center;border:1px solid #ffe9a0">
+          <div style="font-size:1.75rem;font-weight:900;color:#7B5800" id="impact-trees">1 tree</div>
+          <div style="font-size:.7rem;font-weight:700;color:#72796d;text-transform:uppercase;letter-spacing:.1em">Equivalent</div>
+        </div>
+        <div style="background:#fff0f0;border-radius:1rem;padding:1.25rem;text-align:center;border:1px solid #ffd6d6">
+          <div style="font-size:1.6rem;font-weight:900;color:#b02500">24h</div>
+          <div style="font-size:.7rem;font-weight:700;color:#72796d;text-transform:uppercase;letter-spacing:.1em">Est. Pickup</div>
+        </div>
+      </div>
+      <div style="border:2px solid #176a21;border-radius:1rem;padding:1rem 1.1rem;margin-bottom:1.25rem;background:#f6fbf2">
+        <p style="font-size:.7rem;font-weight:800;color:#176a21;text-transform:uppercase;letter-spacing:.1em;margin:0 0 .4rem">Contact the NGO</p>
+        <p id="impact-next" style="font-size:.82rem;color:#575e52;margin:0 0 .6rem"></p>
+        <div id="impact-contact"></div>
+      </div>
+      <div style="background:#f2f9ea;border-radius:.75rem;padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:.75rem">
+        <span style="font-size:1.4rem">&#128203;</span>
+        <p style="font-size:.85rem;color:#575e52;margin:0">Your donation has been logged in your eco activity feed and will appear on your dashboard.</p>
+      </div>
+      <div style="display:flex;gap:.75rem">
+        <button onclick="shareImpact()" style="flex:1;padding:.875rem;background:#176a21;color:#fff;border:none;border-radius:.875rem;font-weight:800;font-size:.9rem;cursor:pointer">&#128228; Share Impact</button>
+        <button onclick="closeDonationImpact('history')" style="flex:1;padding:.875rem;background:#f2f9ea;color:#2a3127;border:1px solid #d6e0cd;border-radius:.875rem;font-weight:700;font-size:.9rem;cursor:pointer">My Donations</button>
+        <button onclick="closeDonationImpact()" style="flex:0 0 auto;padding:.875rem 1.1rem;background:transparent;color:#575e52;border:1px solid #d6e0cd;border-radius:.875rem;font-weight:700;font-size:.9rem;cursor:pointer">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-container" style="position:fixed;bottom:2rem;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:.75rem"></div>
+
+<!-- Legacy stubs -->
+<div style="display:none">
+  <div id="d-total-donated"></div><div id="d-active-requests"></div><div id="d-impact-score"></div>
+  <div id="my-donations"></div><div id="ngo-requests"></div><div id="donate-modal" class="modal-overlay"></div>
+  <div id="donate-form"></div><div id="d-title"></div><div id="d-category"></div>
+  <div id="donate-alert"></div><div id="ngo-modal"></div>
+</div>
+
+<script>
+/* ── Auth guard & user init ── */
+if (!Auth.requireLogin()) throw new Error();
+initNavbar();
+const _user = Auth.user();
+if (_user) {
+  const ini = (_user.name||'EA').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const sbN = document.getElementById('sb-user-name'); if(sbN) sbN.textContent = _user.name||'Eco Steward';
+  const topN = document.getElementById('top-user-name'); if(topN) topN.textContent = _user.name?.split(' ')[0]||'Profile';
+  ['sb-avatar','top-avatar'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=ini;});
+  const sbId = document.getElementById('sb-user-id'); if(sbId&&_user.user_number) sbId.textContent='ID: '+_user.user_number;
+}
+
+/* ── State ── */
+let selectedCategory  = 'Clothes';
+let selectedCondition = 'New';
+let selectedNGO       = null;
+let recommendTimer    = null;
+let donorLat          = null;
+let donorLng          = null;
+let photoFiles        = [];     // photos sent to the AI
+let aiResult          = null;   // last AI analysis shown on this page
+let linkedProductId   = null;   // item from My Items that is being donated
+let linkedProductName = '';
+let analysisRef       = null;   // lets the server add the analyzed item to My Items only once
+let lastDonation      = null;   // confirmed donation (kept so the NGO's contact details stay visible)
+let myItems           = [];
+let _dSaveTimer       = null;
+let _leaving          = false;
+const DONATE_SESSION_KEY = 'donate_session_' + (_user ? _user.id : 'guest');
+const LAST_ANALYSIS_KEY  = 'eco_last_analysis_' + (_user ? _user.id : 'guest');
+const IMG_RE = /\.(jpe?g|png|webp|gif|bmp|heic|heif|avif)$/i;
+
+const CATEGORY_META = {
+  Clothes:     { label:'Clothes',     desc:'Clothing, shoes, accessories & textiles',   dbKey:'Clothes' },
+  Books:       { label:'Books',       desc:'Educational materials, novels, magazines',  dbKey:'Books' },
+  Electronics: { label:'Electronics', desc:'Phones, tablets, laptops, cables & gadgets',dbKey:'Electronics' },
+  Furniture:   { label:'Furniture',   desc:'Chairs, tables, shelves & household items', dbKey:'Furniture' },
+  Toys:        { label:'Toys',        desc:"Toys, games & children's items",            dbKey:'Toys' },
+  General:     { label:'Other',       desc:'Other items that can still help someone',   dbKey:'' },
+};
+
+/* ── Stats ── */
+async function loadStats() {
+  try {
+    const d = await API.get('/donate/stats');
+    document.getElementById('stats-row').innerHTML = [
+      [d.total_donations||0,'Total Donations'],
+      [d.ngo_partners||0,'NGO Partners'],
+      [d.items_needed||0,'Items Needed'],
+    ].map(([v,l])=>`<div class="stat-chip" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff">
+      <div style="font-size:1.5rem;font-weight:900">${Number(v).toLocaleString()}</div>
+      <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.8;margin-top:4px">${l}</div>
+    </div>`).join('');
+  } catch(e) { document.getElementById('stats-row').innerHTML=''; }
+}
+loadStats();
+
+/* ── Tabs ── */
+function switchTab(id, btn) {
+  document.querySelectorAll('.dtab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.dtab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  if (id==='my-donations') loadMyPledges();
+}
+
+/* ── Category & Condition ── */
+function setCategoryUI(cat) {
+  selectedCategory = cat;
+  document.querySelectorAll('.cat-pill').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  const meta = CATEGORY_META[cat] || CATEGORY_META.General;
+  document.getElementById('ngo-section-title').textContent = 'Recommended NGOs for ' + meta.label;
+  document.getElementById('ngo-section-sub').textContent = meta.desc;
+}
+
+function selectCategory(cat, btn) {
+  setCategoryUI(cat);
+  loadNGOs(cat);
+  saveDraft();
+}
+
+function setConditionUI(cond) {
+  selectedCondition = cond;
+  document.querySelectorAll('.cond-btn').forEach(b => b.classList.toggle('active', b.dataset.cond === cond));
+}
+
+function selectCondition(cond, btn) {
+  setConditionUI(cond);
+  saveDraft();
+}
+
+/* ── Load NGOs from backend ── */
+async function loadNGOs(category) {
+  const grid = document.getElementById('ngo-cards-grid');
+  const empty = document.getElementById('ngo-empty');
+  empty.style.display = 'none';
+  grid.innerHTML = '<div class="skeleton h-64 rounded-2xl"></div><div class="skeleton h-64 rounded-2xl"></div><div class="skeleton h-64 rounded-2xl"></div>';
+  try {
+    const dbKey = CATEGORY_META[category]?.dbKey || category;
+    let params = dbKey ? '?category='+encodeURIComponent(dbKey) : '?';
+    if (donorLat) params += '&lat='+donorLat+'&lng='+donorLng;
+    const data = await API.get('/donate/ngos'+params);
+    const ngos = data.ngos || [];
+    const badge = document.getElementById('ngo-count-badge');
+    badge.textContent = ngos.length+' match'+(ngos.length!==1?'es':'');
+    if (!ngos.length) { grid.innerHTML=''; empty.style.display='block'; return; }
+    grid.innerHTML = ngos.map((n,i)=>buildNGOCard(n,i)).join('');
+  } catch(e) {
+    grid.innerHTML = '<div class="col-span-full p-8 text-center text-on-surface-variant"><span class="material-symbols-outlined block text-4xl mb-2 text-outline-variant">cloud_off</span><p class="font-bold">Could not load NGOs</p><p class="text-sm mt-1">Check your backend connection.</p></div>';
+  }
+}
+
+function buildNGOCard(ngo, idx) {
+  const urg = ngo.urgency||70;
+  const needs = (ngo.needs||[]).slice(0,4);
+  const bc = idx===0?'badge-top':(urg>=85?'badge-urgent':'badge-rated');
+  const bl = idx===0?'&#11088; Top Match':(urg>=85?'&#128308; Urgent':'&#9989; Verified');
+  const ob = ngo.open!==false?'<span style="font-size:.7rem;font-weight:800;color:#176a21">&#9679; Open</span>':'<span style="font-size:.7rem;font-weight:800;color:#b02500">&#9679; Closed</span>';
+  const distBadge = ngo.distance_km != null
+    ? `<span style="font-size:.7rem;font-weight:800;color:#006096">&#128205; ${ngo.distance_km} km away</span>`
+    : '';
+  const ngoJson = JSON.stringify(ngo).replace(/"/g,'&quot;');
+  return `<div class="ngo-card" id="ngo-card-${ngo.id}">
+    <div style="height:6px;background:linear-gradient(90deg,#176a21,#9df197);width:${urg}%"></div>
+    <div class="ngo-body">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">
+        <div>
+          <span class="ngo-badge ${bc}">${bl}</span>
+          <h4 style="font-size:1rem;font-weight:900;color:#2a3127;margin:4px 0 2px">${ngo.name}</h4>
+          <p style="font-size:.75rem;color:#575e52;display:flex;align-items:center;gap:4px">
+            <span class="material-symbols-outlined" style="font-size:14px">location_on</span>${ngo.location||'Bengaluru'}
+          </p>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          ${ob}
+          ${distBadge}
+          <div style="font-size:.78rem;font-weight:900;color:#2a3127;margin-top:4px">${urg}%</div>
+          <div style="font-size:.65rem;color:#575e52">urgency</div>
+        </div>
+      </div>
+      ${ngo.contact?`<p style="font-size:.72rem;color:#575e52;display:flex;align-items:center;gap:4px;margin-bottom:4px"><span class="material-symbols-outlined" style="font-size:13px">call</span>${ngo.contact}</p>`:''}
+      <div class="ngo-needs">${needs.map(n=>`<span class="ngo-need-tag">${n}</span>`).join('')}</div>
+      <div class="urgency-bar"><div class="urgency-fill" style="width:${urg}%"></div></div>
+      <button class="ngo-select-btn" onclick="selectNGO(JSON.parse(this.dataset.ngo))" data-ngo="${ngoJson}">
+        <span class="material-symbols-outlined" style="font-size:16px">favorite</span> Donate to ${ngo.name}
+      </button>
+    </div>
+  </div>`;
+}
+
+/* ── NGO selection ── */
+function selectNGO(ngo, silent) {
+  selectedNGO = ngo;
+  document.querySelectorAll('.ngo-card').forEach(c=>c.style.boxShadow='');
+  const card = document.getElementById('ngo-card-'+ngo.id);
+  if (card) card.style.boxShadow='0 0 0 3px #176a21,0 8px 24px rgba(23,106,33,.2)';
+  const cta = document.getElementById('confirm-cta');
+  cta.style.removeProperty('display');
+  document.getElementById('cta-ngo-name').textContent = ngo.name;
+  document.getElementById('cta-ngo-detail').textContent = (ngo.location||'Local NGO')+(ngo.contact?' \u00b7 \u260e '+ngo.contact:'')+' \u00b7 '+selectedCondition+' condition '+selectedCategory;
+  if (!silent) cta.scrollIntoView({behavior:'smooth',block:'nearest'});
+  saveDraft();
+}
+
+function cancelSelection() {
+  selectedNGO = null;
+  document.querySelectorAll('.ngo-card').forEach(c=>c.style.boxShadow='');
+  document.getElementById('confirm-cta').style.display='none';
+  saveDraft();
+}
+
+async function confirmDonation() {
+  if (!selectedNGO) return showToastMsg('Please select an NGO first.','error');
+  const btn = document.getElementById('confirm-btn');
+  btn.disabled=true; btn.innerHTML='&#9203; Submitting&hellip;';
+  const itemName = (aiResult && aiResult.product_name) || linkedProductName || '';
+  const desc = (selectedCondition+' '+selectedCategory+' item. '+(document.getElementById('item-desc').value||'')).trim();
+  try {
+    const resp = await API.post('/donate/request', {
+      ngo_id: selectedNGO.id,
+      category: selectedCategory,
+      item_name: itemName,
+      description: desc,
+      product_id: linkedProductId || undefined,
+    });
+    lastDonation = {
+      ngo: resp.ngo || selectedNGO.name, contact: resp.contact || null, next_steps: resp.next_steps || '',
+      points: resp.eco_points, category: selectedCategory, item: itemName || selectedCategory,
+      confirmation_id: resp.confirmation_id, at: Date.now(),
+    };
+    renderDonationDone(lastDonation);
+    showDonationImpact(lastDonation.ngo, selectedCategory, resp.eco_points, lastDonation.contact, lastDonation.next_steps);
+    if (linkedProductId) loadMyItems();
+    cancelSelection();
+    saveDraftNow();
+  } catch(e) {
+    // Never pretend it worked: tell the donor what went wrong.
+    showToastMsg('Could not submit your donation: '+(e.message||'please try again')+'.','error');
+  } finally {
+    btn.disabled=false;
+    btn.innerHTML='Confirm Donation <span class="material-symbols-outlined text-sm">arrow_forward</span>';
+  }
+}
+
+/* ── NGO contact details (shown after donating and in My Donations) ── */
+function copyText(t) {
+  const done = () => showToastMsg('Copied: '+t,'success');
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done).catch(()=>showToastMsg('Could not copy.','error'));
+  else { const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');done();}catch(e){showToastMsg('Could not copy.','error');} ta.remove(); }
+}
+
+function contactHtml(c) {
+  if (!c) return '<p class="text-sm text-on-surface-variant">Contact details are not available for this NGO yet.</p>';
+  const e = escapeHtml;
+  const base = 'inline-flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold transition-colors no-underline';
+  const btn = (href, icon, label, cls) => href
+    ? '<a href="'+e(href)+'" '+(href.indexOf('http')===0?'target="_blank" rel="noopener" ':'')+'class="'+base+' '+cls+'"><span class="material-symbols-outlined" style="font-size:16px">'+icon+'</span>'+label+'</a>' : '';
+  const rows = [];
+  if (c.phone) rows.push('<div class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-primary" style="font-size:18px">call</span><b>'+e(c.phone)+'</b> <button type="button" data-copy="'+e(c.phone)+'" onclick="copyText(this.dataset.copy)" class="text-[11px] underline text-primary font-bold">Copy</button></div>');
+  if (c.email) rows.push('<div class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-primary" style="font-size:18px">mail</span><span>'+e(c.email)+'</span></div>');
+  if (c.address) rows.push('<div class="flex items-start gap-2 text-sm"><span class="material-symbols-outlined text-primary" style="font-size:18px">location_on</span><span>'+e(c.address)+'</span></div>');
+  const actions =
+    btn(c.call_url, 'call', 'Call', 'bg-emerald-700 text-white hover:bg-emerald-800') +
+    btn(c.whatsapp_url, 'chat', 'WhatsApp', 'bg-green-100 text-green-800 hover:bg-green-200') +
+    btn(c.maps_url, 'directions', 'Directions', 'bg-blue-100 text-blue-800 hover:bg-blue-200') +
+    btn(c.email_url, 'mail', 'Email', 'bg-slate-100 text-slate-700 hover:bg-slate-200');
+  return '<div class="space-y-1.5">'+rows.join('')+'</div>'+(actions?'<div class="flex flex-wrap gap-2 mt-3">'+actions+'</div>':'');
+}
+
+function renderDonationDone(d) {
+  const card = document.getElementById('donation-done-card');
+  if (!card) return;
+  if (!d) { card.classList.add('hidden'); return; }
+  document.getElementById('dd-ngo').textContent = d.ngo;
+  document.getElementById('dd-sub').textContent = (d.next_steps || 'Please contact the NGO to arrange pickup or drop-off.') + (d.confirmation_id ? '  Ref: '+d.confirmation_id : '');
+  document.getElementById('dd-contact').innerHTML = contactHtml(d.contact);
+  card.classList.remove('hidden');
+}
+
+/* ── Persistent draft: everything you enter stays until you press "New" ── */
+function newRef() { return 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+
+function hasDraft() {
+  const desc = (document.getElementById('item-desc').value || '').trim();
+  return !!(desc || photoFiles.length || aiResult || linkedProductId || selectedNGO || lastDonation);
+}
+
+function updateNewBtn() {
+  const b = document.getElementById('new-btn');
+  if (b) b.style.display = hasDraft() ? 'flex' : 'none';
+}
+
+function saveDraft() { clearTimeout(_dSaveTimer); _dSaveTimer = setTimeout(saveDraftNow, 300); }
+
+async function saveDraftNow() {
+  clearTimeout(_dSaveTimer);
+  try {
+    if (!hasDraft()) { await EcoStore.del(DONATE_SESSION_KEY); }
+    else {
+      await EcoStore.put(DONATE_SESSION_KEY, {
+        category: selectedCategory, condition: selectedCondition,
+        description: document.getElementById('item-desc').value,
+        location: document.getElementById('location-input').value, lat: donorLat, lng: donorLng,
+        files: EcoStore.packFiles(photoFiles), aiResult: aiResult, productId: linkedProductId, productName: linkedProductName,
+        ref: analysisRef, ngo: selectedNGO, lastDonation: lastDonation, savedAt: Date.now(),
+      });
+    }
+  } catch (e) { console.warn('[Donate] could not save draft', e); }
+  updateNewBtn();
+}
+window.addEventListener('pagehide', () => { _leaving = true; saveDraftNow(); });
+window.addEventListener('pageshow', () => { _leaving = false; });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveDraftNow(); });
+
+function onDescInput() { saveDraft(); updateNewBtn(); }
+function onLocInput()  { scheduleRecommend(); saveDraft(); }
+function scheduleRecommend() { clearTimeout(recommendTimer); recommendTimer = setTimeout(() => loadNGOs(selectedCategory), 600); }
+
+async function restoreDraft() {
+  let s = null;
+  try { s = await EcoStore.get(DONATE_SESSION_KEY); } catch (e) { s = null; }
+  if (!s) return false;
+  setCategoryUI(s.category || 'Clothes');
+  setConditionUI(s.condition || 'New');
+  document.getElementById('item-desc').value = s.description || '';
+  document.getElementById('location-input').value = s.location || '';
+  donorLat = s.lat || null; donorLng = s.lng || null;
+  photoFiles = EcoStore.unpackFiles(s.files).filter(f => f && ((f.type || '').indexOf('image/') === 0 || IMG_RE.test(f.name || '')));
+  aiResult = s.aiResult || null;
+  linkedProductId = s.productId || null; linkedProductName = s.productName || '';
+  analysisRef = s.ref || null;
+  lastDonation = s.lastDonation || null;
+  renderPhotoStrip();
+  if (aiResult) renderAiResult(aiResult);
+  renderLinkBanner();
+  if (lastDonation) renderDonationDone(lastDonation);
+  await loadNGOs(selectedCategory);
+  if (s.ngo) selectNGO(s.ngo, true);
+  if (aiResult) triggerMatchedNeeds(CATEGORY_META[selectedCategory] && CATEGORY_META[selectedCategory].dbKey || selectedCategory);
+  updateNewBtn();
+  return !!(s.description || photoFiles.length || aiResult || linkedProductId || s.ngo || lastDonation);
+}
+
+async function startNew(skipConfirm) {
+  if (!skipConfirm && hasDraft() && !lastDonation && !confirm('Discard what you entered and start a new donation?')) return;
+  clearTimeout(_dSaveTimer);
+  photoFiles = []; aiResult = null; linkedProductId = null; linkedProductName = ''; analysisRef = null;
+  lastDonation = null; selectedNGO = null;
+  try { await EcoStore.del(DONATE_SESSION_KEY); } catch (e) {}
+  document.getElementById('item-desc').value = '';
+  document.getElementById('location-input').value = '';
+  document.getElementById('location-status').textContent = '';
+  document.getElementById('my-item-select').value = '';
+  document.getElementById('ai-classify-chip').style.display = 'none';
+  document.getElementById('confirm-cta').style.display = 'none';
+  hideAiError(); renderPhotoStrip(); renderLinkBanner(); renderDonationDone(null);
+  document.getElementById('ai-result-card').classList.add('hidden');
+  document.getElementById('matched-needs-section').classList.remove('visible');
+  if (location.search.indexOf('item=') !== -1) history.replaceState(null, '', location.pathname);
+  setConditionUI('New'); setCategoryUI('Clothes'); loadNGOs('Clothes');
+  updateNewBtn(); showLastAnalysisSuggestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── Photos ── */
+document.getElementById('photo-input').addEventListener('change', function (e) {
+  const picked = Array.from(e.target.files || []).filter(f => (f.type || '').indexOf('image/') === 0 || IMG_RE.test(f.name || ''));
+  picked.forEach(f => { if (!photoFiles.some(x => x.name === f.name && x.size === f.size)) photoFiles.push(f); });
+  e.target.value = '';
+  renderPhotoStrip(); saveDraft();
+});
+
+let _photoUrls = [];
+function renderPhotoStrip() {
+  _photoUrls.forEach(u => URL.revokeObjectURL(u)); _photoUrls = [];
+  const strip = document.getElementById('photo-strip');
+  strip.innerHTML = '';
+  photoFiles.forEach((f, i) => {
+    const url = URL.createObjectURL(f); _photoUrls.push(url);
+    const w = document.createElement('div');
+    w.style.cssText = 'position:relative;width:64px;height:64px;border-radius:10px;overflow:hidden;border:2px solid #d6e0cd;background:#e2ebda';
+    const img = document.createElement('img'); img.src = url; img.alt = f.name; img.style.cssText = 'width:100%;height:100%;object-fit:cover';
+    const x = document.createElement('button'); x.type = 'button'; x.textContent = '\u2715'; x.title = 'Remove';
+    x.style.cssText = 'position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;border:none;background:rgba(0,0,0,.65);color:#fff;font-size:10px;cursor:pointer;line-height:1';
+    x.onclick = () => { photoFiles.splice(i, 1); renderPhotoStrip(); saveDraft(); };
+    w.appendChild(img); w.appendChild(x); strip.appendChild(w);
+  });
+  document.getElementById('photo-count').textContent = photoFiles.length ? photoFiles.length + ' photo' + (photoFiles.length > 1 ? 's' : '') + ' added' : '';
+  updateNewBtn();
+}
+
+/* ── My Items (pick an item you already track, or arrive from the AI Engine / My Items page) ── */
+const DONATED_STAGES = ['donated', 'recycled', 'sold'];
+
+async function loadMyItems() {
+  try {
+    const data = await API.get('/products/');
+    myItems = Array.isArray(data) ? data : [];
+  } catch (e) { myItems = []; }
+  const sel = document.getElementById('my-item-select');
+  const cur = linkedProductId ? String(linkedProductId) : '';
+  sel.innerHTML = '<option value="">&mdash; Choose an item you already track &mdash;</option>' +
+    myItems.filter(p => DONATED_STAGES.indexOf((p.lifecycle_stage || '').toLowerCase()) === -1 || String(p.id) === cur)
+      .map(p => '<option value="'+p.id+'">'+escapeHtml(p.name)+' \u00b7 '+escapeHtml(p.category||'')+' \u00b7 '+escapeHtml(p.lifecycle_stage||'In Use')+'</option>').join('');
+  sel.value = cur;
+}
+
+function mapToDonateCategory(text) {
+  const t = ' ' + (text || '').toLowerCase() + ' ';
+  const rules = [
+    ['Clothes',     ['cloth','shirt','jacket','jeans','dress','saree','kurta','shoe','sandal','sweater','hoodie','blanket','coat','uniform','apparel','garment','textile','footwear','bag']],
+    ['Books',       ['book','novel','textbook','magazine','stationery','notebook']],
+    ['Toys',        ['toy','doll','puzzle','lego','teddy','game','bicycle','cycle']],
+    ['Furniture',   ['furniture','chair','table','desk','sofa','couch','bed','mattress','shelf','cabinet','wardrobe','stool','bench','curtain']],
+    ['Electronics', ['electronic','phone','mobile','laptop','tablet','computer','monitor','keyboard','mouse','charger','cable','tv','television','headphone','earphone','speaker','camera','printer','appliance','gadget','watch','console','router']],
+  ];
+  for (const r of rules) if (r[1].some(k => t.indexOf(k) !== -1)) return r[0];
+  return null;
+}
+
+function renderLinkBanner() {
+  const b = document.getElementById('item-link-banner');
+  if (linkedProductId) { document.getElementById('item-link-name').textContent = linkedProductName || ('item #' + linkedProductId); b.classList.remove('hidden'); }
+  else b.classList.add('hidden');
+  updateNewBtn();
+}
+
+function clearItemLink() {
+  linkedProductId = null; linkedProductName = '';
+  document.getElementById('my-item-select').value = '';
+  renderLinkBanner(); saveDraft();
+}
+
+function pickMyItem(id) {
+  if (!id) { if (linkedProductId) clearItemLink(); return; }
+  const p = myItems.find(x => String(x.id) === String(id));
+  if (!p) return;
+  linkedProductId = p.id; linkedProductName = p.name || '';
+  aiResult = null; document.getElementById('ai-result-card').classList.add('hidden'); analysisRef = null;
+  const cond = ['New','Good','Fair','Poor'].indexOf(p.condition) !== -1 ? p.condition : 'Good';
+  setConditionUI(cond);
+  const desc = [p.name, p.brand, p.description].filter(Boolean).join(' \u2014 ');
+  document.getElementById('item-desc').value = desc.slice(0, 500);
+  const cat = mapToDonateCategory((p.category || '') + ' ' + (p.name || '')) || 'General';
+  setCategoryUI(cat); loadNGOs(cat);
+  document.getElementById('my-item-select').value = String(p.id);
+  document.getElementById('last-analysis-suggest').classList.add('hidden');
+  hideAiError(); renderLinkBanner(); saveDraft();
+}
+
+function showLastAnalysisSuggestion() {
+  const box = document.getElementById('last-analysis-suggest');
+  if (!box) return;
+  let la = null;
+  try { la = JSON.parse(localStorage.getItem(LAST_ANALYSIS_KEY) || 'null'); } catch (e) {}
+  if (!la || !la.product_id || linkedProductId || lastDonation) { box.classList.add('hidden'); return; }
+  document.getElementById('last-analysis-name').textContent = la.name || 'an item';
+  box.classList.remove('hidden');
+}
+
+function useLastAnalysis() {
+  let la = null;
+  try { la = JSON.parse(localStorage.getItem(LAST_ANALYSIS_KEY) || 'null'); } catch (e) {}
+  if (la && la.product_id) pickMyItem(la.product_id);
+}
+
+/* ── AI analysis ── */
+function showAiError(msg) { const el = document.getElementById('ai-error'); el.textContent = msg; el.classList.remove('hidden'); }
+function hideAiError() { const el = document.getElementById('ai-error'); if (el) { el.classList.add('hidden'); el.textContent = ''; } }
+
+function renderAiResult(d) {
+  const card = document.getElementById('ai-result-card');
+  document.getElementById('air-name').textContent = d.product_name || 'Item';
+  document.getElementById('air-score').textContent = d.sustainability_score != null ? d.sustainability_score : '\u2014';
+  const chips = [];
+  if (d.recommendation) chips.push('AI suggests: ' + d.recommendation);
+  if (d.category) chips.push('Category: ' + d.category);
+  if (d.material) chips.push('Material: ' + d.material);
+  if (d.estimated_value) chips.push(String(d.estimated_value).slice(0, 60));
+  document.getElementById('air-chips').innerHTML = chips.map(c => '<span style="background:#e8f5e0;color:#176a21;border:1px solid #c9e4bb;border-radius:999px;padding:2px 10px;font-size:.72rem;font-weight:700">'+escapeHtml(c)+'</span>').join('');
+  document.getElementById('air-reason').textContent = d.reason || d.eco_insight || '';
+  const note = document.getElementById('air-note');
+  const msgs = [];
+  if (d._notice) msgs.push(d._notice);
+  if (d.recommendation && d.recommendation !== 'Donate' && !d._fallback) msgs.push('The AI suggests "' + d.recommendation + '" for this item, but you can still donate it if you prefer.');
+  if (msgs.length) { note.textContent = msgs.join(' '); note.classList.remove('hidden'); } else note.classList.add('hidden');
+  const saved = document.getElementById('air-saved');
+  if (d.saved_product && d.saved_product.id) {
+    saved.innerHTML = '\u2705 Saved in <a class="underline font-bold" href="products.html?highlight='+d.saved_product.id+'">My Items</a> and tracked.';
+    saved.classList.remove('hidden');
+  } else saved.classList.add('hidden');
+  card.classList.remove('hidden');
+}
+
+async function smartClassify() {
+  const desc = document.getElementById('item-desc').value.trim();
+  hideAiError();
+  if (desc.length < 3 && !photoFiles.length && !linkedProductId) {
+    showAiError('Describe the item, add a photo, or pick one of your items first \u2014 then the AI can analyze it.');
+    document.getElementById('item-desc').focus();
+    return;
+  }
+  const btn = document.getElementById('classify-btn');
+  if (btn.dataset.busy === '1') return;
+  btn.dataset.busy = '1'; btn.disabled = true;
+  const t0 = Date.now();
+  const tick = () => { btn.innerHTML = '&#9203; Analyzing with AI\u2026 ' + Math.round((Date.now() - t0) / 1000) + 's'; };
+  tick(); const timer = setInterval(tick, 1000);
+
+  // Silently capture location if not yet set (so NGO matching uses proximity)
+  if (!donorLat && navigator.geolocation) {
+    await new Promise(resolve => {
+      navigator.geolocation.getCurrentPosition(
+        pos => { donorLat = pos.coords.latitude; donorLng = pos.coords.longitude; resolve(); },
+        () => resolve(),
+        { enableHighAccuracy: false, timeout: 4000, maximumAge: 300000 }
+      );
+    });
+  }
+
+  if (!analysisRef) analysisRef = newRef();
+  const fd = new FormData();
+  photoFiles.forEach(f => fd.append('media', f));
+  fd.append('description', (desc || linkedProductName) + (desc ? '' : '') + ' Condition: ' + selectedCondition + '.');
+  fd.append('analysis_ref', analysisRef);
+  if (linkedProductId) fd.append('product_id', linkedProductId);
+  await saveDraftNow();
+
+  const ctrl = new AbortController();
+  const abortTimer = setTimeout(() => ctrl.abort(), 220000);
+  let data = null, note = '';
+  try {
+    try {
+      const resp = await fetch(CONFIG.API_BASE + '/ai/vision-analyze', { method: 'POST', headers: { 'Authorization': 'Bearer ' + Auth.token() }, body: fd, signal: ctrl.signal });
+      if (resp.status === 401 || resp.status === 422) { Auth.clear(); window.location.href = 'login.html'; return; }
+      const j = await resp.json().catch(() => ({}));
+      if (!resp.ok) throw new Error(j.error || j.msg || ('Analysis failed (HTTP ' + resp.status + ')'));
+      data = j;
+    } catch (e) {
+      if (_leaving) return;
+      // The full AI could not run (no key, offline, ...). Fall back to the quick matcher so the donor is not stuck.
+      const text = desc || linkedProductName;
+      if (text.length < 3) throw new Error(e.name === 'AbortError' ? 'The analysis took too long. Please try again.' : e.message);
+      const c = await API.post('/donate/classify', { description: text, name: linkedProductName || text.split(' ').slice(0, 3).join(' ') });
+      data = { product_name: linkedProductName || text.slice(0, 40), category: c.category, recommendation: 'Donate', reason: c.reason,
+               sustainability_score: c.match_score, _fallback: true,
+               _notice: 'Full AI analysis was unavailable (' + (e.message || 'offline') + '), so a quick match was used instead.' };
+    }
+
+    aiResult = data;
+    if (data.saved_product && data.saved_product.id) { linkedProductId = data.saved_product.id; linkedProductName = data.saved_product.name || data.product_name || ''; loadMyItems(); }
+    const cat = mapToDonateCategory((data.category || '') + ' ' + (data.product_name || '')) || (CATEGORY_META[data.category] ? data.category : 'General');
+    setCategoryUI(cat);
+    renderAiResult(data); renderLinkBanner();
+    const chip = document.getElementById('ai-classify-chip');
+    chip.innerHTML = '<span class="ai-chip">&#129302; AI: ' + escapeHtml(CATEGORY_META[cat].label) + (data.sustainability_score != null ? ' &middot; score ' + data.sustainability_score : '') + '</span>';
+    chip.style.display = 'block';
+    classifiedMeta = { name: data.product_name, category: cat, recommendation: data.recommendation, sustainability_score: data.sustainability_score };
+    loadNGOs(cat);
+    triggerMatchedNeeds(CATEGORY_META[cat].dbKey || cat);
+    document.getElementById('ai-result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch (e) {
+    showAiError('AI analysis failed: ' + (e.message || 'unknown error') + '. You can still pick a category and an NGO manually.');
+  } finally {
+    clearTimeout(abortTimer); clearInterval(timer);
+    btn.dataset.busy = '0'; btn.disabled = false;
+    btn.innerHTML = '<span class="material-symbols-outlined text-sm">psychology</span> Analyze with AI &amp; Match NGOs';
+    saveDraftNow();
+  }
+}
+
+/* ── Location ── */
+function detectLocation() {
+  const status = document.getElementById('location-status');
+  const input  = document.getElementById('location-input');
+  status.textContent='Detecting your location\u2026';
+  if (!navigator.geolocation) { status.textContent='Geolocation not supported.'; return; }
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      donorLat = pos.coords.latitude;
+      donorLng = pos.coords.longitude;
+      status.textContent='\u2705 Location detected \u2014 loading NGOs nearby\u2026';
+      // Reverse-geocode to get a readable city name
+      try {
+        const key = window.CONFIG?.LOCATIONIQ_KEY || '';
+        let cityName = donorLat.toFixed(4)+', '+donorLng.toFixed(4);
+        if (key) {
+          const r = await fetch(`https://us1.locationiq.com/v1/reverse?key=${key}&lat=${donorLat}&lon=${donorLng}&format=json`);
+          if (r.ok) {
+            const geo = await r.json();
+            const a = geo.address || {};
+            cityName = [a.suburb||a.neighbourhood, a.city||a.town||a.village, a.state].filter(Boolean).join(', ');
+          }
+        }
+        input.value = cityName;
+      } catch(e) {
+        input.value = donorLat.toFixed(4)+', '+donorLng.toFixed(4);
+      }
+      status.textContent='\u2705 Location detected \u2014 NGOs sorted by proximity';
+      saveDraft();
+      // Reload NGOs sorted by proximity
+      loadNGOs(selectedCategory);
+    },
+    ()=>{ status.textContent='\u26a0\ufe0f Could not detect location. Please type it manually.'; },
+    {enableHighAccuracy:false,timeout:8000}
+  );
+}
+
+/* ── My Donations ── */
+async function loadMyPledges() {
+  const list = document.getElementById('pledges-list');
+  list.innerHTML='<div class="skeleton h-20 rounded-2xl mb-3"></div><div class="skeleton h-20 rounded-2xl mb-3"></div><div class="skeleton h-20 rounded-2xl"></div>';
+  try {
+    const data = await API.get('/donate/my-donations');
+    const rows = data.donations||[];
+    if (!rows.length) {
+      list.innerHTML='<div class="py-16 text-center text-on-surface-variant"><span class="material-symbols-outlined text-5xl block mb-3 text-outline-variant">volunteer_activism</span><p class="font-bold text-lg">No donations yet</p><p class="text-sm mt-1">Make your first donation from the Donate Item tab!</p></div>';
+      return;
+    }
+    const icons={Clothes:'apparel',Books:'menu_book',Electronics:'laptop_mac',Furniture:'chair',Toys:'toys'};
+    const e = escapeHtml;
+    list.innerHTML = rows.map(p=>{
+      const sc='status-'+(p.status||'pledged').replace(/\s/g,'_');
+      const cat=p.item_category||'Item';
+      const date=p.created_at?new Date(p.created_at+(String(p.created_at).endsWith('Z')?'':'Z')).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'';
+      const icon=icons[cat]||'category';
+      const isDon = p.record_type==='donation';
+      const cancelBtn = p.status==='pledged'
+        ? '<button onclick="'+(isDon?'cancelDonation('+p.id+')':'cancelPledge(\''+e(p.pledge_id)+'\')')+'" style="flex-shrink:0;padding:6px 12px;border:1px solid #a8afa2;color:#575e52;font-weight:700;border-radius:10px;font-size:.75rem;cursor:pointer;background:transparent;transition:all .18s" onmouseover="this.style.borderColor=\'#b02500\';this.style.color=\'#b02500\'" onmouseout="this.style.borderColor=\'#a8afa2\';this.style.color=\'#575e52\'">Cancel</button>' : '';
+      return '<div class="pledge-hist-card mb-3" style="flex-wrap:wrap">'+
+        '<div class="ph-icon"><span class="material-symbols-outlined">'+icon+'</span></div>'+
+        '<div style="flex:1;min-width:200px">'+
+          '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+
+            '<span style="font-weight:900;color:#2a3127;font-size:.9rem">'+e(p.ngo_name||'NGO')+'</span>'+
+            '<span class="pledge-status '+sc+'">'+e(p.status||'pledged')+'</span>'+
+          '</div>'+
+          '<p style="font-size:.75rem;color:#575e52;margin:2px 0 0">'+e(p.item_name||cat)+' &middot; '+e(cat)+(p.ngo_address?' &middot; '+e(p.ngo_address):'')+'</p>'+
+          (date?'<p style="font-size:.7rem;color:#72796d;margin:2px 0 0">'+date+'</p>':'')+
+        '</div>'+cancelBtn+
+        '<details style="width:100%;margin-top:6px"><summary style="cursor:pointer;font-size:.78rem;font-weight:800;color:#176a21">Contact details</summary><div style="margin-top:8px">'+contactHtml(p.contact)+'</div></details>'+
+      '</div>';
+    }).join('');
+  } catch(e) {
+    list.innerHTML='<div class="p-8 text-center text-on-surface-variant"><p class="font-bold">Could not load donations</p><p class="text-sm mt-1">'+escapeHtml(e.message||'Please log in and try again.')+'</p></div>';
+  }
+}
+
+async function cancelPledge(pledgeId) {
+  if (!confirm('Cancel this pledge?')) return;
+  try {
+    await API.post('/donate/pledges/'+pledgeId+'/cancel', {});
+    showToastMsg('Pledge cancelled.','success'); loadMyPledges();
+  } catch(e) { showToastMsg('Could not cancel: '+e.message,'error'); }
+}
+
+async function cancelDonation(id) {
+  if (!confirm('Cancel this donation?')) return;
+  try {
+    await API.post('/donate/donations/'+id+'/cancel', {});
+    showToastMsg('Donation cancelled.','success'); loadMyPledges(); loadMyItems();
+  } catch(e) { showToastMsg('Could not cancel: '+e.message,'error'); }
+}
+
+/* ── Map toggle ── */
+function toggleMap() {
+  const sec = document.getElementById('matched-needs-section');
+  if (sec.classList.contains('visible')) { sec.classList.remove('visible'); }
+  else {
+    sec.classList.add('visible');
+    const dbKey = CATEGORY_META[selectedCategory]?.dbKey||selectedCategory;
+    if (dbKey) triggerMatchedNeeds(dbKey);
+    setTimeout(()=>sec.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  }
+}
+
+/* ── Impact overlay ── */
+const CO2_BY_CAT = { Clothes:3.2, Books:1.1, Electronics:8.5, Furniture:12, Toys:2.0, General:2.5 };
+
+function showDonationImpact(ngoName, category, serverPoints, contact, nextSteps) {
+  const overlay=document.getElementById('donation-impact-overlay');
+  const points=serverPoints||0;
+  const aiCo2 = aiResult && aiResult.phase2 && aiResult.phase2.carbon && aiResult.phase2.carbon.carbon_saved_kg;
+  const co2 = Number(aiCo2 > 0 ? aiCo2 : (CO2_BY_CAT[category] || 2.5)).toFixed(1);
+  const trees=Math.max(1,Math.round(co2/2.5));
+  document.getElementById('impact-ngo-name').textContent='Your item is heading to '+ngoName+' \ud83d\udc9a';
+  document.getElementById('impact-points').textContent='+'+points;
+  document.getElementById('impact-co2').textContent=co2+' kg';
+  document.getElementById('impact-trees').textContent=trees+(trees===1?' tree':' trees');
+  document.getElementById('impact-next').textContent = nextSteps || 'Please contact the NGO to arrange pickup or drop-off.';
+  document.getElementById('impact-contact').innerHTML = contactHtml(contact);
+  overlay.style.display='flex';
+  const uid=_user?_user.id:'guest';
+  const key='eco_notifications_'+uid;
+  const notifs=JSON.parse(localStorage.getItem(key)||'[]');
+  notifs.unshift({icon:'\ud83d\udc9a',title:'Donated to '+ngoName,sub:'+'+points+' eco points \u00b7 '+co2+'kg CO\u2082 saved'+(contact&&contact.phone?' \u00b7 contact '+contact.phone:''),time:new Date().toISOString(),read:false});
+  localStorage.setItem(key,JSON.stringify(notifs.slice(0,20)));
+}
+
+function closeDonationImpact(goTo) {
+  document.getElementById('donation-impact-overlay').style.display='none';
+  if (goTo === 'history') { const b = document.querySelectorAll('.dtab-btn')[1]; if (b) switchTab('my-donations', b); window.scrollTo({top:0,behavior:'smooth'}); }
+}
+
+function shareImpact() {
+  const pts=document.getElementById('impact-points').textContent;
+  const co2=document.getElementById('impact-co2').textContent;
+  const ngo=document.getElementById('impact-ngo-name').textContent;
+  const text='\u267b\ufe0f I just donated on EcoCircle! '+pts+' eco points earned, '+co2+' CO\u2082 saved. '+ngo+' #EcoCircle #CircularEconomy';
+  if(navigator.share){navigator.share({text}).catch(()=>{});}
+  else{navigator.clipboard.writeText(text).then(()=>showToastMsg('Impact message copied!','success'));}
+}
+
+/* ── Toast ── */
+function showToastMsg(msg, type='success') {
+  const c=document.getElementById('toast-container');
+  const t=document.createElement('div');
+  t.style.cssText='background:'+(type==='success'?'#176a21':'#b02500')+';color:#fff;padding:.875rem 1.25rem;border-radius:.75rem;font-weight:600;font-size:.875rem;display:flex;align-items:center;gap:.5rem;box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:360px;animation:slideIn .3s ease;';
+  t.textContent=(type==='success'?'\u2705 ':'\u274c ')+msg;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(10px)';t.style.transition='.3s';setTimeout(()=>t.remove(),300);},4000);
+}
+
+/* ── Phase 3 Matched Needs ── */
+const MN_API=window.location.origin;
+let mnMap=null,mnMarkers=[],mnNeeds=[],activePledge=null,classifiedMeta=null;
+
+(function patchClassify(){
+  const origFetch=window.fetch;
+  window.fetch=async function(...args){
+    const result=await origFetch(...args);
+    try{
+      const url=typeof args[0]==='string'?args[0]:(args[0]?.url||'');
+      if(url.includes('/donate/classify')||url.includes('/ai/classify')){
+        const clone=result.clone();
+        clone.json().then(d=>{if(d&&d.category)classifiedMeta=d;}).catch(()=>{});
+      }
+    }catch(e){}
+    return result;
+  };
+})();
+
+function getDonorLocation(){
+  return new Promise(resolve=>{
+    if(donorLat)return resolve({lat:donorLat,lng:donorLng});
+    if(window.GlobalLocation){window.GlobalLocation.get(false).then(p=>{donorLat=p.lat;donorLng=p.lng;resolve(p);}).catch(()=>resolve(null));}
+    else{if(!navigator.geolocation)return resolve(null);navigator.geolocation.getCurrentPosition(p=>{donorLat=p.coords.latitude;donorLng=p.coords.longitude;resolve({lat:donorLat,lng:donorLng});},()=>resolve(null),{enableHighAccuracy:false,timeout:6000,maximumAge:300000});}
+  });
+}
+
+async function triggerMatchedNeeds(category){
+  if(!category)return;
+  document.getElementById('mn-category-chip').textContent='Classified: '+category;
+  document.getElementById('matched-needs-section').classList.add('visible');
+  document.getElementById('mn-list').innerHTML='<div class="mn-empty">\u23f3 Fetching live needs\u2026</div>';
+  await getDonorLocation();
+  let url=MN_API+'/api/donate/ngos/matched-needs?category='+encodeURIComponent(category)+'&top_k=10';
+  if(donorLat)url+='&lat='+donorLat+'&lng='+donorLng;
+  try{
+    const resp=await fetch(url);const data=await resp.json();
+    mnNeeds=data.matched_needs||[];renderMnList(mnNeeds);renderMnMap(mnNeeds);
+  }catch(e){document.getElementById('mn-list').innerHTML='<div class="mn-empty">\u274c Could not load live needs.</div>';}
+}
+
+function renderMnList(needs){
+  const el=document.getElementById('mn-list');
+  if(!needs.length){el.innerHTML='<div class="mn-empty">No active NGO needs found for this category.</div>';return;}
+  el.innerHTML=needs.map((n,i)=>{
+    const dist=n.distance_km!=null?n.distance_km+' km':'Location N/A';
+    const score=Math.round(n.final_score*100);
+    const qty=n.quantity_remaining??(n.quantity_needed-n.quantity_fulfilled-n.quantity_pledged);
+    return `<div class="mn-card" id="mncard-${i}" onclick="highlightNeed(${i})">
+      <div class="mn-card-header"><span class="mn-card-name">${n.ngo_name}</span><span class="mn-urgency-dot ${n.urgency}"></span></div>
+      <div class="mn-card-meta"><span>\ud83d\udccd ${dist}</span><span>\ud83d\udce6 ${n.item_category}</span><span class="capitalize">${n.urgency} urgency</span><span>Remaining: ${qty} items</span></div>
+      <div class="mn-score-bar"><div class="mn-score-fill" style="width:${score}%"></div></div>
+      <div style="font-size:.72rem;color:#7fa887;margin-top:4px">Match score: ${score}%</div>
+      <button class="mn-pledge-btn" onclick="event.stopPropagation();openPledgeModal(${i})">\ud83d\udce6 Pledge to This NGO</button>
+    </div>`;
+  }).join('');
+}
+
+const URGENCY_COLORS={high:'#f87171',medium:'#fbbf24',low:'#94a3b8'};
+
+function renderMnMap(needs){
+  if(!mnMap){
+    mnMap=L.map('mn-map',{preferCanvas:true,fadeAnimation:false}).setView([12.9716,77.5946],11);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:18}).addTo(mnMap);
+  }
+  mnMarkers.forEach(m=>m.remove()); mnMarkers=[];
+  const bounds=[];
+  if(donorLat){
+    const di=L.divIcon({className:'',html:'<div style="width:22px;height:22px;background:#60a5fa;border:3px solid #93c5fd;border-radius:50%;box-shadow:0 0 10px rgba(96,165,250,.6)"></div>',iconSize:[22,22],iconAnchor:[11,11]});
+    L.marker([donorLat,donorLng],{icon:di}).addTo(mnMap).bindPopup('<strong style="color:#60a5fa">You are here</strong>');
+    bounds.push([donorLat,donorLng]);
+  }
+  needs.forEach((n,i)=>{
+    if(!n.latitude||!n.longitude)return;
+    const color=URGENCY_COLORS[n.urgency]||'#94a3b8';
+    const icon=L.divIcon({className:'',html:'<div style="width:34px;height:34px;background:'+color+';border:3px solid rgba(255,255,255,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 10px '+color+'66;cursor:pointer">\ud83d\udce6</div>',iconSize:[34,34],iconAnchor:[17,17],popupAnchor:[0,-18]});
+    const marker=L.marker([n.latitude,n.longitude],{icon}).addTo(mnMap).bindPopup('<div style="min-width:200px"><strong>'+n.ngo_name+'</strong><br><span style="color:#7fa887;font-size:.8rem">'+(n.ngo_address||'')+'</span><br><br><span style="color:'+color+';font-weight:700;text-transform:capitalize">'+n.urgency+' urgency</span> &middot; '+n.item_category+'<br>Remaining: '+(n.quantity_remaining??'?')+' items<br>Score: '+Math.round(n.final_score*100)+'%<br><br><button onclick="openPledgeModal('+i+')" style="width:100%;padding:7px;background:#22c55e;border:none;border-radius:7px;color:#0a1a0c;font-weight:700;cursor:pointer;font-family:inherit">\ud83d\udce6 Pledge Item</button></div>');
+    mnMarkers.push(marker); bounds.push([n.latitude,n.longitude]);
+  });
+  requestAnimationFrame(()=>{
+    if(mnMap){
+      mnMap.invalidateSize({animate:false});
+      if(bounds.length>1){try{mnMap.fitBounds(bounds,{padding:[30,30]});}catch(e){}}
+      else if(needs[0]?.latitude){mnMap.setView([needs[0].latitude,needs[0].longitude],13);}
+    }
+  });
+}
+
+function highlightNeed(idx){
+  document.querySelectorAll('.mn-card').forEach(c=>c.classList.remove('active'));
+  const card=document.getElementById('mncard-'+idx);if(card)card.classList.add('active');
+  if(mnMarkers[idx])mnMarkers[idx].openPopup();
+}
+
+function openPledgeModal(idx){
+  const n=mnNeeds[idx];if(!n)return;
+  activePledge={...n,idx};
+  document.getElementById('pm-ngo-name').textContent=n.ngo_name;
+  document.getElementById('pm-category').textContent=n.item_category;
+  document.getElementById('pm-urgency').textContent=n.urgency;
+  const qty=n.quantity_remaining??(n.quantity_needed-n.quantity_fulfilled-n.quantity_pledged);
+  document.getElementById('pm-remaining').textContent=qty+' items needed';
+  document.getElementById('pm-note').value=''; document.getElementById('pm-error').textContent='';
+  const btn=document.getElementById('pm-confirm-btn');btn.disabled=false;btn.textContent='Confirm Pledge';
+  document.getElementById('pledge-modal-overlay').classList.add('open');
+}
+
+function closePledgeModal(){document.getElementById('pledge-modal-overlay').classList.remove('open');activePledge=null;}
+
+async function confirmPledge(){
+  if(!activePledge)return;
+  const ap=activePledge;
+  const token=localStorage.getItem('sce_token')||localStorage.getItem('access_token')||'';
+  if(!token){document.getElementById('pm-error').textContent='You must be logged in to pledge.';return;}
+  const btn=document.getElementById('pm-confirm-btn');
+  btn.disabled=true;btn.textContent='\u23f3 Submitting\u2026';
+  document.getElementById('pm-error').textContent='';
+  const body={ngo_id:ap.ngo_id,need_id:ap.need_id,item_name:(classifiedMeta&&classifiedMeta.name)||linkedProductName||ap.item_category,item_classification:classifiedMeta||{category:ap.item_category},quantity:1,donor_note:document.getElementById('pm-note').value.trim()||null,product_id:linkedProductId||undefined};
+  try{
+    const resp=await fetch(MN_API+'/api/donate/pledge',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(body)});
+    const data=await resp.json();
+    if(!resp.ok){document.getElementById('pm-error').textContent=data.error||'Pledge failed.';btn.disabled=false;btn.textContent='Confirm Pledge';return;}
+    closePledgeModal();
+    lastDonation={ngo:ap.ngo_name,contact:data.contact||null,next_steps:data.next_steps||'',points:data.eco_points,category:ap.item_category,item:body.item_name,at:Date.now()};
+    renderDonationDone(lastDonation);
+    showDonationImpact(ap.ngo_name,ap.item_category,data.eco_points,data.contact,data.next_steps);
+    if(linkedProductId) loadMyItems();
+    saveDraftNow();
+    triggerMatchedNeeds(ap.item_category);
+  }catch(e){document.getElementById('pm-error').textContent='Connection error. Please try again.';btn.disabled=false;btn.textContent='Confirm Pledge';}
+}
+
+document.getElementById('pledge-modal-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('pledge-modal-overlay'))closePledgeModal();});
+
+/* ── WebSocket ── */
+window.addEventListener('load',()=>{
+  const t=setInterval(()=>{
+    if(!window.EcoSocket)return;clearInterval(t);
+    EcoSocket.joinDonateRoom();
+    EcoSocket.on('user_count',({count})=>{
+      const pill=document.getElementById('ws-user-pill'),label=document.getElementById('ws-user-count');
+      if(label)label.textContent=count;if(pill)pill.style.opacity='1';
+    });
+    EcoSocket.on('donation_confirmed',data=>{if(data&&data.message)showToastMsg('\ud83c\udf89 '+data.message,'success');});
+  },200);
+});
+
+/* ── Init ── */
+(async function initDonate(){
+  // Auto-detect location silently in background before loading NGOs
+  if (!donorLat && navigator.geolocation) {
+    const status = document.getElementById('location-status');
+    status.textContent = '\u{1F4CD} Detecting your location\u2026';
+    navigator.geolocation.getCurrentPosition(
+      async pos => {
+        donorLat = pos.coords.latitude;
+        donorLng = pos.coords.longitude;
+        const input = document.getElementById('location-input');
+        try {
+          const key = window.CONFIG?.LOCATIONIQ_KEY || '';
+          let cityName = donorLat.toFixed(4)+', '+donorLng.toFixed(4);
+          if (key) {
+            const r = await fetch(`https://us1.locationiq.com/v1/reverse?key=${key}&lat=${donorLat}&lon=${donorLng}&format=json`);
+            if (r.ok) {
+              const geo = await r.json();
+              const a = geo.address || {};
+              cityName = [a.suburb||a.neighbourhood, a.city||a.town||a.village].filter(Boolean).join(', ');
+            }
+          }
+          if (!input.value) input.value = cityName;
+        } catch(e) {
+          if (!input.value) input.value = donorLat.toFixed(4)+', '+donorLng.toFixed(4);
+        }
+        status.textContent = '\u2705 Location detected \u2014 NGOs sorted by proximity';
+        saveDraft();
+        // Reload NGOs with location-based sorting
+        loadNGOs(selectedCategory);
+      },
+      () => {
+        document.getElementById('location-status').textContent = '\u{1F4CD} Click the location button to find NGOs near you';
+      },
+      {enableHighAccuracy: false, timeout: 6000, maximumAge: 300000}
+    );
+  }
+
+  const restored = await restoreDraft();            // bring back everything entered before leaving the page
+  await loadMyItems();
+  const itemParam = new URLSearchParams(location.search).get('item');
+  if (itemParam && String(itemParam) !== String(linkedProductId)) {
+    if (hasDraft()) await startNew(true);          // an explicit "Donate this item" click replaces the old draft
+    pickMyItem(itemParam);
+  } else if (!restored) {
+    loadNGOs(selectedCategory);
+  }
+  showLastAnalysisSuggestion();
+  updateNewBtn();
+})();
+</script>
+</body>
+</html>

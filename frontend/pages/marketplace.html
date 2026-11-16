@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Marketplace  EcoCircle</title>
+<!-- Performance: early connection hints -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://cdn.tailwindcss.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#176a21","on-primary": "#d1ffc8","primary-container": "#9df197",
+          "on-primary-container": "#005c15","secondary": "#ac2c00","on-secondary": "#ffefec",
+          "secondary-container": "#ffc4b4","tertiary": "#006096","on-tertiary": "#ebf3ff",
+          "tertiary-container": "#5fb7ff","surface": "#f2f9ea","on-surface": "#2a3127",
+          "surface-variant": "#d6e0cd","on-surface-variant": "#575e52","surface-container-lowest": "#ffffff",
+          "surface-container-low": "#ebf3e3","surface-container": "#e2ebda",
+          "surface-container-high": "#dce6d4","surface-container-highest": "#d6e0cd",
+          "outline": "#72796d","outline-variant": "#a8afa2","background": "#f2f9ea",
+          "on-background": "#2a3127","inverse-surface": "#0a1008","error": "#b02500",
+          "primary-dim": "#025d16","secondary-dim": "#972500","tertiary-dim": "#005483",
+        },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" },
+        fontFamily: { headline: ["Manrope"], body: ["Manrope"], label: ["Manrope"] }
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .quick-action { transition: all 0.25s ease; }
+  .quick-action:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(23,106,33,0.15); }
+</style>
+<link rel="stylesheet" href="../css/style.css"/>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/nav.js"></script>
+</head>
+<body class="bg-background text-on-surface font-body">
+
+<!--  SIDEBAR  -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-emerald-50/80 backdrop-blur-xl flex flex-col py-8 px-4 z-50">
+  <div class="mb-10 px-4">
+    <h1 class="text-2xl font-black text-emerald-900 tracking-tight">EcoCircle</h1>
+    <p class="text-xs font-semibold tracking-widest uppercase text-emerald-800/60 mt-1">Eco Manager</p>
+  </div>
+  <nav class="flex-1 space-y-1">
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="dashboard.html">
+      <span class="material-symbols-outlined">dashboard</span><span>Dashboard</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="products.html">
+      <span class="material-symbols-outlined">inventory_2</span><span>My Items</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="ai-engine.html">
+      <span class="material-symbols-outlined">psychology</span><span>AI Engine</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="donate.html">
+      <span class="material-symbols-outlined">favorite</span><span>Donate</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-900 font-bold border-l-4 border-emerald-600 pl-4 py-2.5 bg-emerald-100/60 rounded-r-xl" href="marketplace.html">
+      <span class="material-symbols-outlined text-emerald-700">storefront</span><span>Marketplace</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="repair.html">
+      <span class="material-symbols-outlined">build</span><span>Repair</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="recycling.html">
+      <span class="material-symbols-outlined">recycling</span><span>Recycling</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="map.html">
+      <span class="material-symbols-outlined">map</span><span>Map</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="profile.html">
+      <span class="material-symbols-outlined">person</span><span>Profile</span>
+    </a>
+  </nav>
+  <div class="mt-auto px-2">
+    <div class="flex items-center gap-3 pt-4 border-t border-emerald-900/10">
+      <div id="sb-avatar" class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-800 font-black text-sm flex-shrink-0">EA</div>
+      <div class="overflow-hidden flex-1">
+        <p class="text-sm font-bold text-emerald-900 truncate" id="sb-user-name">Eco Steward</p>
+        <p class="text-[9px] font-bold tracking-widest text-emerald-800/50 mt-0.5" id="sb-user-id"></p>
+      </div>
+      <button id="nav-logout" class="p-1 hover:bg-emerald-100 rounded-full transition-colors" title="Logout">
+        <span class="material-symbols-outlined text-emerald-700/60 text-lg">logout</span>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!--  TOP NAV  -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 backdrop-blur-xl flex justify-between items-center px-8 border-b border-emerald-100/60">
+  <div class="flex items-center gap-3">
+    <span class="material-symbols-outlined text-emerald-700">storefront</span>
+    <h2 class="text-lg font-black text-on-surface">Circular Marketplace</h2>
+    <p class="text-sm text-on-surface-variant hidden md:block">Buy, sell, rent or exchange second-hand products</p>
+  </div>
+  <div class="flex items-center gap-3">
+    <button onclick="openCreateModal()" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-emerald-700 to-emerald-500 text-white font-bold rounded-full text-sm hover:scale-[1.02] transition-all shadow">
+      <span class="material-symbols-outlined text-sm">add</span> List a Product
+    </button>
+  </div>
+</header>
+
+<!--  MAIN CONTENT  -->
+<main class="ml-64 pt-20 px-8 pb-12 min-h-screen">
+
+  <!-- Filters -->
+  <section class="mb-6">
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-emerald-50 flex flex-wrap gap-3 items-center">
+      <div class="flex items-center bg-surface-container-highest px-3 py-2 rounded-full flex-1 min-w-[200px] max-w-xs">
+        <span class="material-symbols-outlined text-outline text-lg mr-2">search</span>
+        <input id="search-input" class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-outline" placeholder="Search products" oninput="loadListings()" type="text"/>
+      </div>
+      <select id="filter-category" class="bg-surface-container-highest border-none rounded-full px-4 py-2 text-sm text-on-surface focus:ring-2 focus:ring-emerald-400 cursor-pointer" onchange="loadListings()">
+        <option value="">All Categories</option>
+        <option>Mobile</option><option>Laptop</option><option>Appliance</option>
+        <option>Furniture</option><option>Clothing</option><option>Electronics</option>
+        <option>Books</option><option>Sports</option>
+      </select>
+      <select id="filter-type" class="bg-surface-container-highest border-none rounded-full px-4 py-2 text-sm text-on-surface focus:ring-2 focus:ring-emerald-400 cursor-pointer" onchange="loadListings()">
+        <option value="">All Types</option>
+        <option value="sell">For Sale</option><option value="rent">For Rent</option><option value="exchange">Exchange</option>
+      </select>
+      <button onclick="resetFilters()" class="px-4 py-2 rounded-full border border-emerald-200 text-sm text-emerald-700 font-semibold hover:bg-emerald-50 transition-colors">Reset</button>
+    </div>
+  </section>
+
+  <!-- Listings -->
+  <div id="listings-container">
+    <div class="flex items-center justify-center py-20">
+      <div class="w-8 h-8 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Create Listing Modal -->
+<div class="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm hidden" id="create-modal">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden max-h-[90vh] overflow-y-auto">
+    <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 px-8 py-6 text-white flex justify-between items-center">
+      <h3 class="text-lg font-black"> List a Product</h3>
+      <button onclick="closeModal()" class="p-1 hover:bg-white/20 rounded-full transition-colors"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="px-8 py-6 space-y-4">
+      <div id="modal-alert"></div>
+      <!-- Link to existing product -->
+      <div>
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Link to My Product (Optional)</label>
+        <select id="m-product" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400">
+          <option value=""> Not linked to a product </option>
+        </select>
+        <p class="text-[10px] text-on-surface-variant mt-1">Selecting a product auto-fills title, category and condition.</p>
+      </div>
+      <div>
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Title</label>
+        <input id="m-title" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400" placeholder="e.g. Samsung Galaxy S21  Good Condition"/>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Category</label>
+          <select id="m-cat" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400">
+            <option>Mobile</option><option>Laptop</option><option>Appliance</option>
+            <option>Furniture</option><option>Clothing</option><option>Electronics</option><option>Books</option><option>Sports</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Type</label>
+          <select id="m-type" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400">
+            <option value="sell">Sell</option><option value="rent">Rent</option><option value="exchange">Exchange</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Price ()</label>
+          <input id="m-price" type="number" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400" placeholder="0"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Condition</label>
+          <select id="m-condition" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400">
+            <option>New</option><option>Good</option><option>Fair</option><option>Poor</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Location</label>
+        <input id="m-location" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400" placeholder="City, State"/>
+      </div>
+      <div>
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Description</label>
+        <textarea id="m-desc" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400 resize-none" rows="3" placeholder="Describe the product"></textarea>
+      </div>
+      <!-- Photo upload -->
+      <div>
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Product Photo <span class="text-on-surface-variant/60 normal-case font-normal">(optional – auto-filled from linked product)</span></label>
+        <div id="m-img-preview" class="hidden mb-2 rounded-xl overflow-hidden h-32 bg-surface-container flex items-center justify-center">
+          <img id="m-img-thumb" src="" alt="preview" class="h-full w-full object-cover"/>
+        </div>
+        <label class="flex items-center gap-2 cursor-pointer px-4 py-2.5 bg-surface-container-highest rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors w-full">
+          <span class="material-symbols-outlined text-lg">add_photo_alternate</span>
+          <span id="m-img-label">Upload a photo</span>
+          <input id="m-image" type="file" accept="image/*" class="hidden" onchange="previewMarketImg(this)"/>
+        </label>
+      </div>
+      <div class="flex gap-3 justify-end pt-2">
+        <button onclick="closeModal()" class="px-5 py-2.5 rounded-full border border-emerald-200 text-sm font-semibold text-on-surface hover:bg-surface-container transition-colors">Cancel</button>
+        <button id="create-btn" onclick="createListing()" class="px-5 py-2.5 rounded-full bg-gradient-to-br from-emerald-700 to-emerald-500 text-white text-sm font-bold hover:scale-[1.02] transition-all shadow">List Product</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Buy Modal -->
+<div class="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm hidden" id="buy-modal">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full mx-4 p-8 text-center">
+    <div class="text-5xl mb-4"></div>
+    <h3 id="buy-title" class="text-xl font-black text-on-surface mb-2">Confirm Purchase</h3>
+    <p id="buy-desc" class="text-sm text-on-surface-variant mb-6"></p>
+    <div class="flex gap-3 justify-center">
+      <button onclick="document.getElementById('buy-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-full border border-emerald-200 text-sm font-semibold hover:bg-surface-container transition-colors">Cancel</button>
+      <button id="buy-confirm-btn" class="px-5 py-2.5 rounded-full bg-gradient-to-br from-emerald-700 to-emerald-500 text-white text-sm font-bold hover:scale-[1.02] transition-all shadow">Confirm Buy +10 pts </button>
+    </div>
+  </div>
+</div>
+
+<script>
+if(!Auth.requireLogin()) throw new Error();
+initNavbar();
+const sidebarUser = Auth.user();
+if(sidebarUser) {
+  const initials = (sidebarUser.name||'EA').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('sb-user-name').textContent = sidebarUser.name || 'Eco Steward';
+  document.getElementById('sb-avatar').textContent = initials;
+  const sbId = document.getElementById('sb-user-id');
+  if (sbId) sbId.textContent = sidebarUser.user_number ? 'ID: ' + sidebarUser.user_number : '';
+}
+
+let currentBuyId = null;
+const typeColors = { sell: 'bg-emerald-100 text-emerald-700', rent: 'bg-amber-100 text-amber-700', exchange: 'bg-blue-100 text-blue-700' };
+const condColors  = { New: 'bg-emerald-100 text-emerald-700', Good: 'bg-green-100 text-green-700', Fair: 'bg-amber-100 text-amber-700', Poor: 'bg-red-100 text-red-700' };
+
+async function loadListings(){
+  const q   = document.getElementById("search-input").value;
+  const cat = document.getElementById("filter-category").value;
+  const type= document.getElementById("filter-type").value;
+  const container = document.getElementById("listings-container");
+  container.innerHTML = '<div class="flex items-center justify-center py-20"><div class="w-8 h-8 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div></div>';
+  try {
+    const params = new URLSearchParams();
+    if(q)   params.append("q", q);
+    if(cat) params.append("category", cat);
+    if(type)params.append("type", type);
+    const data = await API.get("/marketplace/?" + params.toString());
+    if(!data.length){
+      container.innerHTML = '<div class="text-center py-20 text-on-surface-variant"><div class="text-5xl mb-4"></div><p class="text-sm">No listings found. Be the first to list something!</p></div>';
+      return;
+    }
+    container.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">${data.map(renderCard).join("")}</div>`;
+  } catch(e) {
+    container.innerHTML = `<div class="bg-red-50 border border-red-200 text-red-700 rounded-2xl p-4 text-sm">${e.message}</div>`;
+  }
+}
+
+function renderCard(l){
+  const e = escapeHtml;  // XSS guard - escapes user-provided data before innerHTML injection
+  const emoji = categoryEmoji(l.category);
+  const tc = typeColors[l.listing_type] || 'bg-slate-100 text-slate-600';
+  const cc = condColors[l.condition]    || 'bg-slate-100 text-slate-600';
+  const safeTitle = e(l.title);
+  const imgSection = l.image
+    ? `<div class="h-36 bg-surface-container-low overflow-hidden"><img src="${l.image}" alt="${safeTitle}" class="w-full h-full object-cover"/></div>`
+    : `<div class="h-36 bg-surface-container-low flex items-center justify-center text-5xl">${emoji}</div>`;
+  return `
+  <div class="bg-white rounded-2xl border border-emerald-50 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden">
+    ${imgSection}
+    <div class="p-4">
+      <div class="flex gap-2 mb-2 flex-wrap">
+        <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${tc}">${e(l.listing_type)}</span>
+        <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${cc}">${e(l.condition)}</span>
+      </div>
+      <p class="font-bold text-sm text-on-surface mb-1 line-clamp-2">${safeTitle}</p>
+      <p class="text-base font-black text-emerald-700 mb-1">${l.listing_type==="exchange"?"Exchange":formatPrice(l.price)}</p>
+      <p class="text-xs text-on-surface-variant"> ${e(l.location||"India")}  ${e(l.created_at)}</p>
+    </div>
+    <div class="px-4 pb-4 flex justify-between items-center">
+      <span class="text-xs text-on-surface-variant">By ${e(l.seller_name)}</span>
+      ${Auth.isLoggedIn()?`<button onclick="confirmBuy(${l.id},this.dataset.t,this.dataset.p)" data-t="${safeTitle}" data-p="${e(formatPrice(l.price))}" class="px-4 py-1.5 bg-gradient-to-br from-emerald-700 to-emerald-500 text-white text-xs font-bold rounded-full hover:scale-105 transition-all">Buy</button>`:`<a href="login.html" class="px-4 py-1.5 border border-emerald-300 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-50 transition-colors">Login to Buy</a>`}
+    </div>
+  </div>`;
+}
+
+function confirmBuy(id, title, price){
+  currentBuyId = id;
+  document.getElementById("buy-title").textContent = "Buy: " + title;
+  document.getElementById("buy-desc").textContent  = `Price: ${price}. Earn +10 Eco Points!`;
+  document.getElementById("buy-modal").classList.remove("hidden");
+  document.getElementById("buy-confirm-btn").onclick = executeBuy;
+}
+
+async function executeBuy(){
+  const btn = document.getElementById("buy-confirm-btn");
+  btn.disabled = true; btn.innerHTML = '<div class="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin mx-auto"></div>';
+  try {
+    await API.post(`/marketplace/${currentBuyId}/buy`, {});
+    document.getElementById("buy-modal").classList.add("hidden");
+    showToast("Purchase successful! +10 Eco Points earned ");
+    loadListings();
+  } catch(e) { showToast(e.message, "error"); }
+  btn.disabled = false; btn.innerHTML = "Confirm Buy +10 pts ";
+}
+
+function openCreateModal(){
+  if(!Auth.isLoggedIn()){ window.location.href="login.html"; return; }
+  // Load user's products into the dropdown
+  API.get('/products/').then(products => {
+    const sel = document.getElementById('m-product');
+    sel.innerHTML = '<option value=""> Not linked to a product </option>';
+    products.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = `${p.name} (${p.category}  ${p.condition})`;
+      opt.dataset.cat       = p.category || '';
+      opt.dataset.condition = p.condition || '';
+      opt.dataset.price     = p.resale_estimate || '';
+      opt.dataset.image     = p.image || '';
+      sel.appendChild(opt);
+    });
+    // Auto-fill on selection
+    sel.onchange = function(){
+      const opt = sel.options[sel.selectedIndex];
+      if (!opt.value) return;
+      if (opt.dataset.cat)       document.getElementById('m-cat').value       = opt.dataset.cat;
+      if (opt.dataset.condition) document.getElementById('m-condition').value = opt.dataset.condition;
+      if (!document.getElementById('m-title').value)
+        document.getElementById('m-title').value = opt.textContent.split(' (')[0];
+      if (opt.dataset.price && !document.getElementById('m-price').value)
+        document.getElementById('m-price').value = Math.round(parseFloat(opt.dataset.price)) || '';
+      // Show product image preview (if no custom file chosen yet)
+      if (opt.dataset.image && !document.getElementById('m-image').files.length) {
+        document.getElementById('m-img-thumb').src = opt.dataset.image;
+        document.getElementById('m-img-preview').classList.remove('hidden');
+        document.getElementById('m-img-label').textContent = 'Product photo (auto-filled)';
+      }
+    };
+  }).catch(() => {/* silently ignore if not logged in yet */});
+  document.getElementById("create-modal").classList.remove("hidden");
+}
+function closeModal(){
+  document.getElementById("create-modal").classList.add("hidden");
+  document.getElementById('m-product').innerHTML = '<option value=""> Not linked to a product </option>';
+  document.getElementById('m-image').value = '';
+  document.getElementById('m-img-preview').classList.add('hidden');
+  document.getElementById('m-img-label').textContent = 'Upload a photo';
+}
+
+function previewMarketImg(input){
+  if(!input.files.length) return;
+  const url = URL.createObjectURL(input.files[0]);
+  document.getElementById('m-img-thumb').src = url;
+  document.getElementById('m-img-preview').classList.remove('hidden');
+  document.getElementById('m-img-label').textContent = input.files[0].name;
+}
+
+async function createListing(){
+  const btn = document.getElementById("create-btn");
+  const ab  = document.getElementById("modal-alert");
+  ab.innerHTML = '';
+  const productSel = document.getElementById('m-product');
+  const selectedProductId = productSel.value ? parseInt(productSel.value) : null;
+  const title = document.getElementById("m-title").value.trim();
+  if(!title){ ab.innerHTML='<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm mb-2"> Title is required.</div>'; return; }
+  btn.disabled = true; btn.innerHTML = '<div class="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin mx-auto"></div>';
+  try {
+    const fd = new FormData();
+    fd.append('title',        title);
+    fd.append('category',     document.getElementById("m-cat").value);
+    fd.append('listing_type', document.getElementById("m-type").value);
+    fd.append('price',        parseFloat(document.getElementById("m-price").value)||0);
+    fd.append('condition',    document.getElementById("m-condition").value);
+    fd.append('location',     document.getElementById("m-location").value.trim());
+    fd.append('description',  document.getElementById("m-desc").value.trim());
+    if(selectedProductId) fd.append('product_id', selectedProductId);
+    const imgFile = document.getElementById('m-image').files[0];
+    if(imgFile) fd.append('image', imgFile);
+    const token = localStorage.getItem('ecocircle_token');
+    const resp = await fetch(`${API_BASE}/marketplace/`, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      body: fd
+    });
+    if(!resp.ok){ const err = await resp.json().catch(()=>({})); throw new Error(err.error||resp.statusText); }
+    const res = await resp.json();
+    closeModal();
+    showToast(`Listing created! +${res.eco_points || 15} Eco Points `);
+    loadListings();
+  } catch(e) { ab.innerHTML=`<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm mb-2">${e.message}</div>`; }
+  btn.disabled = false; btn.innerHTML = "List Product";
+}
+
+function resetFilters(){
+  document.getElementById("search-input").value = "";
+  document.getElementById("filter-category").value = "";
+  document.getElementById("filter-type").value = "";
+  loadListings();
+}
+
+// Close modals on overlay click
+['create-modal','buy-modal'].forEach(id => {
+  document.getElementById(id).addEventListener('click', e => { if(e.target === document.getElementById(id)) document.getElementById(id).classList.add('hidden'); });
+});
+
+loadListings();
+</script>
+</body>
+</html>

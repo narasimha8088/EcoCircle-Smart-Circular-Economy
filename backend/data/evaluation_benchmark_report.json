@@ -1,0 +1,72 @@
+{
+  "evaluation_title": "EcoCircle Circular Economy \u2014 Comparative Baseline Benchmarks",
+  "resale_price_evaluation": {
+    "test_sample_count": 310,
+    "naive_baseline": {
+      "name": "Naive Fixed Depreciation (0.45 * MRP)",
+      "mae_inr": 7911.04,
+      "rmse_inr": 13152.0,
+      "r2_score": 0.4043,
+      "mape_pct": 166.0
+    },
+    "linear_regression": {
+      "name": "Linear Regression Baseline (OLS)",
+      "mae_inr": 4964.6,
+      "rmse_inr": 8695.07,
+      "r2_score": 0.7396,
+      "mape_pct": 151.4
+    },
+    "proposed_xgboost": {
+      "name": "Proposed Tuned XGBoost Recommerce Predictor",
+      "mae_inr": 1016.13,
+      "rmse_inr": 1921.44,
+      "r2_score": 0.9873,
+      "mape_pct": 22.9
+    },
+    "error_reduction_vs_linear_pct": 79.5
+  },
+  "carbon_footprint_evaluation": {
+    "evaluation_samples": 12,
+    "flat_mean_baseline": {
+      "name": "Flat Mean Baseline (8.5 kg CO2e)",
+      "mae_kg": 47.694,
+      "rmse_kg": 67.948
+    },
+    "category_only_baseline": {
+      "name": "Category-Only Flat Multiplier",
+      "mae_kg": 13.542,
+      "rmse_kg": 19.683
+    },
+    "proposed_source_traced_lca": {
+      "name": "Proposed Source-Traced LCA + Displacement Ratio",
+      "mae_kg": 0.0,
+      "rmse_kg": 0.0,
+      "standards_compliance": [
+        "ISO 14040/14044",
+        "DEFRA 2023",
+        "IPCC 2019"
+      ]
+    }
+  },
+  "ngo_matching_evaluation": {
+    "test_queries_count": 10,
+    "random_baseline": {
+      "name": "Random Assignment Baseline",
+      "top1_accuracy_pct": 20.0,
+      "top3_recall_pct": 60.0,
+      "mrr": 0.473
+    },
+    "keyword_jaccard_baseline": {
+      "name": "Keyword Jaccard Overlap Baseline",
+      "top1_accuracy_pct": 80.0,
+      "top3_recall_pct": 90.0,
+      "mrr": 0.858
+    },
+    "proposed_sbert_ahp": {
+      "name": "Proposed Sentence-BERT + AHP Multi-Criteria Ranker",
+      "top1_accuracy_pct": 100.0,
+      "top3_recall_pct": 100.0,
+      "mrr": 1.0
+    }
+  }
+}

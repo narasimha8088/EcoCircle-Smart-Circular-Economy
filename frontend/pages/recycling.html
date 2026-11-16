@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recycling  EcoCircle</title>
+<!-- Performance: early connection hints -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://cdn.tailwindcss.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#176a21","on-primary": "#d1ffc8","primary-container": "#9df197",
+          "on-primary-container": "#005c15","secondary": "#ac2c00","on-secondary": "#ffefec",
+          "secondary-container": "#ffc4b4","tertiary": "#006096","on-tertiary": "#ebf3ff",
+          "tertiary-container": "#5fb7ff","surface": "#f2f9ea","on-surface": "#2a3127",
+          "surface-variant": "#d6e0cd","on-surface-variant": "#575e52","surface-container-lowest": "#ffffff",
+          "surface-container-low": "#ebf3e3","surface-container": "#e2ebda",
+          "surface-container-high": "#dce6d4","surface-container-highest": "#d6e0cd",
+          "outline": "#72796d","outline-variant": "#a8afa2","background": "#f2f9ea",
+          "on-background": "#2a3127",
+        },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" },
+        fontFamily: { headline: ["Manrope"], body: ["Manrope"], label: ["Manrope"] }
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+<link rel="stylesheet" href="../css/style.css"/>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/nav.js"></script>
+</head>
+<body class="bg-background text-on-surface font-body">
+
+<!--  SIDEBAR  -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-emerald-50/80 backdrop-blur-xl flex flex-col py-8 px-4 z-50">
+  <div class="mb-10 px-4">
+    <h1 class="text-2xl font-black text-emerald-900 tracking-tight">EcoCircle</h1>
+    <p class="text-xs font-semibold tracking-widest uppercase text-emerald-800/60 mt-1">Eco Manager</p>
+  </div>
+  <nav class="flex-1 space-y-1">
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="dashboard.html">
+      <span class="material-symbols-outlined">dashboard</span><span>Dashboard</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="products.html">
+      <span class="material-symbols-outlined">inventory_2</span><span>My Items</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="ai-engine.html">
+      <span class="material-symbols-outlined">psychology</span><span>AI Engine</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="donate.html">
+      <span class="material-symbols-outlined">favorite</span><span>Donate</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="marketplace.html">
+      <span class="material-symbols-outlined">storefront</span><span>Marketplace</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="repair.html">
+      <span class="material-symbols-outlined">build</span><span>Repair</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-900 font-bold border-l-4 border-emerald-600 pl-4 py-2.5 bg-emerald-100/60 rounded-r-xl" href="recycling.html">
+      <span class="material-symbols-outlined text-emerald-700">recycling</span><span>Recycling</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="map.html">
+      <span class="material-symbols-outlined">map</span><span>Map</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="profile.html">
+      <span class="material-symbols-outlined">person</span><span>Profile</span>
+    </a>
+  </nav>
+  <div class="mt-auto px-2">
+    <div class="flex items-center gap-3 pt-4 border-t border-emerald-900/10">
+      <div id="sb-avatar" class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-800 font-black text-sm flex-shrink-0">EA</div>
+      <div class="overflow-hidden flex-1">
+        <p class="text-sm font-bold text-emerald-900 truncate" id="sb-user-name">Eco Steward</p>
+        <p class="text-[9px] font-bold tracking-widest text-emerald-800/50 mt-0.5" id="sb-user-id"></p>
+      </div>
+      <button id="nav-logout" class="p-1 hover:bg-emerald-100 rounded-full transition-colors" title="Logout">
+        <span class="material-symbols-outlined text-emerald-700/60 text-lg">logout</span>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!--  TOP NAV  -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 backdrop-blur-xl flex justify-between items-center px-8 border-b border-emerald-100/60">
+  <div class="flex items-center gap-3">
+    <span class="material-symbols-outlined text-emerald-700">recycling</span>
+    <div>
+      <h2 class="text-lg font-black text-on-surface leading-tight">Smart Recycling</h2>
+      <p class="text-xs text-on-surface-variant">Classify waste, find centres & schedule pickups</p>
+    </div>
+  </div>
+</header>
+
+<!--  MAIN CONTENT  -->
+<main class="ml-64 pt-20 px-8 pb-12 min-h-screen">
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Waste Classifier -->
+    <div class="bg-white rounded-2xl border border-emerald-50 shadow-sm p-6">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-emerald-700">search</span>
+        </div>
+        <div>
+          <h3 class="font-black text-on-surface">Waste Classifier</h3>
+          <p class="text-xs text-on-surface-variant">Find out how to dispose of your item</p>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Material Type</label>
+        <select id="material" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400">
+          <option value="plastic">Plastic</option><option value="glass">Glass</option><option value="paper">Paper</option>
+          <option value="metal">Metal</option><option value="electronics">Electronics (E-Waste)</option>
+          <option value="battery">Battery</option><option value="food">Food Waste</option><option value="cloth">Clothing / Textile</option>
+        </select>
+      </div>
+      <button onclick="classifyWaste()" class="w-full px-5 py-2.5 rounded-full bg-gradient-to-br from-emerald-700 to-emerald-500 text-white text-sm font-bold hover:scale-[1.02] transition-all shadow">Classify </button>
+      <div id="classify-result" class="mt-4"></div>
+    </div>
+
+    <!-- Schedule Pickup -->
+    <div class="bg-white rounded-2xl border border-emerald-50 shadow-sm p-6">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-blue-600">local_shipping</span>
+        </div>
+        <div>
+          <h3 class="font-black text-on-surface">Schedule Pickup</h3>
+          <p class="text-xs text-on-surface-variant">Get your recyclables collected</p>
+        </div>
+      </div>
+      <div class="space-y-3 mb-4">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Item Description</label>
+          <input id="p-item" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400" placeholder="e.g. Old laptop, broken TV"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Preferred Date</label>
+          <input id="p-date" type="date" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Pickup Address</label>
+          <input id="p-addr" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400" placeholder="Your pickup address"/>
+        </div>
+      </div>
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-sm text-emerald-700 font-semibold mb-4">
+         Scheduling a pickup earns you <strong>+25 Eco Points</strong>!
+      </div>
+      <button onclick="schedulePickup()" class="w-full px-5 py-2.5 rounded-full bg-gradient-to-br from-emerald-700 to-emerald-500 text-white text-sm font-bold hover:scale-[1.02] transition-all shadow">Schedule Pickup</button>
+      <div id="pickup-result" class="mt-3"></div>
+    </div>
+  </div>
+
+  <!-- Recycling Centres -->
+  <div class="mb-4 flex items-center gap-3">
+    <span class="material-symbols-outlined text-emerald-700">location_on</span>
+    <h3 class="text-lg font-black text-on-surface">Recycling Centres Near You</h3>
+  </div>
+  <div id="centers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="flex items-center justify-center py-16 col-span-full">
+      <div class="w-8 h-8 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+(function() {
+'use strict';
+if(!Auth.requireLogin()) return;
+initNavbar();
+const sidebarUser = Auth.user();
+if(sidebarUser) {
+  const initials = (sidebarUser.name||'EA').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const sbName = document.getElementById('sb-user-name');
+  const sbAvatar = document.getElementById('sb-avatar');
+  const sbId = document.getElementById('sb-user-id');
+  if (sbName) sbName.textContent = sidebarUser.name || 'Eco Steward';
+  if (sbAvatar) sbAvatar.textContent = initials;
+  if (sbId) sbId.textContent = sidebarUser.user_number ? 'ID: ' + sidebarUser.user_number : '';
+}
+
+async function classifyWaste(){
+  const mat = document.getElementById('material').value;
+  try {
+    const d = await API.post('/recycling/classify', { material: mat });
+    const colors = { Recyclable: 'emerald', 'E-Waste': 'amber', Hazardous: 'red', Organic: 'green', 'Donate/Recycle': 'blue', 'General Waste': 'slate' };
+    const col = colors[d.type] || 'slate';
+    document.getElementById('classify-result').innerHTML=`
+      <div class="bg-${col}-50 border border-${col}-200 rounded-xl p-4">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-xs font-black px-3 py-1 rounded-full bg-${col}-100 text-${col}-700">${d.type}</span>
+        </div>
+        <p class="text-sm text-on-surface"><strong>Bin:</strong> ${d.bin}</p>
+        <p class="text-sm text-on-surface-variant mt-1"><strong>Tip:</strong> ${d.tip}</p>
+      </div>`;
+  } catch(e) { showToast(e.message, 'error'); }
+}
+
+async function schedulePickup(){
+  if(!Auth.isLoggedIn()){ window.location.href='login.html'; return; }
+  const item = document.getElementById('p-item').value.trim();
+  const date = document.getElementById('p-date').value;
+  const addr = document.getElementById('p-addr').value.trim();
+  if(!item || !addr){ showToast('Please fill item and address', 'error'); return; }
+  try {
+    const d = await API.post('/recycling/schedule-pickup', { item, preferred_date: date, address: addr, product_id: 0 });
+    document.getElementById('pickup-result').innerHTML=`
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm text-emerald-700">
+        ✅ ${d.message}<br/>
+        <span class="text-xs text-on-surface-variant">Confirmation: ${d.confirmation} · Eco Points: +${d.eco_points_earned}</span>
+      </div>`;
+    showToast('+25 Eco Points earned! ♻️');
+  } catch(e) { showToast(e.message, 'error'); }
+}
+
+// ── Load nearby recycling centres via Overpass (OpenStreetMap) ────────────
+const OVERPASS = 'https://overpass-api.de/api/interpreter';
+const RADIUS   = 8000; // 8 km
+
+async function loadCenters() {
+  const container = document.getElementById('centers-grid');
+  if (!container) return;
+
+  container.innerHTML = `<div class="flex flex-col items-center justify-center py-20 col-span-full gap-3">
+    <div class="w-8 h-8 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+    <p class="text-sm text-on-surface-variant">Detecting your location…</p>
+  </div>`;
+
+  // Get user location
+  let lat, lng;
+  try {
+    const pos = await (window.GlobalLocation
+      ? window.GlobalLocation.get(false)
+      : new Promise((res, rej) => navigator.geolocation.getCurrentPosition(
+          p => res({ lat: p.coords.latitude, lng: p.coords.longitude }),
+          rej, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+        )));
+    lat = pos.lat; lng = pos.lng;
+  } catch(_) {
+    container.innerHTML = renderDefaultCenters();
+    return;
+  }
+
+  container.innerHTML = `<div class="flex flex-col items-center justify-center py-20 col-span-full gap-3">
+    <div class="w-8 h-8 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+    <p class="text-sm text-on-surface-variant">Searching recycling centres near you…</p>
+  </div>`;
+
+  const query = `[out:json][timeout:25];
+    (
+      node["amenity"="recycling"](around:${RADIUS},${lat},${lng});
+      node["recycling_type"="centre"](around:${RADIUS},${lat},${lng});
+      node["shop"="second_hand"](around:${RADIUS},${lat},${lng});
+      node["amenity"="recycling"]["recycling:electronics"="yes"](around:${RADIUS},${lat},${lng});
+      node["amenity"="recycling"]["recycling:plastic"="yes"](around:${RADIUS},${lat},${lng});
+    );out body;`;
+
+  try {
+    const resp = await fetch(OVERPASS, {
+      method: 'POST',
+      body: 'data=' + encodeURIComponent(query),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+    const data = await resp.json();
+    const elements = (data.elements || []).filter(e => e.lat && e.lon);
+
+    if (!elements.length) {
+      container.innerHTML = renderDefaultCenters();
+      showToast('No recycling centres found nearby. Showing popular centres.', 'error');
+      return;
+    }
+
+    function dist(a) {
+      const R = 6371, dLat = (a.lat-lat)*Math.PI/180, dLon = (a.lon-lng)*Math.PI/180;
+      const x = Math.sin(dLat/2)**2 + Math.cos(lat*Math.PI/180)*Math.cos(a.lat*Math.PI/180)*Math.sin(dLon/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
+    }
+    elements.sort((a,b) => dist(a)-dist(b));
+    const top = elements.slice(0, 9);
+
+    container.innerHTML = top.map(el => {
+      const name    = el.tags?.name || 'Recycling Centre';
+      const phone   = el.tags?.phone || el.tags?.['contact:phone'] || '';
+      const addr    = el.tags?.['addr:full'] || [el.tags?.['addr:housenumber'], el.tags?.['addr:street'], el.tags?.['addr:city']].filter(Boolean).join(', ');
+      const km      = dist(el);
+      const distStr = km < 1 ? Math.round(km*1000)+'m' : km.toFixed(1)+'km';
+      const accepts = [
+        el.tags?.['recycling:plastic'] === 'yes' ? 'Plastic' : null,
+        el.tags?.['recycling:paper']   === 'yes' ? 'Paper'   : null,
+        el.tags?.['recycling:glass']   === 'yes' ? 'Glass'   : null,
+        el.tags?.['recycling:electronics'] === 'yes' ? 'Electronics' : null,
+        el.tags?.['recycling:metal']   === 'yes' ? 'Metal'   : null,
+      ].filter(Boolean).join(', ') || 'General Recyclables';
+      const osmUrl = `https://www.openstreetmap.org/?mlat=${el.lat}&mlon=${el.lon}#map=18/${el.lat}/${el.lon}`;
+      return `<div class="bg-white rounded-2xl border border-emerald-50 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-emerald-700 text-2xl">recycling</span>
+          </div>
+          <span class="text-xs font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">${distStr} away</span>
+        </div>
+        <h3 class="font-black text-on-surface mb-1">${name}</h3>
+        <p class="text-sm text-on-surface-variant mb-0.5">♻️ ${accepts}</p>
+        ${addr ? `<p class="text-sm text-on-surface-variant mb-0.5">📍 ${addr}</p>` : ''}
+        ${phone ? `<p class="text-sm text-on-surface-variant mb-4">📞 ${phone}</p>` : '<p class="mb-4"></p>'}
+        <div class="flex gap-2">
+          ${phone ? `<a href="tel:${phone}" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 border border-emerald-300 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-50 transition-colors"><span class="material-symbols-outlined text-sm">call</span> Contact</a>` : ''}
+          <a href="${osmUrl}" target="_blank" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-100 transition-colors"><span class="material-symbols-outlined text-sm">map</span> Directions</a>
+        </div>
+      </div>`;
+    }).join('');
+
+    showToast(`📍 Found ${top.length} recycling centres near you!`);
+  } catch(e) {
+    container.innerHTML = renderDefaultCenters();
+  }
+}
+
+function renderDefaultCenters() {
+  const defaults = [
+    { name: 'Green Earth Recyclers', location: 'HSR Layout, Bengaluru', accepted: 'Paper, Plastic, Glass, Metal', contact: '+91-80-1234-5678' },
+    { name: 'E-Waste Hub India', location: 'Electronic City, Bengaluru', accepted: 'Electronics, Batteries, Cables', contact: '+91-80-9876-5432' },
+    { name: 'EcoSmart Collection', location: 'Koramangala, Bengaluru', accepted: 'All recyclables', contact: '+91-80-5555-4444' },
+  ];
+  return defaults.map(c => `
+    <div class="bg-white rounded-2xl border border-emerald-50 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all">
+      <div class="flex items-start justify-between mb-3">
+        <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-emerald-700">recycling</span>
+        </div>
+        <span class="text-xs font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">Open</span>
+      </div>
+      <h3 class="font-black text-on-surface mb-1">${c.name}</h3>
+      <p class="text-sm text-on-surface-variant mb-0.5">♻️ ${c.accepted}</p>
+      <p class="text-sm text-on-surface-variant mb-0.5">📍 ${c.location}</p>
+      <p class="text-sm text-on-surface-variant mb-4">📞 ${c.contact}</p>
+      <div class="flex gap-2">
+        <a href="tel:${c.contact}" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 border border-emerald-300 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-50">
+          <span class="material-symbols-outlined text-sm">call</span> Call
+        </a>
+        <button onclick="window.open('https://www.google.com/maps/search/'+encodeURIComponent('${c.name}'),'_blank')" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-100">
+          <span class="material-symbols-outlined text-sm">map</span> Directions
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+window.classifyWaste   = classifyWaste;
+window.schedulePickup  = schedulePickup;
+
+loadCenters();
+})();
+</script>
+</body>
+</html>

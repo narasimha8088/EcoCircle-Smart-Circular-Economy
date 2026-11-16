@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Repair Services  EcoCircle</title>
+<!-- Performance: early connection hints -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://cdn.tailwindcss.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#176a21","on-primary": "#d1ffc8","primary-container": "#9df197",
+          "on-primary-container": "#005c15","secondary": "#ac2c00","on-secondary": "#ffefec",
+          "secondary-container": "#ffc4b4","tertiary": "#006096","on-tertiary": "#ebf3ff",
+          "tertiary-container": "#5fb7ff","surface": "#f2f9ea","on-surface": "#2a3127",
+          "surface-variant": "#d6e0cd","on-surface-variant": "#575e52","surface-container-lowest": "#ffffff",
+          "surface-container-low": "#ebf3e3","surface-container": "#e2ebda",
+          "surface-container-high": "#dce6d4","surface-container-highest": "#d6e0cd",
+          "outline": "#72796d","outline-variant": "#a8afa2","background": "#f2f9ea",
+          "on-background": "#2a3127",
+        },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" },
+        fontFamily: { headline: ["Manrope"], body: ["Manrope"], label: ["Manrope"] }
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .action-card { transition: all 0.25s ease; }
+  .action-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(23,106,33,0.15); }
+</style>
+<link rel="stylesheet" href="../css/style.css"/>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/nav.js"></script>
+</head>
+<body class="bg-background text-on-surface font-body">
+
+<!--  SIDEBAR  -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-emerald-50/80 backdrop-blur-xl flex flex-col py-8 px-4 z-50">
+  <div class="mb-10 px-4">
+    <h1 class="text-2xl font-black text-emerald-900 tracking-tight">EcoCircle</h1>
+    <p class="text-xs font-semibold tracking-widest uppercase text-emerald-800/60 mt-1">Eco Manager</p>
+  </div>
+  <nav class="flex-1 space-y-1">
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="dashboard.html">
+      <span class="material-symbols-outlined">dashboard</span><span>Dashboard</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="products.html">
+      <span class="material-symbols-outlined">inventory_2</span><span>My Items</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="ai-engine.html">
+      <span class="material-symbols-outlined">psychology</span><span>AI Engine</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="donate.html">
+      <span class="material-symbols-outlined">favorite</span><span>Donate</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="marketplace.html">
+      <span class="material-symbols-outlined">storefront</span><span>Marketplace</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-900 font-bold border-l-4 border-emerald-600 pl-4 py-2.5 bg-emerald-100/60 rounded-r-xl" href="repair.html">
+      <span class="material-symbols-outlined text-emerald-700">build</span><span>Repair</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="recycling.html">
+      <span class="material-symbols-outlined">recycling</span><span>Recycling</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="map.html">
+      <span class="material-symbols-outlined">map</span><span>Map</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="profile.html">
+      <span class="material-symbols-outlined">person</span><span>Profile</span>
+    </a>
+  </nav>
+  <div class="mt-auto px-2">
+    <div class="flex items-center gap-3 pt-4 border-t border-emerald-900/10">
+      <div id="sb-avatar" class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-800 font-black text-sm flex-shrink-0">EA</div>
+      <div class="overflow-hidden flex-1">
+        <p class="text-sm font-bold text-emerald-900 truncate" id="sb-user-name">Eco Steward</p>
+        <p class="text-[9px] font-bold tracking-widest text-emerald-800/50 mt-0.5" id="sb-user-id"></p>
+      </div>
+      <button id="nav-logout" class="p-1 hover:bg-emerald-100 rounded-full transition-colors" title="Logout">
+        <span class="material-symbols-outlined text-emerald-700/60 text-lg">logout</span>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!--  TOP NAV  -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 backdrop-blur-xl flex justify-between items-center px-8 border-b border-emerald-100/60">
+  <div class="flex items-center gap-3">
+    <span class="material-symbols-outlined text-emerald-700">build</span>
+    <div>
+      <h2 class="text-lg font-black text-on-surface leading-tight">Repair Services</h2>
+      <p class="text-xs text-on-surface-variant">Find centres, estimate costs & log repairs</p>
+    </div>
+  </div>
+  <button onclick="openLogModal()" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-emerald-700 to-emerald-500 text-white font-bold rounded-full text-sm hover:scale-[1.02] transition-all shadow">
+    <span class="material-symbols-outlined text-sm">add</span> Log Repair +20 pts
+  </button>
+</header>
+
+<!--  MAIN CONTENT  -->
+<main class="ml-64 pt-20 px-8 pb-12 min-h-screen">
+
+  <!-- Quick Action Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="action-card bg-white rounded-2xl p-6 shadow-sm border border-emerald-50 text-center cursor-pointer" onclick="openLogModal()">
+      <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-emerald-700 text-3xl">build</span>
+      </div>
+      <h3 class="font-black text-on-surface mb-1">Log a Repair</h3>
+      <p class="text-sm text-on-surface-variant mb-4">Already repaired something? Log it and earn eco points!</p>
+      <span class="inline-block px-4 py-1.5 bg-gradient-to-br from-emerald-700 to-emerald-500 text-white text-xs font-bold rounded-full">Log Repair +20 pts</span>
+    </div>
+    <div class="action-card bg-white rounded-2xl p-6 shadow-sm border border-emerald-50 text-center cursor-pointer" onclick="document.getElementById('estimate-modal').classList.remove('hidden')">
+      <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-amber-600 text-3xl">payments</span>
+      </div>
+      <h3 class="font-black text-on-surface mb-1">Cost Estimator</h3>
+      <p class="text-sm text-on-surface-variant mb-4">Get an estimate before visiting a repair centre.</p>
+      <span class="inline-block px-4 py-1.5 border border-emerald-300 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-50 transition-colors">Estimate Cost</span>
+    </div>
+    <div class="action-card bg-white rounded-2xl p-6 shadow-sm border border-emerald-50 text-center">
+      <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-blue-600 text-3xl">play_circle</span>
+      </div>
+      <h3 class="font-black text-on-surface mb-1">DIY Tutorials</h3>
+      <p class="text-sm text-on-surface-variant mb-4">Learn to fix common devices yourself.</p>
+      <a href="https://www.ifixit.com" target="_blank" class="inline-block px-4 py-1.5 border border-blue-300 text-blue-700 text-xs font-bold rounded-full hover:bg-blue-50 transition-colors">iFixit Guides </a>
+    </div>
+  </div>
+
+  <!-- Repair Centres -->
+  <div class="mb-4 flex items-center gap-3">
+    <span class="material-symbols-outlined text-emerald-700">location_on</span>
+    <h3 class="text-lg font-black text-on-surface">Nearby Repair Centres</h3>
+  </div>
+  <div id="centers-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="flex items-center justify-center py-20 col-span-full">
+      <div class="w-8 h-8 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Log Repair Modal -->
+<div class="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm hidden" id="log-modal">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+    <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 px-8 py-6 text-white flex justify-between items-center">
+      <h3 class="text-lg font-black"> Log a Repair</h3>
+      <button onclick="document.getElementById('log-modal').classList.add('hidden')" class="p-1 hover:bg-white/20 rounded-full transition-colors"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="px-8 py-6 space-y-4">
+      <div id="log-alert"></div>
+      <div>
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Product Name</label>
+        <input id="l-product" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400" placeholder="e.g. iPhone 12"/>
+      </div>
+      <div>
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">What was repaired?</label>
+        <textarea id="l-desc" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400 resize-none" rows="3" placeholder="Replaced battery"></textarea>
+      </div>
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-sm text-emerald-700 font-semibold">
+         Logging a repair earns you <strong>+20 Eco Points</strong>!
+      </div>
+      <div class="flex gap-3 justify-end pt-2">
+        <button onclick="document.getElementById('log-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-full border border-emerald-200 text-sm font-semibold hover:bg-surface-container transition-colors">Cancel</button>
+        <button id="log-btn" onclick="logRepair()" class="px-5 py-2.5 rounded-full bg-gradient-to-br from-emerald-700 to-emerald-500 text-white text-sm font-bold hover:scale-[1.02] transition-all shadow">Log Repair</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Estimate Modal -->
+<div class="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm hidden" id="estimate-modal">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+    <div class="bg-gradient-to-br from-amber-500 to-amber-700 px-8 py-6 text-white flex justify-between items-center">
+      <h3 class="text-lg font-black"> Repair Cost Estimator</h3>
+      <button onclick="document.getElementById('estimate-modal').classList.add('hidden')" class="p-1 hover:bg-white/20 rounded-full transition-colors"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="px-8 py-6 space-y-4">
+      <div>
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Product Category</label>
+        <select id="e-cat" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-amber-400">
+          <option value="mobile">Mobile Phone</option><option value="laptop">Laptop</option>
+          <option value="appliance">Home Appliance</option><option value="electronics">Electronics</option><option value="furniture">Furniture</option>
+        </select>
+      </div>
+      <button onclick="estimateCost()" class="w-full px-5 py-2.5 rounded-full bg-gradient-to-br from-amber-600 to-amber-500 text-white text-sm font-bold hover:scale-[1.02] transition-all shadow">Get Estimate</button>
+      <div id="estimate-result"></div>
+    </div>
+  </div>
+</div>
+
+<<script>
+(function() {
+'use strict';
+if(!Auth.requireLogin()) return;
+initNavbar();
+const sidebarUser = Auth.user();
+if(sidebarUser) {
+  const initials = (sidebarUser.name||'EA').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const sbName = document.getElementById('sb-user-name');
+  const sbAvatar = document.getElementById('sb-avatar');
+  const sbId = document.getElementById('sb-user-id');
+  if (sbName) sbName.textContent = sidebarUser.name || 'Eco Steward';
+  if (sbAvatar) sbAvatar.textContent = initials;
+  if (sbId) sbId.textContent = sidebarUser.user_number ? 'ID: ' + sidebarUser.user_number : '';
+}
+
+// ── Load nearby repair centres via Overpass (OpenStreetMap) ──────────────
+const OVERPASS = 'https://overpass-api.de/api/interpreter';
+const RADIUS   = 8000; // 8 km
+
+async function loadCenters() {
+  const container = document.getElementById('centers-list');
+  if (!container) return;
+
+  // Show spinner
+  container.innerHTML = `<div class="flex flex-col items-center justify-center py-20 col-span-full gap-3">
+    <div class="w-8 h-8 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+    <p class="text-sm text-on-surface-variant">Detecting your location…</p>
+  </div>`;
+
+  // 1. Try to get user location (use session cache if available)
+  let lat, lng;
+  try {
+    const pos = await (window.GlobalLocation
+      ? window.GlobalLocation.get(false)
+      : new Promise((res, rej) => navigator.geolocation.getCurrentPosition(
+          p => res({ lat: p.coords.latitude, lng: p.coords.longitude }),
+          rej, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+        )));
+    lat = pos.lat; lng = pos.lng;
+  } catch(_) {
+    // Location unavailable — show defaults
+    container.innerHTML = renderDefaultRepairCentres();
+    return;
+  }
+
+  // 2. Update spinner
+  container.innerHTML = `<div class="flex flex-col items-center justify-center py-20 col-span-full gap-3">
+    <div class="w-8 h-8 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+    <p class="text-sm text-on-surface-variant">Searching repair centres near you…</p>
+  </div>`;
+
+  // 3. Query Overpass for nearby repair shops
+  const query = `[out:json][timeout:25];
+    (
+      node["shop"="mobile_phone"](around:${RADIUS},${lat},${lng});
+      node["repair"](around:${RADIUS},${lat},${lng});
+      node["craft"="electronics_repair"](around:${RADIUS},${lat},${lng});
+      node["shop"="electronics"](around:${RADIUS},${lat},${lng});
+      node["shop"="computer"](around:${RADIUS},${lat},${lng});
+      node["shop"="mobile_phone"](around:${RADIUS},${lat},${lng});
+    );out body;`;
+
+  try {
+    const resp = await fetch(OVERPASS, {
+      method: 'POST',
+      body: 'data=' + encodeURIComponent(query),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+    const data = await resp.json();
+    const elements = (data.elements || []).filter(e => e.lat && e.lon && e.tags?.name);
+
+    if (!elements.length) {
+      container.innerHTML = renderDefaultRepairCentres();
+      showToast('No repair centres found nearby. Showing popular centres.', 'error');
+      return;
+    }
+
+    // Sort by distance
+    function dist(a) {
+      const R = 6371, dLat = (a.lat-lat)*Math.PI/180, dLon = (a.lon-lng)*Math.PI/180;
+      const x = Math.sin(dLat/2)**2 + Math.cos(lat*Math.PI/180)*Math.cos(a.lat*Math.PI/180)*Math.sin(dLon/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
+    }
+    elements.sort((a,b) => dist(a)-dist(b));
+    const top = elements.slice(0, 9);
+
+    container.innerHTML = top.map(el => {
+      const name    = el.tags.name;
+      const phone   = el.tags.phone || el.tags['contact:phone'] || el.tags['contact:mobile'] || '';
+      const addr    = el.tags['addr:full'] || [el.tags['addr:housenumber'], el.tags['addr:street'], el.tags['addr:city']].filter(Boolean).join(', ');
+      const km      = dist(el);
+      const distStr = km < 1 ? Math.round(km*1000)+'m' : km.toFixed(1)+'km';
+      const type    = el.tags.shop === 'mobile_phone' ? 'Mobile Repair'
+                    : el.tags.craft === 'electronics_repair' ? 'Electronics Repair'
+                    : el.tags.shop === 'computer' ? 'Computer Repair'
+                    : el.tags.repair ? 'Repair Shop'
+                    : 'Electronics';
+      const osmUrl  = `https://www.openstreetmap.org/?mlat=${el.lat}&mlon=${el.lon}#map=18/${el.lat}/${el.lon}`;
+      return `<div class="bg-white rounded-2xl border border-emerald-50 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-amber-600">home_repair_service</span>
+          </div>
+          <span class="text-xs font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">${distStr} away</span>
+        </div>
+        <h3 class="font-black text-on-surface mb-1">${name}</h3>
+        <p class="text-sm text-on-surface-variant mb-0.5">🔧 ${type}</p>
+        ${addr ? `<p class="text-sm text-on-surface-variant mb-0.5">📍 ${addr}</p>` : ''}
+        ${phone ? `<p class="text-sm text-on-surface-variant mb-4">📞 ${phone}</p>` : '<p class="mb-4"></p>'}
+        <div class="flex gap-2">
+          ${phone ? `<a href="tel:${phone}" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 border border-emerald-300 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-50 transition-colors"><span class="material-symbols-outlined text-sm">call</span> Call Now</a>` : ''}
+          <a href="${osmUrl}" target="_blank" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-100 transition-colors"><span class="material-symbols-outlined text-sm">map</span> Directions</a>
+        </div>
+      </div>`;
+    }).join('');
+
+    showToast(`📍 Found ${top.length} repair centres near you!`);
+  } catch(e) {
+    container.innerHTML = renderDefaultRepairCentres();
+  }
+}
+
+function renderDefaultRepairCentres() {
+  const defaults = [
+    { name: 'TechFix Pro', type: 'Phones, Laptops, Tablets', location: 'Indiranagar, Bengaluru', contact: '+91-80-2222-3333', rating: '4.8' },
+    { name: 'QuickRepair Centre', type: 'All Electronics', location: 'Jayanagar, Bengaluru', contact: '+91-80-7777-8888', rating: '4.5' },
+    { name: 'iRepair Solutions', type: 'Apple & Android Devices', location: 'Whitefield, Bengaluru', contact: '+91-80-6666-9999', rating: '4.7' },
+  ];
+  return defaults.map(x => `
+    <div class="bg-white rounded-2xl border border-emerald-50 shadow-sm p-5 hover:shadow-md hover:-translate-y-1 transition-all">
+      <div class="flex items-start justify-between mb-3">
+        <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-amber-600">home_repair_service</span>
+        </div>
+        <span class="text-xs font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">⭐ ${x.rating}</span>
+      </div>
+      <h3 class="font-black text-on-surface mb-1">${x.name}</h3>
+      <p class="text-sm text-on-surface-variant mb-0.5">🔧 ${x.type}</p>
+      <p class="text-sm text-on-surface-variant mb-0.5">📍 ${x.location}</p>
+      <p class="text-sm text-on-surface-variant mb-4">📞 ${x.contact}</p>
+      <div class="flex gap-2">
+        <a href="tel:${x.contact}" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 border border-emerald-300 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-50 transition-colors">
+          <span class="material-symbols-outlined text-sm">call</span> Call Now
+        </a>
+        <button onclick="window.open('https://www.google.com/maps/search/'+encodeURIComponent('${x.name}'),'_blank')" class="flex-1 flex items-center justify-center gap-1 px-3 py-1.5 bg-amber-50 text-amber-700 text-xs font-bold rounded-full hover:bg-amber-100 transition-colors">
+          <span class="material-symbols-outlined text-sm">map</span> Directions
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function openLogModal(){ if(!Auth.isLoggedIn()){ window.location.href='login.html'; return; } document.getElementById('log-modal').classList.remove('hidden'); }
+
+async function logRepair(){
+  const btn = document.getElementById('log-btn');
+  btn.disabled = true; btn.innerHTML = '<div class="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin mx-auto"></div>';
+  try {
+    const data = await API.post('/repair/log', { product_name: document.getElementById('l-product').value });
+    document.getElementById('log-modal').classList.add('hidden');
+    showToast(data.message);
+  } catch(e) { document.getElementById('log-alert').innerHTML=`<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm">${e.message}</div>`; }
+  btn.disabled = false; btn.innerHTML = 'Log Repair';
+}
+
+async function estimateCost(){
+  try {
+    const d = await API.post('/repair/cost-estimate', { category: document.getElementById('e-cat').value });
+    document.getElementById('estimate-result').innerHTML=`
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm">
+        💰 Estimated for <strong>${d.category}</strong>: <strong class="text-emerald-700">${d.estimated_min.toLocaleString()} – ${d.estimated_max.toLocaleString()}</strong>
+        <br/><span class="text-on-surface-variant text-xs">${d.note}</span>
+      </div>`;
+  } catch(e) { showToast(e.message, 'error'); }
+}
+
+['log-modal','estimate-modal'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('click', e => { if(e.target===el) el.classList.add('hidden'); });
+});
+
+window.openLogModal  = openLogModal;
+window.logRepair     = logRepair;
+window.estimateCost  = estimateCost;
+
+loadCenters();
+})();
+</script>
+</body>
+</html>

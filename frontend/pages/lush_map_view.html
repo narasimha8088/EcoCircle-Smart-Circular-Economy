@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EcoArchive | Lush Map View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#a8afa2",
+                        "surface-container-high": "#dce6d4",
+                        "surface-container-highest": "#d6e0cd",
+                        "on-secondary-container": "#882100",
+                        "inverse-surface": "#0a1008",
+                        "surface-bright": "#f2f9ea",
+                        "surface-tint": "#176a21",
+                        "surface-dim": "#ccd8c4",
+                        "error-dim": "#b92902",
+                        "on-background": "#2a3127",
+                        "surface-container": "#e2ebda",
+                        "secondary-dim": "#972500",
+                        "primary-fixed": "#9df197",
+                        "on-tertiary-fixed-variant": "#003c61",
+                        "inverse-on-surface": "#989f92",
+                        "primary-container": "#9df197",
+                        "tertiary-container": "#5fb7ff",
+                        "on-tertiary-fixed": "#00192d",
+                        "on-surface-variant": "#575e52",
+                        "on-secondary": "#ffefec",
+                        "on-tertiary-container": "#003353",
+                        "secondary-fixed": "#ffc4b4",
+                        "secondary-container": "#ffc4b4",
+                        "secondary": "#ac2c00",
+                        "surface-variant": "#d6e0cd",
+                        "primary-fixed-dim": "#90e28a",
+                        "on-primary-fixed-variant": "#12661e",
+                        "on-primary-fixed": "#00460e",
+                        "primary-dim": "#025d16",
+                        "tertiary-fixed": "#5fb7ff",
+                        "on-error": "#ffefec",
+                        "error": "#b02500",
+                        "surface-container-low": "#ebf3e3",
+                        "on-secondary-fixed-variant": "#992600",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#72796d",
+                        "on-error-container": "#520c00",
+                        "secondary-fixed-dim": "#ffb19b",
+                        "surface": "#f2f9ea",
+                        "on-surface": "#2a3127",
+                        "background": "#f2f9ea",
+                        "error-container": "#f95630",
+                        "tertiary": "#006096",
+                        "on-tertiary": "#ebf3ff",
+                        "tertiary-dim": "#005483",
+                        "inverse-primary": "#9df197",
+                        "primary": "#176a21",
+                        "on-primary": "#d1ffc8",
+                        "on-secondary-fixed": "#671600",
+                        "on-primary-container": "#005c15",
+                        "tertiary-fixed-dim": "#46aaf5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift-only { background-image: linear-gradient(135deg, rgba(23, 106, 33, 0.05), transparent); }
+        .map-mesh {
+            background-image: radial-gradient(circle at 2px 2px, rgba(23, 106, 33, 0.1) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            background-color: rgba(242, 249, 234, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background overflow-hidden">
+<!-- SideNavBar (Execution from JSON) -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex flex-col h-full py-8 px-4 z-50 shadow-[0_20px_40px_rgba(23,106,33,0.06)] tonal-shift-only">
+<div class="mb-10 px-4">
+<h1 class="text-2xl font-black text-emerald-900 dark:text-emerald-50 tracking-tight">Greenhouse</h1>
+<p class="text-xs uppercase tracking-widest text-primary font-bold opacity-70">Eco-Manager</p>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Navigation Items Mapping -->
+<a class="flex items-center gap-3 text-emerald-900 dark:text-emerald-100 font-bold border-l-4 border-orange-600 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined">eco</span>
+<span>Greenhouse</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined">psychology_alt</span>
+<span>My Garden</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+<span>Eco-Tasks</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined">insert_chart</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4">
+<button class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-DEFAULT shadow-lg flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined">add</span>
+<span>New Initiative</span>
+</button>
+</div>
+</aside>
+<!-- TopNavBar (Execution from JSON) -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex justify-between items-center px-8 w-full flat no-shadows">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold text-emerald-900 dark:text-emerald-50">Lush Archive</span>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-sm">search</span>
+<input class="bg-surface-container-highest border-none rounded-full pl-10 pr-4 py-1.5 text-sm focus:ring-2 focus:ring-primary/20 w-64" placeholder="Search facilities..." type="text"/>
+</div>
+</div>
+<nav class="flex items-center gap-6 font-manrope text-sm font-medium">
+<a class="text-emerald-900 dark:text-emerald-50 font-bold border-b-2 border-orange-600 pb-1" href="#">Overview</a>
+<a class="text-emerald-700/70 dark:text-emerald-400/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="#">Resources</a>
+<a class="text-emerald-700/70 dark:text-emerald-400/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="#">Community</a>
+<div class="flex items-center gap-3 ml-4">
+<span class="material-symbols-outlined text-emerald-800 cursor-pointer">notifications</span>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-xl">account_circle</span>
+</div>
+</div>
+</nav>
+</header>
+<!-- Main Content Canvas (Interactive Map View) -->
+<main class="ml-64 pt-16 h-screen flex">
+<!-- Vibrant Map Section -->
+<section class="flex-1 relative bg-surface overflow-hidden map-mesh">
+<!-- Simulated Map Elements -->
+<div class="absolute inset-0 z-0 overflow-hidden">
+<img class="w-full h-full object-cover opacity-40 mix-blend-multiply filter saturate-150 brightness-110" data-alt="Top-down vibrant cartographic map illustration of a city with lush green parks, winding blue rivers, and bright orange road networks" data-location="Copenhagen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHSCvM1FiZAY2noHMOtWpq-O5quUR--p692IfQ-iAsSAi52N9TWAapkwosZdtnGSwQnwMcb5eZnhekHBLuvAq1P3UGmaM-BogAFmpEbtwCK8RL-qzGxcuukTO-nnPJ1mh5vUmmgq4da4JnQLX1-JLtdP8AZ1Chq2uQEZVk00j3qoF_LzRJoLBzYSxsDUKHgJVCRcLDYY4GJMKM2FOUXw_tih8pkwTNMMmqtBz8RBTH8FJKfxeQtvv_1Jsb9WSiukkJhWmK2_NjDm8"/>
+</div>
+<!-- Colorful Map Markers (Thematic Pop) -->
+<!-- Marker: Bio-Waste (Green) -->
+<div class="absolute top-1/4 left-1/3 z-10 group cursor-pointer">
+<div class="relative flex flex-col items-center">
+<div class="bg-primary p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<div class="absolute -top-12 bg-surface-container-lowest px-3 py-1 rounded-full text-[10px] font-bold text-primary shadow-xl opacity-0 group-hover:opacity-100 transition-opacity">BIO-WAFT CENTER</div>
+</div>
+</div>
+<!-- Marker: Electronics (Blue) -->
+<div class="absolute bottom-1/3 left-1/2 z-10 group cursor-pointer">
+<div class="relative flex flex-col items-center">
+<div class="bg-tertiary p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">devices</span>
+</div>
+<div class="absolute -top-12 bg-surface-container-lowest px-3 py-1 rounded-full text-[10px] font-bold text-tertiary shadow-xl opacity-0 group-hover:opacity-100 transition-opacity">E-RECYCLING HUB</div>
+</div>
+</div>
+<!-- Marker: Furniture (Orange) -->
+<div class="absolute top-1/2 right-1/4 z-10 group cursor-pointer">
+<div class="relative flex flex-col items-center">
+<div class="bg-secondary p-3 rounded-full shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">chair</span>
+</div>
+<div class="absolute -top-12 bg-surface-container-lowest px-3 py-1 rounded-full text-[10px] font-bold text-secondary shadow-xl opacity-0 group-hover:opacity-100 transition-opacity">UPCYCLE DEPOT</div>
+</div>
+</div>
+<!-- Floating Map Controls -->
+<div class="absolute bottom-8 left-8 flex flex-col gap-2 z-20">
+<button class="bg-surface-container-lowest p-3 rounded-full shadow-xl hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-primary">add</span>
+</button>
+<button class="bg-surface-container-lowest p-3 rounded-full shadow-xl hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-primary">remove</span>
+</button>
+<button class="bg-primary p-3 rounded-full shadow-xl text-white mt-2">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+</div>
+</section>
+<!-- Smart Recovery Side Panel -->
+<aside class="w-96 bg-surface-container-low p-8 overflow-y-auto flex flex-col gap-8 z-30 shadow-[-20px_0_40px_rgba(23,106,33,0.04)]">
+<div>
+<h2 class="text-3xl font-black text-on-surface tracking-tighter mb-2 leading-none">Smart Recovery</h2>
+<p class="text-on-surface-variant text-sm font-medium">Identify nearby resources and optimize your disposal route.</p>
+</div>
+<!-- Action Bento Grid -->
+<div class="grid grid-cols-2 gap-4">
+<button class="bg-primary-container p-6 rounded-lg text-left flex flex-col justify-between h-40 hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl mb-4" style="font-variation-settings: 'FILL' 1;">compost</span>
+<div class="mt-auto">
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-primary-container/60 mb-1">Organic</p>
+<p class="text-lg font-bold text-on-primary-container leading-tight">Bio-Waste Collection</p>
+</div>
+</button>
+<button class="bg-tertiary-container p-6 rounded-lg text-left flex flex-col justify-between h-40 hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined text-on-tertiary-container text-3xl mb-4" style="font-variation-settings: 'FILL' 1;">cable</span>
+<div class="mt-auto">
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-tertiary-container/60 mb-1">Technical</p>
+<p class="text-lg font-bold text-on-tertiary-container leading-tight">Drop-off E-waste</p>
+</div>
+</button>
+<button class="bg-secondary-container p-6 rounded-lg text-left flex flex-col justify-between h-40 col-span-2 hover:scale-[1.02] transition-transform relative overflow-hidden">
+<div class="relative z-10 flex flex-col justify-between h-full">
+<span class="material-symbols-outlined text-on-secondary-container text-3xl mb-4" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<div>
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-secondary-container/60 mb-1">Bulky Items</p>
+<p class="text-lg font-bold text-on-secondary-container leading-tight">Schedule Large Pickup</p>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]">package_2</span>
+</div>
+</button>
+</div>
+<!-- Contextual Insights Card -->
+<div class="bg-surface-container-highest p-6 rounded-lg flex flex-col gap-4 border-l-4 border-primary">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">psychology</span>
+</div>
+<span class="font-bold text-sm text-on-surface">AI Route Recommendation</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                    Based on your recent archive of <strong>12.4kg of paper</strong>, the nearest high-yield center is just 400m away on Orchard St.
+                </p>
+<button class="text-sm font-bold text-primary flex items-center gap-2 hover:underline">
+                    View Optimized Path
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Stats/Metric Row -->
+<div class="mt-auto pt-8 border-t border-surface-container-high grid grid-cols-2 gap-4">
+<div class="bg-surface-bright p-4 rounded-lg">
+<p class="text-[10px] font-bold uppercase text-outline mb-1">Impact Radius</p>
+<p class="text-2xl font-black text-on-surface">1.2<span class="text-sm font-medium ml-1">km</span></p>
+</div>
+<div class="bg-surface-bright p-4 rounded-lg">
+<p class="text-[10px] font-bold uppercase text-outline mb-1">Recycle Score</p>
+<p class="text-2xl font-black text-tertiary">94%</p>
+</div>
+</div>
+</aside>
+</main>
+</body></html>

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Items  EcoCircle</title>
+<!-- Performance: early connection hints -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://cdn.tailwindcss.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#176a21","on-primary": "#d1ffc8","primary-container": "#9df197",
+          "on-primary-container": "#005c15","secondary": "#ac2c00","on-secondary": "#ffefec",
+          "secondary-container": "#ffc4b4","tertiary": "#006096","on-tertiary": "#ebf3ff",
+          "tertiary-container": "#5fb7ff","surface": "#f2f9ea","on-surface": "#2a3127",
+          "surface-variant": "#d6e0cd","on-surface-variant": "#575e52","surface-container-lowest": "#ffffff",
+          "surface-container-low": "#ebf3e3","surface-container": "#e2ebda",
+          "surface-container-high": "#dce6d4","surface-container-highest": "#d6e0cd",
+          "outline": "#72796d","outline-variant": "#a8afa2","background": "#f2f9ea",
+          "on-background": "#2a3127",
+        },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" },
+        fontFamily: { headline: ["Manrope"], body: ["Manrope"], label: ["Manrope"] }
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  @keyframes badge-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.8;transform:scale(1.05)} }
+  .badge-new { animation: badge-pulse 1.5s ease infinite; }
+  @keyframes fadeIn  { from{opacity:0}            to{opacity:1} }
+  @keyframes popIn   { from{opacity:0;transform:scale(0.85)} to{opacity:1;transform:scale(1)} }
+</style>
+<link rel="stylesheet" href="../css/style.css"/>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/nav.js"></script>
+</head>
+<body class="bg-background text-on-surface font-body">
+
+<!--  SIDEBAR  -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-emerald-50/80 backdrop-blur-xl flex flex-col py-8 px-4 z-50">
+  <div class="mb-10 px-4">
+    <h1 class="text-2xl font-black text-emerald-900 tracking-tight">EcoCircle</h1>
+    <p class="text-xs font-semibold tracking-widest uppercase text-emerald-800/60 mt-1">Eco Manager</p>
+  </div>
+  <nav class="flex-1 space-y-1">
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="dashboard.html">
+      <span class="material-symbols-outlined">dashboard</span><span>Dashboard</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-900 font-bold border-l-4 border-emerald-600 pl-4 py-2.5 bg-emerald-100/60 rounded-r-xl" href="products.html">
+      <span class="material-symbols-outlined text-emerald-700">inventory_2</span><span>My Items</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="ai-engine.html">
+      <span class="material-symbols-outlined">psychology</span><span>AI Engine</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="donate.html">
+      <span class="material-symbols-outlined">favorite</span><span>Donate</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="marketplace.html">
+      <span class="material-symbols-outlined">storefront</span><span>Marketplace</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="repair.html">
+      <span class="material-symbols-outlined">build</span><span>Repair</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="recycling.html">
+      <span class="material-symbols-outlined">recycling</span><span>Recycling</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="map.html">
+      <span class="material-symbols-outlined">map</span><span>Map</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="profile.html">
+      <span class="material-symbols-outlined">person</span><span>Profile</span>
+    </a>
+  </nav>
+  <div class="mt-auto px-2">
+    <a href="products.html" class="w-full py-3 px-4 bg-gradient-to-br from-emerald-700 to-emerald-500 text-white font-bold rounded-xl shadow flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all text-sm mb-6">
+      <span class="material-symbols-outlined text-sm">add</span> Add New Item
+    </a>
+    <div class="flex items-center gap-3 pt-4 border-t border-emerald-900/10">
+      <div id="sb-avatar" class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-800 font-black text-sm flex-shrink-0">EA</div>
+      <div class="overflow-hidden flex-1">
+        <p class="text-sm font-bold text-emerald-900 truncate" id="sb-user-name">Eco Steward</p>
+        <p class="text-[9px] font-bold tracking-widest text-emerald-800/50 mt-0.5" id="sb-user-id"></p>
+      </div>
+      <button id="nav-logout" class="p-1 hover:bg-emerald-100 rounded-full transition-colors" title="Logout">
+        <span class="material-symbols-outlined text-emerald-700/60 text-lg">logout</span>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!--  TOP NAV  -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 backdrop-blur-xl flex justify-between items-center px-8 border-b border-emerald-100/60">
+  <div class="flex items-center gap-3">
+    <span class="material-symbols-outlined text-emerald-700">inventory_2</span>
+    <div>
+      <h2 class="text-lg font-black text-on-surface leading-tight">My Items</h2>
+      <p class="text-xs text-on-surface-variant">Track the lifecycle of everything you own</p>
+    </div>
+  </div>
+  <button onclick="document.getElementById('add-modal').classList.remove('hidden')" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-emerald-700 to-emerald-500 text-white font-bold rounded-full text-sm hover:scale-[1.02] transition-all shadow">
+    <span class="material-symbols-outlined text-sm">add</span> Add Product
+  </button>
+</header>
+
+<!--  MAIN CONTENT  -->
+<main class="ml-64 pt-20 px-8 pb-12 min-h-screen">
+  <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div class="flex items-center justify-center py-20 col-span-full">
+      <div class="w-8 h-8 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div>
+    </div>
+  </div>
+</main>
+
+<!--  FAB  -->
+<button onclick="document.getElementById('add-modal').classList.remove('hidden')" class="fixed bottom-10 right-10 w-14 h-14 bg-secondary text-on-secondary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50" title="Add item">
+  <span class="material-symbols-outlined text-2xl">add</span>
+</button>
+
+<!-- Add Product Modal -->
+<div class="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm hidden" id="add-modal">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden max-h-[90vh] overflow-y-auto">
+    <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 px-8 py-6 text-white flex justify-between items-center">
+      <h3 class="text-lg font-black"> Add New Product</h3>
+      <button onclick="document.getElementById('add-modal').classList.add('hidden')" class="p-1 hover:bg-white/20 rounded-full transition-colors"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="px-8 py-6 space-y-4">
+      <div id="add-alert"></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Product Name</label>
+          <input id="a-name" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400" placeholder="e.g. Dell Laptop"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Brand</label>
+          <input id="a-brand" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400" placeholder="e.g. Dell"/>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Category</label>
+          <select id="a-cat" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400">
+            <option>Mobile</option><option>Laptop</option><option>Appliance</option>
+            <option>Furniture</option><option>Electronics</option><option>Clothing</option><option>Books</option><option>Toys</option><option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Condition</label>
+          <select id="a-cond" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400">
+            <option>New</option><option>Good</option><option>Fair</option><option>Poor</option>
+          </select>
+        </div>
+      </div>
+      <!-- Phase 2: Material dropdown for carbon estimator (M5) -->
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Primary Material</label>
+          <select id="a-material" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400">
+            <option value=""> Select material </option>
+            <option value="metal"> Metal / Aluminium</option>
+            <option value="plastic"> Plastic / Polymer</option>
+            <option value="glass"> Glass</option>
+            <option value="fabric"> Fabric / Textile</option>
+            <option value="leather"> Leather</option>
+            <option value="wood"> Wood</option>
+            <option value="rubber"> Rubber</option>
+            <option value="ceramic"> Ceramic / Porcelain</option>
+            <option value="paper"> Paper / Cardboard</option>
+            <option value="other"> Other / Mixed</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Lifecycle Stage</label>
+          <select id="a-stage" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400">
+            <option value="In Use"> In Use</option>
+            <option value="Repaired"> Repaired</option>
+            <option value="Listed"> Listed for Sale</option>
+            <option value="Donated"> Donated</option>
+            <option value="Recycled"> Recycled</option>
+            <option value="Sold"> Sold</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Purchase Price (&#8377;)</label>
+          <input id="a-price" type="number" min="0" step="1" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400" placeholder="e.g. 25000"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Weight (kg)</label>
+          <input id="a-weight" type="number" min="0" step="0.1" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400" placeholder="e.g. 1.8"/>
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Purchase Date</label>
+        <input id="a-date" type="date" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400"/>
+      </div>
+      <div>
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Description</label>
+        <textarea id="a-desc" class="w-full bg-surface-container-highest rounded-xl px-4 py-2.5 text-sm border-none focus:ring-2 focus:ring-emerald-400 resize-none" rows="2" placeholder="Any notes about this product"></textarea>
+      </div>
+      <!-- Product Photo Upload -->
+      <div>
+        <label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-1 block">Product Photo <span class="font-normal normal-case text-on-surface-variant/60">(optional)</span></label>
+        <label class="flex flex-col items-center justify-center gap-2 w-full h-28 border-2 border-dashed border-emerald-200 rounded-xl cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/50 transition-all relative overflow-hidden" id="img-drop-label">
+          <span class="material-symbols-outlined text-3xl text-emerald-400" id="img-upload-icon">add_photo_alternate</span>
+          <span class="text-xs text-on-surface-variant" id="img-upload-text">Click to upload a photo</span>
+          <img id="img-preview" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden" alt="preview"/>
+          <input type="file" id="a-image" accept="image/*" class="sr-only" onchange="previewImage(this)"/>
+        </label>
+      </div>
+      <div class="flex gap-3 justify-end pt-2">
+        <button onclick="document.getElementById('add-modal').classList.add('hidden')" class="px-5 py-2.5 rounded-full border border-emerald-200 text-sm font-semibold hover:bg-surface-container transition-colors">Cancel</button>
+        <button id="add-btn" onclick="addProduct()" class="px-5 py-2.5 rounded-full bg-gradient-to-br from-emerald-700 to-emerald-500 text-white text-sm font-bold hover:scale-[1.02] transition-all shadow">Add Product</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+if(!Auth.requireLogin()) throw new Error();
+initNavbar();
+const sidebarUser = Auth.user();
+if(sidebarUser) {
+  const initials = (sidebarUser.name||'EA').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('sb-user-name').textContent = sidebarUser.name || 'Eco Steward';
+  document.getElementById('sb-avatar').textContent = initials;
+  const sbId = document.getElementById('sb-user-id');
+  if (sbId) sbId.textContent = sidebarUser.user_number ? 'ID: ' + sidebarUser.user_number : '';
+}
+
+const condBadge  = { New: 'bg-emerald-100 text-emerald-700', Good: 'bg-green-100 text-green-700', Fair: 'bg-amber-100 text-amber-700', Poor: 'bg-red-100 text-red-700' };
+const healthMap  = { New: 97, Good: 75, Fair: 48, Poor: 20 };
+const barColor   = h => h > 70 ? 'bg-emerald-500' : h > 40 ? 'bg-amber-400' : 'bg-red-400';
+const STAGES     = ['In Use', 'Repaired', 'Listed', 'Donated', 'Recycled', 'Sold'];
+const stageBadge = { 'In Use': 'bg-blue-100 text-blue-700', Repaired: 'bg-amber-100 text-amber-800', Listed: 'bg-indigo-100 text-indigo-700',
+                     Donated: 'bg-emerald-100 text-emerald-700', Recycled: 'bg-teal-100 text-teal-700', Sold: 'bg-purple-100 text-purple-700' };
+
+async function updateStage(id, stage) {
+  try {
+    const r = await API.put('/products/' + id, { lifecycle_stage: stage, note: 'Updated by you in My Items' });
+    showToast('Status updated to ' + stage + (r.eco_points ? ' (+' + r.eco_points + ' eco points)' : ''));
+    loadProducts();
+  } catch (e) { showToast(e.message, 'error'); loadProducts(); }
+}
+
+async function loadProducts(){
+  try {
+    const data = await API.get("/products/");
+    const g = document.getElementById("products-grid");
+    if(!data.length){
+      g.innerHTML = `
+      <!-- Example Ghost Item 1 -->
+      <div class="bg-white/40 rounded-2xl border border-dashed border-emerald-200 shadow-sm opacity-50 pointer-events-none overflow-hidden filter grayscale">
+        <div class="h-32 bg-surface-container-low flex items-center justify-center text-5xl"></div>
+        <div class="p-4">
+          <div class="flex gap-2 mb-2 flex-wrap">
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">Good</span>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">In Use</span>
+          </div>
+          <p class="font-black text-on-surface mb-0.5">Example Smartphone</p>
+          <p class="text-xs text-on-surface-variant mb-2">Electronics  2 yrs old</p>
+          <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div class="bg-emerald-500 h-full rounded-full" style="width:85%"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Add Call to Action Card -->
+      <div class="bg-emerald-50 rounded-2xl border-2 border-dashed border-emerald-300 flex flex-col items-center justify-center text-center p-8 hover:bg-emerald-100 transition-colors cursor-pointer group shadow-sm hover:shadow-md" onclick="document.getElementById('add-modal').classList.remove('hidden')">
+        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4 group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-3xl text-emerald-600">add</span>
+        </div>
+        <p class="font-bold text-emerald-800 mb-1 text-lg">Add Your First Item</p>
+        <p class="text-sm text-emerald-600/80 mb-4">Start tracking to see real data</p>
+      </div>
+      <!-- Example Ghost Item 2 -->
+      <div class="bg-white/40 rounded-2xl border border-dashed border-emerald-200 shadow-sm opacity-50 pointer-events-none overflow-hidden filter grayscale hidden md:block">
+        <div class="h-32 bg-surface-container-low flex items-center justify-center text-5xl"></div>
+        <div class="p-4">
+          <div class="flex gap-2 mb-2 flex-wrap">
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">Fair</span>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Storage</span>
+          </div>
+          <p class="font-black text-on-surface mb-0.5">Example Winter Jacket</p>
+          <p class="text-xs text-on-surface-variant mb-2">Clothing  4 yrs old</p>
+          <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div class="bg-amber-400 h-full rounded-full" style="width:40%"></div>
+          </div>
+        </div>
+      </div>
+      `;
+      return;
+    }
+    const userObj = Auth.user();
+    const userId = userObj ? userObj.id : 'guest';
+    const newItemId = localStorage.getItem('eco_new_item_id_' + userId);
+    const highlightId = new URLSearchParams(location.search).get('highlight');
+    g.innerHTML = data.map(p => {
+      const e = escapeHtml;  // XSS guard
+      const emoji = categoryEmoji(p.category) || '&#128230;';
+      const h = healthMap[p.condition] || 50;
+      const isNew = (newItemId && String(p.id) === String(newItemId)) || (highlightId && String(p.id) === String(highlightId));
+      const stage = p.lifecycle_stage || 'In Use';
+      const stageCls = stageBadge[stage] || 'bg-blue-100 text-blue-700';
+      const rec = p.ai_recommendation;
+      const events = (p.events || []);
+      const stageOpts = STAGES.map(st => `<option value="${st}" ${st === stage ? 'selected' : ''}>${st}</option>`).join('');
+      const timeline = events.length ? events.map(ev => `
+          <li class="flex gap-2 items-start">
+            <span class="mt-1.5 w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0"></span>
+            <span class="min-w-0"><span class="font-bold text-on-surface">${e(ev.stage)}</span>
+              <span class="text-on-surface-variant"> &middot; ${e(new Date(ev.created_at + (ev.created_at.endsWith('Z') ? '' : 'Z')).toLocaleDateString('en-IN',{day:'numeric',month:'short'}))}</span>
+              ${ev.note ? `<span class="block text-[11px] text-on-surface-variant break-words">${e(ev.note)}</span>` : ''}</span>
+          </li>`).join('') : '<li class="text-on-surface-variant">No activity yet.</li>';
+      return `
+      <div id="item-${p.id}" class="bg-white rounded-2xl border ${isNew ? 'border-emerald-400 ring-2 ring-emerald-200 shadow-md' : 'border-emerald-50 shadow-sm'} hover:shadow-md transition-all overflow-hidden flex flex-col">
+        <div class="h-28 ${isNew ? 'bg-emerald-50' : 'bg-surface-container-low'} flex items-center justify-center text-5xl relative overflow-hidden">
+          ${p.image
+            ? `<img src="${e(p.image)}" alt="${e(p.name)}" class="w-full h-full object-cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+               <span class="absolute inset-0 items-center justify-center text-5xl hidden">${emoji}</span>`
+            : emoji}
+          ${p.source === 'ai_scan' ? '<span class="absolute top-2 left-2 text-[9px] font-black bg-secondary text-on-secondary px-2 py-0.5 rounded-full z-10">AI SCAN</span>' : ''}
+          ${isNew ? '<span class="badge-new absolute top-2 right-2 text-[9px] font-black bg-emerald-600 text-white px-2 py-0.5 rounded-full z-10">NEW</span>' : ''}
+        </div>
+        <div class="p-4 flex-1">
+          <div class="flex gap-2 mb-2 flex-wrap">
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${condBadge[p.condition] || 'bg-slate-100 text-slate-600'}">${e(p.condition)}</span>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${stageCls}">${e(stage)}</span>
+            ${rec ? `<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800" title="Recommended by the AI">AI: ${e(rec)}</span>` : ''}
+          </div>
+          <p class="font-black text-on-surface mb-0.5 break-words">${e(p.name)}</p>
+          <p class="text-xs text-on-surface-variant mb-2">${e(p.category)} &middot; ${e(String(p.age_years))} yrs old &middot; ${e(String(p.weight_kg||'?'))}kg</p>
+          <div class="flex justify-between text-xs text-on-surface-variant mb-1">
+            <span>Health</span><span class="font-bold">${h}%</span>
+          </div>
+          <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+            <div class="${barColor(h)} h-full rounded-full" style="width:${h}%"></div>
+          </div>
+          <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs">
+            ${p.purchase_price ? `<span class="font-black text-emerald-700">${formatPrice(p.purchase_price)}</span>` : ''}
+            ${p.resale_estimate ? `<span class="text-on-surface-variant">Resale ~<b>${formatPrice(Math.round(p.resale_estimate))}</b></span>` : ''}
+            ${p.co2_saved_kg ? `<span class="text-on-surface-variant">CO&#8322; saved <b>${Number(p.co2_saved_kg).toFixed(1)} kg</b></span>` : ''}
+            ${p.ai_score != null && p.source === 'ai_scan' ? `<span class="text-on-surface-variant">Eco score <b>${p.ai_score}/100</b></span>` : ''}
+          </div>
+          <details class="mt-3 group">
+            <summary class="text-xs font-bold text-primary cursor-pointer select-none">Tracking &amp; history (${events.length})</summary>
+            <ul class="mt-2 space-y-2 text-xs">${timeline}</ul>
+          </details>
+        </div>
+        <div class="px-4 pb-4">
+          <label class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant block mb-1">Update status</label>
+          <select onchange="updateStage(${p.id}, this.value)" class="w-full bg-surface-container-highest rounded-xl px-3 py-2 text-xs font-semibold border-none focus:ring-2 focus:ring-emerald-400 mb-2">${stageOpts}</select>
+          <div class="flex gap-2">
+            <a href="ai-engine.html" class="flex-1 text-center px-3 py-1.5 border border-emerald-300 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-50 transition-colors">AI Advice</a>
+            <a href="donate.html?item=${p.id}" class="flex-1 text-center px-3 py-1.5 border border-emerald-300 text-emerald-700 text-xs font-bold rounded-full hover:bg-emerald-50 transition-colors">Donate</a>
+            <button onclick="deleteProduct(${p.id})" class="px-3 py-1.5 border border-red-200 text-red-600 text-xs font-bold rounded-full hover:bg-red-50 transition-colors">Delete</button>
+          </div>
+        </div>
+      </div>`;
+    }).join("");
+    if (highlightId) setTimeout(() => { const el = document.getElementById('item-' + highlightId); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 150);
+    if(newItemId) setTimeout(() => localStorage.removeItem('eco_new_item_id_' + userId), 5000);
+  } catch(e) {
+    document.getElementById("products-grid").innerHTML = `<div class="bg-red-50 border border-red-200 text-red-700 rounded-2xl p-4 text-sm col-span-full">${e.message}</div>`;
+  }
+}
+
+async function addProduct(){
+  const btn = document.getElementById("add-btn");
+  const ab  = document.getElementById("add-alert");
+  if(!document.getElementById("a-name").value.trim()){
+    ab.innerHTML='<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm mb-2"> Product name required.</div>';
+    return;
+  }
+  btn.disabled = true; btn.innerHTML = '<div class="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin mx-auto"></div>';
+  try {
+    // Use FormData so we can include the image file
+    const fd = new FormData();
+    fd.append("name",           document.getElementById("a-name").value.trim());
+    fd.append("brand",          document.getElementById("a-brand").value.trim());
+    fd.append("category",       document.getElementById("a-cat").value);
+    fd.append("condition",      document.getElementById("a-cond").value);
+    fd.append("material",       document.getElementById("a-material").value || "other");
+    fd.append("lifecycle_stage",document.getElementById("a-stage")?.value || "In Use");
+    fd.append("purchase_price", parseFloat(document.getElementById("a-price").value)||0);
+    fd.append("weight_kg",      parseFloat(document.getElementById("a-weight").value)||0);
+    fd.append("purchase_date",  document.getElementById("a-date").value);
+    fd.append("description",    document.getElementById("a-desc").value.trim());
+    const imgFile = document.getElementById("a-image")?.files?.[0];
+    if (imgFile) fd.append("image", imgFile);
+
+    // Send multipart (no Content-Type header — browser sets boundary automatically)
+    const token = localStorage.getItem("sce_token");
+    const r = await fetch(API.base() + "/products/", {
+      method: "POST",
+      headers: token ? { "Authorization": `Bearer ${token}` } : {},
+      body: fd,
+    });
+    const res = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(res.error || res.message || "Request failed");
+
+    document.getElementById('add-modal').classList.add('hidden');
+    // Reset image preview
+    document.getElementById("img-preview")?.classList.add("hidden");
+    document.getElementById("img-upload-icon")?.classList.remove("hidden");
+    document.getElementById("img-upload-text")?.classList.remove("hidden");
+    if (document.getElementById("a-image")) document.getElementById("a-image").value = "";
+
+    const userObj = Auth.user();
+    const userId = userObj ? userObj.id : 'guest';
+    if(res && res.product) localStorage.setItem('eco_new_item_id_' + userId, res.product.id);
+
+    // Phase 2 M6: fetch resale estimate immediately for the success banner
+    let resaleInfo = null;
+    const pprice = parseFloat(document.getElementById("a-price").value)||0;
+    if(pprice > 0) {
+      try {
+        resaleInfo = await API.post('/ai/price-predict', {
+          purchase_price: pprice,
+          age_years:      0,
+          condition:      document.getElementById("a-cond").value,
+          category:       document.getElementById("a-cat").value,
+          brand:          document.getElementById("a-brand").value.trim() || '',
+        });
+      } catch(e) { /* non-critical */ }
+    }
+    showUploadSuccess(document.getElementById("a-name").value.trim(), res && res.product ? res.product.id : null, resaleInfo);
+    loadProducts();
+  } catch(e) { ab.innerHTML=`<div class="bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 text-sm mb-2">${e.message}</div>`; }
+  btn.disabled = false; btn.innerHTML = "Add Product";
+}
+
+function previewImage(input) {
+  const preview = document.getElementById("img-preview");
+  const icon    = document.getElementById("img-upload-icon");
+  const text    = document.getElementById("img-upload-text");
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.classList.remove("hidden");
+      icon?.classList.add("hidden");
+      text?.classList.add("hidden");
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function showUploadSuccess(itemName, itemId, resaleInfo) {
+  const resaleBadge = resaleInfo && resaleInfo.estimated_price
+    ? `<div style="background:linear-gradient(135deg,#006096,#0082cc);border-radius:0.875rem;padding:1rem;text-align:center;grid-column:span 2;">
+         <div style="font-size:0.7rem;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-bottom:0.25rem;"> M6 Resale Estimate</div>
+         <div style="font-size:1.6rem;font-weight:900;color:#fff;">${Math.round(resaleInfo.estimated_price).toLocaleString('en-IN')}</div>
+         <div style="font-size:0.65rem;color:rgba(255,255,255,0.65);">
+           Range ${Math.round(resaleInfo.price_range?.[0]||0).toLocaleString('en-IN')}  ${Math.round(resaleInfo.price_range?.[1]||0).toLocaleString('en-IN')}
+           &nbsp;&nbsp; Depreciation ${resaleInfo.depreciation_pct}%
+         </div>
+       </div>`
+    : '';
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);animation:fadeIn 0.3s ease;';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:1.5rem;max-width:400px;width:90%;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.25);animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);">
+      <div style="background:linear-gradient(135deg,#176a21,#2d9c3a);padding:2rem;text-align:center;">
+        <div style="font-size:3rem;margin-bottom:0.5rem;"></div>
+        <h3 style="color:#fff;font-size:1.4rem;font-weight:900;margin:0;">Item Added!</h3>
+        <p style="color:rgba(255,255,255,0.8);font-size:0.875rem;margin:0.5rem 0 0;">${itemName || 'Your item'} is now being tracked</p>
+      </div>
+      <div style="padding:1.5rem;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.25rem;">
+          <div style="background:#f2f9ea;border-radius:0.875rem;padding:1rem;text-align:center;">
+            <div style="font-size:1.5rem;font-weight:900;color:#176a21;">+10</div>
+            <div style="font-size:0.7rem;font-weight:700;color:#72796d;text-transform:uppercase;">Eco Points</div>
+          </div>
+          <div style="background:#ebf3ff;border-radius:0.875rem;padding:1rem;text-align:center;">
+            <div style="font-size:1.5rem;font-weight:900;color:#006096;"></div>
+            <div style="font-size:0.7rem;font-weight:700;color:#72796d;text-transform:uppercase;">Tracked</div>
+          </div>
+          ${resaleBadge}
+        </div>
+
+        <div style="display:flex;gap:0.625rem;">
+          <a href="ai-engine.html" style="flex:1;display:block;text-align:center;padding:0.75rem;background:#176a21;color:#fff;border-radius:0.75rem;font-weight:800;font-size:0.875rem;text-decoration:none;"> AI Scan</a>
+          <button onclick="this.closest('[style*=position]').remove()" style="flex:1;padding:0.75rem;background:#f2f9ea;color:#2a3127;border:1px solid #d6e0cd;border-radius:0.75rem;font-weight:700;font-size:0.875rem;cursor:pointer;">Stay Here</button>
+        </div>
+      </div>
+    </div>
+  `;
+  overlay.addEventListener('click', e => { if(e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+  const userObj = Auth.user();
+  const userId = userObj ? userObj.id : 'guest';
+  const notifsKey = 'eco_notifications_' + userId;
+  const notifs = JSON.parse(localStorage.getItem(notifsKey) || '[]');
+  notifs.unshift({ icon: '', title: `${itemName} added to your items`, sub: '+10 eco points earned', time: new Date().toISOString(), read: false });
+  localStorage.setItem(notifsKey, JSON.stringify(notifs.slice(0, 20)));
+}
+
+async function deleteProduct(id){
+  if(!confirm("Delete this product?")) return;
+  try { await API.delete("/products/"+id); showToast("Product deleted"); loadProducts(); }
+  catch(e) { showToast(e.message, "error"); }
+}
+
+document.getElementById('add-modal').addEventListener('click', e => {
+  if(e.target === document.getElementById('add-modal')) document.getElementById('add-modal').classList.add('hidden');
+});
+
+loadProducts();
+</script>
+</body>
+</html>

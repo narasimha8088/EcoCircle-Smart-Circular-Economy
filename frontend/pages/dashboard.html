@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard  EcoCircle</title>
+<!-- Performance: early connection hints -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://cdn.tailwindcss.com"/>
+<link rel="dns-prefetch" href="https://cdn.socket.io"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#176a21","on-primary": "#d1ffc8","primary-container": "#9df197",
+          "on-primary-container": "#005c15","secondary": "#ac2c00","on-secondary": "#ffefec",
+          "secondary-container": "#ffc4b4","tertiary": "#006096","on-tertiary": "#ebf3ff",
+          "tertiary-container": "#5fb7ff","surface": "#f2f9ea","on-surface": "#2a3127",
+          "surface-variant": "#d6e0cd","on-surface-variant": "#575e52","surface-container-lowest": "#ffffff",
+          "surface-container-low": "#ebf3e3","surface-container": "#e2ebda",
+          "surface-container-high": "#dce6d4","surface-container-highest": "#d6e0cd",
+          "outline": "#72796d","outline-variant": "#a8afa2","background": "#f2f9ea",
+          "on-background": "#2a3127","inverse-surface": "#0a1008","error": "#b02500",
+          "primary-dim": "#025d16","secondary-dim": "#972500","tertiary-dim": "#005483",
+          "on-secondary-fixed-variant": "#992600", "on-secondary-fixed": "#671600",
+        },
+        borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" },
+        fontFamily: { headline: ["Manrope"], body: ["Manrope"], label: ["Manrope"] }
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .tonal-shift-only { border: none !important; }
+  /* Onboarding modal */
+  #onboarding-modal { transition: opacity 0.4s ease; }
+  #onboarding-modal.hidden { opacity: 0; pointer-events: none; }
+  /* Notifications panel */
+  #notif-panel { transform: translateX(100%); transition: transform 0.3s ease; }
+  #notif-panel.open { transform: translateX(0); }
+  /* Step circles */
+  .step-done { background: #176a21 !important; color: white !important; }
+  .step-done::after { content: ''; }
+  /* NEW badge pulse */
+  @keyframes badge-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.8;transform:scale(1.05)} }
+  .badge-new { animation: badge-pulse 1.5s ease infinite; }
+  /* Quick action hover */
+  .quick-action { transition: all 0.25s ease; }
+  .quick-action:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(23,106,33,0.15); }
+  /* Activity item hover */
+  .activity-item { transition: transform 0.25s ease; }
+  .activity-item:hover { transform: translateX(4px); }
+  /* Badge progress bar */
+  .badge-bar { transition: width 1.5s ease; }
+  /* Eco trend sparkline */
+  .sparkline-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: drawLine 1.8s ease forwards 0.3s; }
+  @keyframes drawLine { to { stroke-dashoffset: 0; } }
+  /* Trend arrow */
+  @keyframes trendPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+  .trend-arrow { animation: trendPulse 2s ease infinite; }
+  /* Eco score counter */
+  .eco-counter { transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+</style>
+<link rel="stylesheet" href="../css/style.css"/>
+
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/nav.js"></script>
+</head>
+<body class="bg-background text-on-surface font-body">
+
+<!--  ONBOARDING MODAL (New Users Only)  -->
+<div id="onboarding-modal" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm hidden" style="opacity:0">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden">
+    <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 px-8 py-10 text-white text-center">
+      <div class="text-5xl mb-3"></div>
+      <h2 class="text-2xl font-black mb-2">Welcome to EcoCircle!</h2>
+      <p class="opacity-80 text-sm" id="onboard-name-msg">Let's get your eco journey started.</p>
+    </div>
+    <div class="px-8 py-6">
+      <p class="text-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-4">Your 3-step Quick Start</p>
+      <div class="space-y-3" id="onboard-steps">
+        <div class="flex items-center gap-4 p-3 rounded-xl bg-emerald-50 border border-emerald-100">
+          <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-black text-sm flex-shrink-0">1</div>
+          <div class="flex-1">
+            <p class="font-bold text-sm">Add Your First Item</p>
+            <p class="text-xs text-on-surface-variant">Track any product  phone, laptop, clothing</p>
+          </div>
+          <a href="products.html" class="text-xs font-bold text-emerald-700 hover:underline">Go </a>
+        </div>
+        <div class="flex items-center gap-4 p-3 rounded-xl bg-slate-50 border border-slate-100">
+          <div class="w-9 h-9 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center font-black text-sm flex-shrink-0">2</div>
+          <div class="flex-1">
+            <p class="font-bold text-sm text-slate-400">Scan with AI</p>
+            <p class="text-xs text-on-surface-variant">Get a sustainability recommendation</p>
+          </div>
+          <a href="ai-engine.html" class="text-xs font-bold text-slate-400 hover:underline">Go </a>
+        </div>
+        <div class="flex items-center gap-4 p-3 rounded-xl bg-slate-50 border border-slate-100">
+          <div class="w-9 h-9 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center font-black text-sm flex-shrink-0">3</div>
+          <div class="flex-1">
+            <p class="font-bold text-sm text-slate-400">Make a Donation</p>
+            <p class="text-xs text-on-surface-variant">Give unused items to NGOs in need</p>
+          </div>
+          <a href="donate.html" class="text-xs font-bold text-slate-400 hover:underline">Go </a>
+        </div>
+      </div>
+      <div class="mt-6 flex gap-3">
+        <button id="onboard-dismiss" class="flex-1 py-3 bg-emerald-700 text-white font-bold rounded-xl hover:bg-emerald-800 transition-colors text-sm">
+          Let's Go! 
+        </button>
+        <button id="onboard-skip" class="px-4 py-3 text-on-surface-variant font-medium rounded-xl hover:bg-surface-container text-sm">
+          Skip
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  NOTIFICATIONS PANEL  -->
+<div id="notif-overlay" class="fixed inset-0 z-[150] hidden" onclick="closeNotifPanel()"></div>
+<div id="notif-panel" class="fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-[160] flex flex-col">
+  <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+    <h3 class="font-black text-on-surface text-lg">Notifications</h3>
+    <button onclick="closeNotifPanel()" class="p-1 hover:bg-surface-container rounded-full transition-colors">
+      <span class="material-symbols-outlined text-on-surface-variant">close</span>
+    </button>
+  </div>
+  <div class="flex-1 overflow-y-auto" id="notif-list">
+    <div class="p-5 text-center text-on-surface-variant text-sm mt-8">
+      <div class="text-3xl mb-2"></div>
+      <p>No notifications yet</p>
+    </div>
+  </div>
+  <div class="p-4 border-t border-slate-100">
+    <button onclick="markAllRead()" class="w-full text-sm text-center text-emerald-700 font-semibold py-2 hover:bg-emerald-50 rounded-xl transition-colors">
+      Mark all as read
+    </button>
+  </div>
+</div>
+
+<!--  SIDEBAR  -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex flex-col py-8 px-4 z-50">
+  <div class="mb-10 px-4">
+    <h1 class="text-2xl font-black text-emerald-900 tracking-tight">EcoCircle</h1>
+    <p class="text-xs font-semibold tracking-widest uppercase text-emerald-800/60 mt-1">Eco Manager</p>
+  </div>
+  <nav class="flex-1 space-y-1">
+    <a class="flex items-center gap-3 text-emerald-900 font-bold border-l-4 border-emerald-600 pl-4 py-2.5 bg-emerald-100/60 rounded-r-xl" href="dashboard.html">
+      <span class="material-symbols-outlined text-emerald-700">dashboard</span><span>Dashboard</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="products.html">
+      <span class="material-symbols-outlined">inventory_2</span><span>My Items</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="ai-engine.html">
+      <span class="material-symbols-outlined">psychology</span><span>AI Engine</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="donate.html">
+      <span class="material-symbols-outlined">favorite</span><span>Donate</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="marketplace.html">
+      <span class="material-symbols-outlined">storefront</span><span>Marketplace</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="repair.html">
+      <span class="material-symbols-outlined">build</span><span>Repair</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="recycling.html">
+      <span class="material-symbols-outlined">recycling</span><span>Recycling</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="map.html">
+      <span class="material-symbols-outlined">map</span><span>Map</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="profile.html">
+      <span class="material-symbols-outlined">person</span><span>Profile</span>
+    </a>
+  </nav>
+  <div class="mt-auto px-2">
+    <a href="products.html" class="w-full py-3 px-4 bg-gradient-to-br from-emerald-700 to-emerald-500 text-white font-bold rounded-xl shadow flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all text-sm mb-6">
+      <span class="material-symbols-outlined text-sm">add</span> Add New Item
+    </a>
+    <div class="flex items-center gap-3 pt-4 border-t border-emerald-900/10">
+      <div id="sb-avatar" class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-800 font-black text-sm flex-shrink-0">EA</div>
+      <div class="overflow-hidden flex-1">
+        <p class="text-sm font-bold text-emerald-900 truncate" id="sb-user-name">Eco Steward</p>
+        <p class="text-[9px] font-bold tracking-widest text-emerald-800/50 mt-0.5" id="sb-user-id"></p>
+      </div>
+      <button id="nav-logout" class="p-1 hover:bg-emerald-100 rounded-full transition-colors" title="Logout">
+        <span class="material-symbols-outlined text-emerald-700/60 text-lg">logout</span>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!--  TOP NAV  -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 backdrop-blur-xl flex justify-between items-center px-8 tonal-shift-only border-b border-emerald-100/60">
+  <div class="flex items-center gap-4">
+    <div class="flex items-center bg-surface-container-highest px-4 py-1.5 rounded-full w-72">
+      <span class="material-symbols-outlined text-outline text-lg">search</span>
+      <input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-outline" placeholder="Search your items..." type="text"/>
+    </div>
+  </div>
+  <div class="flex items-center gap-3">
+    <!-- Live online user counter (updated by WebSocket) -->
+    <div id="ws-user-pill" class="flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold opacity-0 transition-opacity duration-500">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+      </span>
+      <span id="ws-user-count"></span> online
+    </div>
+    <button id="notif-btn" class="p-2 hover:bg-surface-container-high rounded-full transition-colors relative" onclick="openNotifPanel()">
+      <span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+      <span id="notif-badge" class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-secondary rounded-full hidden"></span>
+    </button>
+    <a href="profile.html" class="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-full hover:bg-surface-container-high transition-colors">
+      <div id="top-avatar" class="w-6 h-6 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-800 font-black text-xs">EA</div>
+      <span class="text-sm font-medium text-on-surface" id="top-user-name">Profile</span>
+    </a>
+  </div>
+</header>
+
+<!--  MAIN CONTENT  -->
+<main class="ml-64 pt-20 px-8 pb-12 min-h-screen">
+
+  <!--  Personalized Greeting  -->
+  <section class="mb-8">
+    <div class="flex items-start justify-between">
+      <div>
+        <h2 class="text-3xl font-extrabold text-on-surface tracking-tight mb-1" id="greeting-text">Good morning! </h2>
+        <p class="text-on-surface-variant text-sm" id="greeting-sub">Loading your dashboard...</p>
+      </div>
+      <div class="text-right">
+      </div>
+    </div>
+  </section>
+
+  <!--  Quick Actions Bar  -->
+  <section class="mb-8">
+    <p class="text-xs font-black uppercase tracking-widest text-outline mb-3">Quick Actions</p>
+    <div class="grid grid-cols-4 gap-4">
+      <a href="products.html" class="quick-action bg-white border border-emerald-100 rounded-xl p-4 flex flex-col items-center gap-2 text-center shadow-sm hover:border-emerald-300 cursor-pointer">
+        <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-emerald-700 text-2xl">add_box</span>
+        </div>
+        <p class="text-sm font-bold text-on-surface">Add Item</p>
+        <p class="text-xs text-on-surface-variant">Track a new product</p>
+      </a>
+      <a href="ai-engine.html" class="quick-action bg-white border border-emerald-100 rounded-xl p-4 flex flex-col items-center gap-2 text-center shadow-sm hover:border-emerald-300 cursor-pointer">
+        <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-emerald-700 text-2xl">psychology</span>
+        </div>
+        <p class="text-sm font-bold text-on-surface">AI Scan</p>
+        <p class="text-xs text-on-surface-variant">Get sustainability advice</p>
+      </a>
+      <a href="donate.html" class="quick-action bg-white border border-emerald-100 rounded-xl p-4 flex flex-col items-center gap-2 text-center shadow-sm hover:border-emerald-300 cursor-pointer">
+        <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-red-500 text-2xl">favorite</span>
+        </div>
+        <p class="text-sm font-bold text-on-surface">Donate</p>
+        <p class="text-xs text-on-surface-variant">Give to NGOs in need</p>
+      </a>
+      <a href="map.html" class="quick-action bg-white border border-emerald-100 rounded-xl p-4 flex flex-col items-center gap-2 text-center shadow-sm hover:border-emerald-300 cursor-pointer">
+        <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-blue-500 text-2xl">location_on</span>
+        </div>
+        <p class="text-sm font-bold text-on-surface">Find Recycler</p>
+        <p class="text-xs text-on-surface-variant">Nearby centers</p>
+      </a>
+    </div>
+  </section>
+
+  <!--  Stats Grid  -->
+  <div class="grid grid-cols-12 gap-6 mb-8">
+    <!-- Impact Cards -->
+    <div class="col-span-12 lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-primary text-on-primary p-6 rounded-2xl relative overflow-hidden group">
+        <div class="absolute -right-6 -bottom-6 opacity-10 group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-[100px]">cloud_done</span>
+        </div>
+        <span class="material-symbols-outlined text-primary-container mb-3 block">energy_savings_leaf</span>
+        <h4 class="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Carbon Offset</h4>
+        <p class="text-3xl font-black mb-3"><span id="s-carbon">0</span> <span class="text-base font-medium opacity-70">kg CO</span></p>
+        <p class="text-xs opacity-80" id="carbon-equivalent">Start recycling to track your impact!</p>
+      </div>
+      <div class="bg-tertiary text-on-tertiary p-6 rounded-2xl relative overflow-hidden group">
+        <div class="absolute -right-6 -bottom-6 opacity-10 group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-[100px]">inventory</span>
+        </div>
+        <span class="material-symbols-outlined text-tertiary-container mb-3 block">inventory_2</span>
+        <h4 class="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Total Items</h4>
+        <p class="text-3xl font-black mb-3"><span id="s-items">0</span> <span class="text-base font-medium opacity-70">tracked</span></p>
+        <p class="text-xs opacity-80" id="items-sub">Add items to begin tracking</p>
+      </div>
+      <!-- Phase 2 M7: Eco-Score Trend Sparkline Card -->
+      <div class="bg-white border border-surface-container-high col-span-1 md:col-span-2 p-5 rounded-2xl" id="eco-trend-card">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <h4 class="text-xs font-black uppercase tracking-[0.15em] text-on-surface-variant mb-0.5">Eco-Score Trend (30-day forecast)</h4>
+            <div class="flex items-center gap-2">
+              <span class="text-2xl font-black text-primary eco-counter" id="eco-score-val"></span>
+              <span class="text-xs text-on-surface-variant font-medium">pts now</span>
+              <span class="mx-1 text-outline-variant"></span>
+              <span class="text-2xl font-black text-tertiary eco-counter" id="eco-score-pred"></span>
+              <span class="text-xs text-on-surface-variant font-medium">pts predicted</span>
+              <span class="ml-2 trend-arrow text-lg" id="trend-arrow"></span>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs font-bold text-on-surface-variant" id="trend-label">Loading</div>
+            <div class="text-xs text-on-surface-variant/60" id="trend-driver"></div>
+          </div>
+        </div>
+        <!-- SVG Sparkline -->
+        <div class="relative h-16 w-full" id="sparkline-container">
+          <svg id="sparkline-svg" viewBox="0 0 300 64" preserveAspectRatio="none" class="w-full h-full">
+            <defs>
+              <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#176a21" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#176a21" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path id="sparkline-fill" fill="url(#sparkGrad)" d=""/>
+            <path id="sparkline-path" class="sparkline-path" fill="none" stroke="#176a21" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d=""/>
+            <!-- Today marker -->
+            <line x1="0" y1="0" x2="0" y2="64" stroke="#ac2c00" stroke-width="1.5" stroke-dasharray="3,3" id="today-line"/>
+          </svg>
+          <div class="absolute bottom-0 left-0 text-[9px] font-bold text-on-surface-variant/50">Today</div>
+          <div class="absolute bottom-0 right-0 text-[9px] font-bold text-on-surface-variant/50">+30 days</div>
+        </div>
+        <p class="text-xs text-on-surface-variant/60 mt-2" id="trend-confidence">Powered by Phase 2 Model 7  XGBoost eco-score predictor</p>
+      </div>
+      <div class="bg-secondary text-on-secondary col-span-1 md:col-span-2 p-5 rounded-2xl flex items-center gap-6">
+        <div class="flex-1">
+          <h4 class="text-xs font-black uppercase tracking-[0.15em] mb-1 opacity-80">AI Recommendation</h4>
+          <p class="text-sm font-semibold leading-relaxed" id="ai-tip">Loading your personalized eco tip...</p>
+        </div>
+        <a href="ai-engine.html" class="flex-shrink-0 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full text-xs font-bold transition-colors">
+          Try AI 
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!--  Activity Feed + Asset Grid  -->
+  <div class="grid grid-cols-12 gap-6">
+    <!-- My Assets -->
+    <div class="col-span-12 lg:col-span-12 bg-white rounded-2xl p-6 shadow-sm border border-emerald-50">
+      <div class="flex justify-between items-center mb-5">
+        <div>
+          <h3 class="text-lg font-black text-on-surface">My Items</h3>
+          <p class="text-xs text-on-surface-variant">Track the lifecycle of your belongings</p>
+        </div>
+        <a href="products.html" class="text-xs font-bold text-tertiary hover:underline">Manage all </a>
+      </div>
+      <div id="assets-grid" class="space-y-3">
+        <div class="relative overflow-hidden rounded-xl border border-dashed border-emerald-200 bg-emerald-50/50 p-3 opacity-70 group mb-4">
+          <div class="flex items-center gap-3 filter grayscale group-hover:grayscale-0 transition-all">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-2xl"></div>
+            <div class="flex-1">
+              <p class="text-sm font-bold text-on-surface">Example Smartphone</p>
+              <p class="text-[10px] text-on-surface-variant">Electronics  90% Health</p>
+            </div>
+            <span class="badge badge-green text-[9px] px-2 py-0.5">Good</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--  Circular Economy Tips  -->
+  <div class="mt-6 bg-gradient-to-br from-emerald-800 to-emerald-600 text-white rounded-2xl p-6">
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <h3 class="text-lg font-black">Eco Tip of the Day</h3>
+        <p class="text-xs opacity-70">Small actions, big impact</p>
+      </div>
+      <span class="material-symbols-outlined text-white/50 text-3xl" style="font-variation-settings:'FILL' 1;">eco</span>
+    </div>
+    <p class="text-sm text-white/90 leading-relaxed mb-4" id="eco-daily-tip">Loading your personalised eco tip</p>
+    <div class="grid grid-cols-3 gap-3">
+      <a href="repair.html" class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-3 text-center">
+        <div class="text-xl mb-1"></div>
+        <p class="text-[10px] font-black uppercase tracking-wider">Repair</p>
+      </a>
+      <a href="donate.html" class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-3 text-center">
+        <div class="text-xl mb-1"></div>
+        <p class="text-[10px] font-black uppercase tracking-wider">Donate</p>
+      </a>
+      <a href="recycling.html" class="bg-white/10 hover:bg-white/20 transition-colors rounded-xl p-3 text-center">
+        <div class="text-xl mb-1"></div>
+        <p class="text-[10px] font-black uppercase tracking-wider">Recycle</p>
+      </a>
+    </div>
+  </div>
+
+  <!--  Leaderboard + Badge Row  -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-0">
+
+    <!-- Leaderboard -->
+    <div class="bg-white rounded-2xl shadow-sm border border-emerald-50 overflow-hidden">
+      <div class="px-5 py-4 border-b border-emerald-50 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-500" style="font-variation-settings:'FILL' 1;">emoji_events</span>
+          <h3 class="font-black text-on-surface text-sm">Eco Leaderboard</h3>
+        </div>
+        <span class="text-[10px] font-bold text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">Top 10 Platform</span>
+      </div>
+      <div class="p-4" id="leaderboard-list">
+        <div class="flex items-center justify-center py-6"><div class="w-6 h-6 border-2 border-emerald-200 border-t-emerald-600 rounded-full animate-spin"></div></div>
+      </div>
+    </div>
+
+    <!-- My Badge Card -->
+    <div class="bg-gradient-to-br from-emerald-700 to-emerald-900 rounded-2xl shadow-xl text-white overflow-hidden">
+      <div class="px-5 py-4 border-b border-white/10 flex items-center gap-2">
+        <span class="material-symbols-outlined text-white/70" style="font-variation-settings:'FILL' 1;">workspace_premium</span>
+        <h3 class="font-black text-sm">Your Eco Badge</h3>
+      </div>
+      <div class="p-6 text-center">
+        <div class="text-5xl mb-3" id="badge-emoji"></div>
+        <p class="text-xl font-black mb-1" id="badge-label">Newcomer</p>
+        <p class="text-sm text-white/70 mb-4">Eco Score: <span id="badge-score" class="font-black text-white">0</span> pts</p>
+        <!-- Progress to next badge -->
+        <div id="badge-progress-wrap" class="mb-4">
+          <div class="flex justify-between text-xs text-white/60 mb-1">
+            <span id="badge-level-cur">Newcomer</span>
+            <span id="badge-level-next">Eco Starter</span>
+          </div>
+          <div class="h-2 bg-white/20 rounded-full overflow-hidden">
+            <div id="badge-bar" class="badge-bar h-full bg-white rounded-full" style="width:0%"></div>
+          </div>
+          <p class="text-xs text-white/50 mt-1" id="badge-progress-label">0 pts to next rank</p>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-white/10 rounded-xl p-3">
+            <p class="text-xs text-white/60 font-bold uppercase tracking-wider mb-1"> Streak</p>
+            <p class="text-2xl font-black" id="badge-streak">0d</p>
+          </div>
+          <div class="bg-white/10 rounded-xl p-3">
+            <p class="text-xs text-white/60 font-bold uppercase tracking-wider mb-1"> Items</p>
+            <p class="text-2xl font-black" id="badge-items">0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<!--  FAB  -->
+<a href="products.html" class="fixed bottom-10 right-10 w-14 h-14 bg-secondary text-on-secondary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50" title="Add item">
+  <span class="material-symbols-outlined text-2xl">add</span>
+</a>
+
+<script>
+if(!Auth.requireLogin()) throw new Error();
+initNavbar();
+
+//  Greeter 
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+//  Days since last login 
+function daysSince(isoDate) {
+  if (!isoDate) return null;
+  const diff = Date.now() - new Date(isoDate).getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+}
+
+//  Badge system removed 
+
+const userObjForNotifs = Auth.user();
+const userIdForNotifs = userObjForNotifs ? userObjForNotifs.id : 'guest';
+let notifItems = JSON.parse(localStorage.getItem('eco_notifications_' + userIdForNotifs) || '[]');
+
+function addNotification(icon, title, sub) {
+  const user = Auth.user();
+  const uId = user ? user.id : 'guest';
+  notifItems.unshift({ icon, title, sub, time: new Date().toISOString(), read: false });
+  notifItems = notifItems.slice(0, 20);
+  localStorage.setItem('eco_notifications_' + uId, JSON.stringify(notifItems));
+  renderNotifs();
+}
+
+function renderNotifs() {
+  const list = document.getElementById('notif-list');
+  const badge = document.getElementById('notif-badge');
+  const unread = notifItems.filter(n => !n.read).length;
+  if (unread > 0) badge.classList.remove('hidden'); else badge.classList.add('hidden');
+
+  if (!notifItems.length) {
+    list.innerHTML = `<div class="p-5 text-center text-on-surface-variant text-sm mt-8"><div class="text-3xl mb-2"></div><p>No notifications yet</p></div>`;
+    return;
+  }
+  list.innerHTML = notifItems.map((n, i) => `
+    <div class="flex gap-3 p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors ${n.read ? 'opacity-60' : ''}">
+      <span class="text-2xl flex-shrink-0">${n.icon}</span>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-bold text-on-surface">${n.title}</p>
+        <p class="text-xs text-on-surface-variant truncate">${n.sub}</p>
+        <p class="text-[10px] text-outline mt-1">${timeSince(n.time)}</p>
+      </div>
+      ${!n.read ? '<div class="w-2 h-2 bg-secondary rounded-full mt-1.5 flex-shrink-0"></div>' : ''}
+    </div>`).join('');
+}
+
+function timeSince(iso) {
+  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  return Math.floor(diff/86400) + 'd ago';
+}
+
+function openNotifPanel() {
+  document.getElementById('notif-panel').classList.add('open');
+  document.getElementById('notif-overlay').classList.remove('hidden');
+}
+function closeNotifPanel() {
+  document.getElementById('notif-panel').classList.remove('open');
+  document.getElementById('notif-overlay').classList.add('hidden');
+}
+function markAllRead() {
+  const user = Auth.user();
+  const uId = user ? user.id : 'guest';
+  notifItems.forEach(n => n.read = true);
+  localStorage.setItem('eco_notifications_' + uId, JSON.stringify(notifItems));
+  renderNotifs();
+}
+
+//  Sidebar / top bar user info 
+const sidebarUser = Auth.user();
+if (sidebarUser) {
+  const initials = (sidebarUser.name||'EA').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('sb-user-name').textContent = sidebarUser.name || 'Eco Steward';
+  document.getElementById('sb-avatar').textContent = initials;
+  document.getElementById('sb-user-id').textContent = sidebarUser.user_number ? 'ID: ' + sidebarUser.user_number : '';
+  document.getElementById('top-avatar').textContent = initials;
+  document.getElementById('top-user-name').textContent = sidebarUser.name?.split(' ')[0] || 'Profile';
+}
+
+//  Dashboard loader 
+async function loadDashboard() {
+  try {
+    const data = await API.get('/dashboard/stats');
+    const user = data.user || Auth.user();
+    const score = data.eco_score || 0;
+    const firstName = user.name?.split(' ')[0] || 'there';
+
+    // Greeting
+    document.getElementById('greeting-text').textContent = `${getGreeting()}, ${firstName}! `;
+
+    // Since last login
+    const lastLogin = user.last_login;
+    const days = daysSince(lastLogin);
+    let subMsg = '';
+    if (user.is_new_user) {
+      subMsg = 'Welcome to EcoCircle! Follow the quick start below to earn your first eco points.';
+    } else if (days === 0) {
+      subMsg = `Great to see you again today! You have ${data.total_products || 0} item${data.total_products !== 1 ? 's' : ''} being tracked.`;
+    } else if (days === 1) {
+      subMsg = `Welcome back! It's been 1 day since your last visit.`;
+    } else {
+      subMsg = `Welcome back! It's been ${days} day${days !== 1 ? 's' : ''} since your last visit.`;
+    }
+    document.getElementById('greeting-sub').textContent = subMsg;
+
+    // Eco score removed
+
+    // Carbon
+    const carbon = data.carbon_saved_kg || 0;
+    document.getElementById('s-carbon').textContent = carbon;
+    const trees = Math.round(carbon / 21);
+    document.getElementById('carbon-equivalent').textContent = carbon > 0
+      ? ` ${trees} mature tree${trees !== 1 ? 's' : ''} planted this month`
+      : 'Start recycling to track your impact!';
+
+    // Items count
+    document.getElementById('s-items').textContent = data.total_products || 0;
+    const soldCount = data.items_sold || 0;
+    const donatedCount = data.items_donated || 0;
+    let itemsSub = 'Add items to begin tracking';
+    if (data.total_products > 0) {
+      const parts = [];
+      if (soldCount > 0) parts.push(`${soldCount} sold`);
+      if (donatedCount > 0) parts.push(`${donatedCount} donated`);
+      itemsSub = parts.length ? parts.join('  ') : 'All items being tracked';
+    }
+    document.getElementById('items-sub').textContent = itemsSub;
+
+    // AI tip
+    const tips = [
+      `Your eco score is ${score}. ${score < 50 ? 'Add your first item to start earning points!' : score < 200 ? 'Try donating an old item to boost your score.' : 'Amazing progress  keep it up!'}`,
+      'Repairing electronics instead of replacing saves up to 60kg of CO on average.',
+      'Donating clothes extends their life by 2+ years and saves 2kg of CO per item.',
+    ];
+    document.getElementById('ai-tip').textContent = tips[Math.floor(Math.random() * tips.length)];
+
+    // Eco tip of the day (user-personalised)
+    const ecoTips = [
+      score < 50 ? `Welcome! Add your first item and use AI Engine to earn eco points quickly.` : score < 200 ? `You're at ${score} pts. Try donating an unused item to jump to the next badge!` : `Impressive! Your ${score} eco pts show real impact. Keep repairing instead of replacing!`,
+      'Repairing electronics instead of replacing saves up to 60 kg of CO on average.',
+      'Donating clothes extends their life by 2+ years and saves around 2 kg of CO per item.',
+      'Scheduling a recycling pickup takes 2 minutes and earns +25 eco points!',
+      'The circular economy can reduce global carbon emissions by 45% by 2030.',
+    ];
+    const tipEl = document.getElementById('eco-daily-tip');
+    if (tipEl) tipEl.textContent = ecoTips[Math.floor(Math.random() * ecoTips.length)];
+
+    // Load subcomponents
+    await Promise.all([loadUserAssets(), loadEcoTrend(), loadLeaderboard()]);
+
+    // Update badge card
+    const badgeEmojis = { 1:'', 2:'', 3:'', 4:'', 5:'' };
+    const badgeThresholds = [0, 50, 200, 500, 1000];
+    const badgeNames = ['Newcomer', 'Eco Starter', 'Earth Saver', 'Green Hero', 'Eco Champion'];
+    const bLevel = data.badge_level || 1;
+    document.getElementById('badge-emoji').textContent = badgeEmojis[bLevel] || '';
+    document.getElementById('badge-label').textContent = data.badge_label || 'Newcomer';
+    document.getElementById('badge-score').textContent = (data.eco_score || 0).toLocaleString('en-IN');
+    document.getElementById('badge-streak').textContent = (data.streak || 0) + 'd';
+    document.getElementById('badge-items').textContent = data.total_products || 0;
+    // Progress to next level
+    const curThresh = badgeThresholds[bLevel - 1] || 0;
+    const nextThresh = badgeThresholds[bLevel] || 1000;
+    const pct = bLevel >= 5 ? 100 : Math.round(((data.eco_score - curThresh) / (nextThresh - curThresh)) * 100);
+    document.getElementById('badge-level-cur').textContent = badgeNames[bLevel - 1];
+    document.getElementById('badge-level-next').textContent = bLevel >= 5 ? 'Max!' : badgeNames[bLevel];
+    document.getElementById('badge-progress-label').textContent = bLevel >= 5 ? 'Max rank achieved! ' : `${Math.max(0, nextThresh - (data.eco_score||0))} pts to ${badgeNames[bLevel]}`;
+    setTimeout(() => { const b = document.getElementById('badge-bar'); if(b) b.style.width = Math.min(100, Math.max(2, pct)) + '%'; }, 300);
+
+    // Show onboarding for new users
+    if (user.is_new_user) {
+      const dismissed = localStorage.getItem('eco_onboarding_done_' + user.id);
+      if (!dismissed) showOnboarding(user.id);
+    }
+
+    // Add welcome notification for first-time users
+    if (user.is_new_user && !localStorage.getItem('eco_welcome_notif_' + user.id)) {
+      addNotification('', 'Welcome to EcoCircle!', 'Complete 3 steps to earn your first eco points.');
+      localStorage.setItem('eco_welcome_notif_' + user.id, '1');
+    }
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById('greeting-sub').textContent = 'Welcome back! Could not load full stats.';
+  }
+}
+
+//  Activity feed removed 
+
+//  Leaderboard 
+async function loadLeaderboard() {
+  const el = document.getElementById('leaderboard-list');
+  if (!el) return;
+  try {
+    const data = await API.get('/dashboard/leaderboard');
+    const board = data.leaderboard || [];
+    const me = Auth.user();
+    const medalEmoji = ['', '', ''];
+    if (!board.length) {
+      el.innerHTML = '<p class="text-center text-sm text-on-surface-variant py-4">No data yet. Be the first!</p>';
+      return;
+    }
+    el.innerHTML = board.map((u, i) => {
+      const isMe = me && u.user_number === me.user_number;
+      return `
+        <div class="flex items-center gap-3 py-2.5 ${i < board.length - 1 ? 'border-b border-emerald-50' : ''} ${isMe ? 'bg-emerald-50 -mx-4 px-4 rounded-xl' : ''} transition-colors">
+          <div class="w-7 text-center text-sm font-black ${i < 3 ? 'text-xl' : 'text-on-surface-variant'}">${i < 3 ? medalEmoji[i] : u.rank}</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-bold text-on-surface truncate">${u.name} ${isMe ? '<span class="text-[10px] text-emerald-600 font-black">(You)</span>' : ''}</p>
+            <p class="text-[10px] text-on-surface-variant">${u.badge_label}</p>
+          </div>
+          <p class="text-sm font-black text-emerald-700">${(u.eco_score||0).toLocaleString()} pts</p>
+        </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<p class="text-center text-xs text-on-surface-variant py-4">Could not load leaderboard</p>';
+  }
+}
+
+//  Phase 2 M7: Eco-Score Trend Sparkline 
+async function loadEcoTrend() {
+  try {
+    const data = await API.get('/dashboard/eco-trend');
+    if (!data || data.status === 'error') return;
+
+    const current   = data.current_score   || 0;
+    const predicted = data.predicted_30d   || current;
+    const trend     = (data.trend          || 'stable').toLowerCase();
+    const changePct = data.change_pct      || 0;
+    const driver    = data.top_driver      || '';
+    const points    = data.forecast_points || [];
+    const confidence = data.confidence     || 'formula';
+
+    document.getElementById('eco-score-val').textContent  = current.toLocaleString('en-IN');
+    document.getElementById('eco-score-pred').textContent = predicted.toLocaleString('en-IN');
+
+    const arrowEl = document.getElementById('trend-arrow');
+    const labelEl = document.getElementById('trend-label');
+    if (trend === 'rising')   { arrowEl.textContent = ''; arrowEl.style.color = '#176a21'; labelEl.textContent = `Rising +${changePct}%`; }
+    else if (trend === 'declining') { arrowEl.textContent = ''; arrowEl.style.color = '#ac2c00'; labelEl.textContent = `Declining ${changePct}%`; }
+    else                      { arrowEl.textContent = ''; arrowEl.style.color = '#006096'; labelEl.textContent = 'Stable trend'; }
+
+    const driverEl = document.getElementById('trend-driver');
+    if (driverEl && driver) driverEl.textContent = `Top driver: ${driver}`;
+
+    const confEl = document.getElementById('trend-confidence');
+    if (confEl) confEl.textContent = confidence === 'model'
+      ? 'Powered by Phase 2 Model 7  XGBoost trained (high confidence)'
+      : 'Powered by Phase 2 Model 7  formula fallback (train model for higher accuracy)';
+
+    if (points.length < 2) return;
+    const scores = points.map(p => p.score);
+    const minS   = Math.min(current, ...scores);
+    const maxS   = Math.max(current, ...scores);
+    const rangeS = Math.max(maxS - minS, 10);
+    const W = 300, H = 56, PAD = 4;
+
+    const xs = i => (i / (points.length - 1)) * W;
+    const ys = s => H - PAD - ((s - minS) / rangeS) * (H - PAD * 2);
+
+    let pathD = `M 0 ${ys(current)}`;
+    points.forEach((p, i) => { pathD += ` L ${xs(i)} ${ys(p.score)}`; });
+    const fillD = pathD + ` L ${W} ${H} L 0 ${H} Z`;
+
+    const pathEl = document.getElementById('sparkline-path');
+    const fillEl = document.getElementById('sparkline-fill');
+    if (pathEl) { pathEl.setAttribute('d', pathD); pathEl.style.strokeDasharray = pathEl.getTotalLength?.() || 1000; pathEl.style.strokeDashoffset = pathEl.getTotalLength?.() || 1000; }
+    if (fillEl) fillEl.setAttribute('d', fillD);
+  } catch(e) {
+    console.warn('[EcoTrend] Could not load sparkline:', e);
+  }
+}
+
+//  Assets grid 
+
+async function loadUserAssets() {
+  const grid = document.getElementById('assets-grid');
+  try {
+    const products = await API.get('/products/');
+    if (!products || !products.length) {
+      grid.innerHTML = `
+        <div class="relative overflow-hidden rounded-xl border border-dashed border-emerald-200 bg-emerald-50/50 p-3 opacity-70 group mb-4">
+          <div class="flex items-center gap-3 filter grayscale group-hover:grayscale-0 transition-all">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-2xl"></div>
+            <div class="flex-1">
+              <p class="text-sm font-bold text-on-surface">Example Smartphone</p>
+              <p class="text-[10px] text-on-surface-variant">Electronics  90% Health</p>
+            </div>
+            <span class="badge badge-green text-[9px] px-2 py-0.5">Good</span>
+          </div>
+        </div>
+        <div class="text-center pb-2">
+          <p class="text-sm font-bold text-emerald-800 mb-3">Start building your eco portfolio</p>
+          <a href="products.html" class="inline-block bg-emerald-700 text-white px-5 py-2 rounded-full text-xs font-bold hover:bg-emerald-800 transition-colors shadow-sm">+ Add First Item</a>
+        </div>
+      `;
+      return;
+    }
+
+    const condBadge = { New: 'bg-emerald-100 text-emerald-700', Good: 'bg-green-100 text-green-700', Fair: 'bg-amber-100 text-amber-700', Poor: 'bg-red-100 text-red-700' };
+    const health = { New: 97, Good: 75, Fair: 48, Poor: 20 };
+    const barColor = h => h > 70 ? 'bg-emerald-500' : h > 40 ? 'bg-amber-400' : 'bg-red-400';
+
+    // Check for newly added item (stored in localStorage from products.html)
+    const user = Auth.user();
+    const userId = user ? user.id : 'guest';
+    const newItemId = localStorage.getItem('eco_new_item_id_' + userId);
+
+    grid.innerHTML = products.slice(0, 4).map(p => {
+      const emoji = categoryEmoji(p.category);
+      const h = health[p.condition] || 50;
+      const isNew = newItemId && String(p.id) === String(newItemId);
+      return `
+        <div class="flex items-center gap-3 p-3 rounded-xl border ${isNew ? 'border-emerald-300 bg-emerald-50' : 'border-slate-100 hover:bg-surface-container-low'} transition-colors">
+          <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xl flex-shrink-0">${emoji}</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <p class="font-bold text-sm text-on-surface truncate">${p.name}</p>
+              ${isNew ? '<span class="badge-new text-[9px] font-black bg-emerald-600 text-white px-2 py-0.5 rounded-full">NEW</span>' : ''}
+            </div>
+            <p class="text-xs text-on-surface-variant">${p.category}  ${p.condition}</p>
+            <div class="mt-1.5 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+              <div class="${barColor(h)} h-full rounded-full" style="width:${h}%"></div>
+            </div>
+          </div>
+          <span class="text-xs font-bold ${condBadge[p.condition] || 'bg-slate-100 text-slate-600'} px-2 py-1 rounded-full flex-shrink-0">${h}%</span>
+        </div>`;
+    }).join('');
+
+    if (products.length > 4) {
+      grid.innerHTML += `<a href="products.html" class="block text-center text-xs font-bold text-tertiary hover:underline py-2">View all ${products.length} items </a>`;
+    }
+
+    // Clear new item flag after render
+    if (newItemId) setTimeout(() => localStorage.removeItem('eco_new_item_id_' + userId), 5000);
+
+  } catch(e) {
+    grid.innerHTML = `<div class="text-sm text-on-surface-variant p-4">Could not load items.</div>`;
+  }
+}
+
+
+//  Onboarding modal 
+function showOnboarding(userId) {
+  const modal = document.getElementById('onboarding-modal');
+  const user = Auth.user();
+  document.getElementById('onboard-name-msg').textContent = `Hi ${user?.name?.split(' ')[0] || 'there'}! Let's get your eco journey started.`;
+  modal.classList.remove('hidden');
+  requestAnimationFrame(() => { modal.style.opacity = '1'; });
+
+  const dismiss = () => {
+    modal.style.opacity = '0';
+    setTimeout(() => modal.classList.add('hidden'), 400);
+    localStorage.setItem('eco_onboarding_done_' + userId, '1');
+  };
+  document.getElementById('onboard-dismiss').onclick = dismiss;
+  document.getElementById('onboard-skip').onclick = dismiss;
+}
+
+//  Init 
+renderNotifs();
+loadDashboard();
+
+//  WebSocket: live user count + donation alerts 
+window.addEventListener('load', () => {
+  const trySocket = setInterval(() => {
+    if (!window.EcoSocket) return;
+    clearInterval(trySocket);
+
+    // Update live user pill
+    EcoSocket.on('user_count', ({ count }) => {
+      const pill  = document.getElementById('ws-user-pill');
+      const label = document.getElementById('ws-user-count');
+      if (label) label.textContent = count;
+      if (pill)  pill.style.opacity = '1';
+    });
+
+    // Push a notification card when someone donates anywhere on the platform
+    EcoSocket.on('donation_confirmed', (data) => {
+      addNotification('', data.message || 'New donation made!',
+        `+${data.eco_points} eco points  ${data.ngo}`);
+    });
+  }, 200);
+});
+</script>
+</body>
+</html>

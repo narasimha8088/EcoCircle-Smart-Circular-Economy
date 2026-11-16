@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoCircle — Smart Circular Economy Platform</title>
+  <meta name="description" content="AI-powered platform for sustainable decisions. Reduce, Reuse, Repair, Recycle with EcoCircle." />
+  <meta name="author" content="EcoCircle Smart Circular Economy" />
+  <meta property="og:title" content="EcoCircle — Smart Circular Economy Platform" />
+  <meta property="og:description" content="AI-powered platform for sustainable decisions. Reduce, Reuse, Repair, Recycle." />
+  <meta property="og:type" content="website" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f2f9ea;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #2a3127;
+    }
+    .splash {
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .logo {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #176a21;
+      margin-bottom: 0.25rem;
+    }
+    p {
+      font-size: 0.95rem;
+      color: #575e52;
+      margin-bottom: 1.5rem;
+    }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid #d6e0cd;
+      border-top-color: #176a21;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="splash">
+    <div class="logo">🌿</div>
+    <h1>EcoCircle</h1>
+    <p>Smart Circular Economy Platform</p>
+    <div class="spinner"></div>
+  </div>
+  <script>
+    // Smart redirect: authenticated users go to dashboard, others to login
+    try {
+      const token = localStorage.getItem('sce_token');
+      if (token) {
+        window.location.replace('dashboard.html');
+      } else {
+        window.location.replace('login.html');
+      }
+    } catch (e) {
+      window.location.replace('login.html');
+    }
+  </script>
+</body>
+</html>

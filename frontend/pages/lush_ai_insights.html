@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lush Archive | AI Insights</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#a8afa2",
+                    "surface-container-high": "#dce6d4",
+                    "surface-container-highest": "#d6e0cd",
+                    "on-secondary-container": "#882100",
+                    "inverse-surface": "#0a1008",
+                    "surface-bright": "#f2f9ea",
+                    "surface-tint": "#176a21",
+                    "surface-dim": "#ccd8c4",
+                    "error-dim": "#b92902",
+                    "on-background": "#2a3127",
+                    "surface-container": "#e2ebda",
+                    "secondary-dim": "#972500",
+                    "primary-fixed": "#9df197",
+                    "on-tertiary-fixed-variant": "#003c61",
+                    "inverse-on-surface": "#989f92",
+                    "primary-container": "#9df197",
+                    "tertiary-container": "#5fb7ff",
+                    "on-tertiary-fixed": "#00192d",
+                    "on-surface-variant": "#575e52",
+                    "on-secondary": "#ffefec",
+                    "on-tertiary-container": "#003353",
+                    "secondary-fixed": "#ffc4b4",
+                    "secondary-container": "#ffc4b4",
+                    "secondary": "#ac2c00",
+                    "surface-variant": "#d6e0cd",
+                    "primary-fixed-dim": "#90e28a",
+                    "on-primary-fixed-variant": "#12661e",
+                    "on-primary-fixed": "#00460e",
+                    "primary-dim": "#025d16",
+                    "tertiary-fixed": "#5fb7ff",
+                    "on-error": "#ffefec",
+                    "error": "#b02500",
+                    "surface-container-low": "#ebf3e3",
+                    "on-secondary-fixed-variant": "#992600",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#72796d",
+                    "on-error-container": "#520c00",
+                    "secondary-fixed-dim": "#ffb19b",
+                    "surface": "#f2f9ea",
+                    "on-surface": "#2a3127",
+                    "background": "#f2f9ea",
+                    "error-container": "#f95630",
+                    "tertiary": "#006096",
+                    "on-tertiary": "#ebf3ff",
+                    "tertiary-dim": "#005483",
+                    "inverse-primary": "#9df197",
+                    "primary": "#176a21",
+                    "on-primary": "#d1ffc8",
+                    "on-secondary-fixed": "#671600",
+                    "on-primary-container": "#005c15",
+                    "tertiary-fixed-dim": "#46aaf5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift-only { background-color: var(--tw-bg-opacity); }
+        .no-borders { border: none !important; }
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar Shell -->
+<nav class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl shadow-[0_20px_40px_rgba(23,106,33,0.06)] flex flex-col h-full py-8 px-4 z-50">
+<div class="mb-10 px-4">
+<h1 class="text-2xl font-black text-emerald-900 dark:text-emerald-50 tracking-tight">Greenhouse</h1>
+<p class="text-xs font-semibold text-emerald-800 dark:text-emerald-400 opacity-70 tracking-widest uppercase">Eco-Manager</p>
+</div>
+<div class="space-y-2 flex-grow">
+<!-- Greenhouse Tab -->
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="eco">eco</span>
+<span class="font-semibold tracking-tight">Greenhouse</span>
+</a>
+<!-- My Garden Tab -->
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="psychology_alt">psychology_alt</span>
+<span class="font-semibold tracking-tight">My Garden</span>
+</a>
+<!-- Analytics Tab (Active: Nearest match for AI Insights/Analyzer) -->
+<a class="flex items-center gap-3 text-emerald-900 dark:text-emerald-100 font-bold border-l-4 border-orange-600 pl-4 py-2 bg-emerald-100/50 dark:bg-emerald-900/30" href="#">
+<span class="material-symbols-outlined" data-icon="insert_chart" style="font-variation-settings: 'FILL' 1;">insert_chart</span>
+<span class="font-bold tracking-tight">Analytics</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="font-semibold tracking-tight">Eco-Tasks</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-semibold tracking-tight">Settings</span>
+</a>
+</div>
+<div class="mt-auto px-4">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                New Initiative
+            </button>
+</div>
+</nav>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex justify-between items-center px-8 w-full border-none">
+<div class="flex items-center gap-6">
+<span class="text-xl font-bold text-emerald-900 dark:text-emerald-50">Lush Archive</span>
+<div class="relative w-72">
+<input class="w-full bg-surface-container-highest border-none rounded-full py-1.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary transition-all" placeholder="Search archive..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<nav class="flex gap-6">
+<a class="text-emerald-700/70 dark:text-emerald-400/70 font-medium text-sm hover:text-emerald-900 dark:hover:text-emerald-50" href="#">Overview</a>
+<a class="text-emerald-900 dark:text-emerald-50 font-bold border-b-2 border-orange-600 pb-1 text-sm" href="#">Resources</a>
+<a class="text-emerald-700/70 dark:text-emerald-400/70 font-medium text-sm hover:text-emerald-900 dark:hover:text-emerald-50" href="#">Community</a>
+</nav>
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-emerald-800 dark:text-emerald-400 hover:scale-110 transition-transform" data-icon="notifications">notifications</button>
+<div class="w-8 h-8 rounded-full bg-secondary overflow-hidden shadow-inner border-2 border-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of a woman with a natural confident expression and soft daylight lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaYtmrW0ts0V_M6LxzlWdRy7Q09trfO34pU-3X3QwWGdPLi6HId-utlwxyYQU-cEfAAU2Kt59Xo5p9K7mafU8BPYFe0rhAVazOrsHeGppJETHo0Quj5tqNrXMZK6u1fufoRHDlQ4Ppmvl1Jk5J-oImxTTgmLxvd2cl6-04aIvkuyRAfbWTMWEP1LYXxiBtjTrgQ_ZLgswDCXWIKCc0f2IKcupxm8tRre9hNLcK6JxP6Vlg6wO-BIhZxf7jHCapWDIEyTw7bo_GS-Y"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pl-64 pt-16 min-h-screen">
+<div class="max-w-6xl mx-auto p-8">
+<!-- Page Header -->
+<section class="mb-12">
+<h2 class="text-5xl font-extrabold text-on-surface tracking-tighter mb-2">Smart Product Analyzer</h2>
+<p class="text-lg text-on-surface-variant max-w-2xl leading-relaxed">Leverage the Digital Greenhouse's neural engine to dissect material composition, lifecycle impact, and sustainability metrics with organic precision.</p>
+</section>
+<!-- Analysis Section (Asymmetric Layout) -->
+<div class="grid grid-cols-12 gap-8 mb-16">
+<!-- Drop Zone (Column 1-7) -->
+<div class="col-span-7">
+<div class="relative group h-[400px] rounded-xl overflow-hidden shadow-2xl bg-surface-container-highest flex flex-col items-center justify-center border-4 border-dashed border-primary/20 hover:border-primary/50 transition-all duration-300">
+<!-- Colorful Animated Gradient Background -->
+<div class="absolute inset-0 bg-gradient-to-br from-emerald-100/50 via-tertiary-container/10 to-secondary-container/30 opacity-50"></div>
+<div class="relative z-10 text-center px-12">
+<div class="w-24 h-24 bg-white/80 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl text-primary transform group-hover:rotate-12 transition-transform duration-500">
+<span class="material-symbols-outlined text-5xl" data-icon="upload_file">upload_file</span>
+</div>
+<h3 class="text-2xl font-bold text-emerald-900 mb-2">Drop Product Media</h3>
+<p class="text-on-surface-variant mb-6">Analyze PNG, JPG, or PDF data sheets for instant sustainability scoring</p>
+<button class="bg-secondary text-on-secondary px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 active:scale-95 transition-all">Browse Local Archive</button>
+</div>
+<!-- Decorative Floating Icons -->
+<span class="material-symbols-outlined absolute top-12 left-12 text-tertiary opacity-20 text-4xl" data-icon="filter_center_focus">filter_center_focus</span>
+<span class="material-symbols-outlined absolute bottom-12 right-12 text-secondary opacity-20 text-4xl" data-icon="auto_awesome">auto_awesome</span>
+</div>
+</div>
+<!-- Live Results Preview (Column 8-12) -->
+<div class="col-span-5 flex flex-col gap-6">
+<div class="bg-surface-container-low p-6 rounded-xl shadow-sm border-l-4 border-primary">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="verified_user">verified_user</span>
+                                Material Scoring
+                            </h4>
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-xs font-black">94/100</span>
+</div>
+<div class="space-y-3">
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[94%]"></div>
+</div>
+<p class="text-sm text-on-surface-variant">Exceptional organic cellulose composition with 0% microplastic runoff potential.</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl shadow-sm border-l-4 border-tertiary">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary" data-icon="water_drop">water_drop</span>
+                                Hydrological Impact
+                            </h4>
+<span class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-xs font-black">72/100</span>
+</div>
+<div class="space-y-3">
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[72%]"></div>
+</div>
+<p class="text-sm text-on-surface-variant">Moderate water usage during refining phase. Recommended transition to closed-loop irrigation.</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl shadow-sm border-l-4 border-secondary">
+<div class="flex items-center justify-between mb-4">
+<h4 class="font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="local_fire_department">local_fire_department</span>
+                                Carbon Footprint
+                            </h4>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-black">B+ Grade</span>
+</div>
+<p class="text-sm text-on-surface-variant">Logistics chain contributes to 60% of total emissions. Localized sourcing could improve this to A-.</p>
+</div>
+</div>
+</div>
+<!-- Bento Grid: Recently Analyzed -->
+<section class="mb-16">
+<div class="flex items-end justify-between mb-8">
+<div>
+<h3 class="text-3xl font-extrabold tracking-tight">Recently Analyzed</h3>
+<p class="text-on-surface-variant">Archived neural insights from your past 48 hours</p>
+</div>
+<button class="text-primary font-bold flex items-center gap-1 hover:underline">
+                        View Full Archive
+                        <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="group bg-surface-container-lowest p-5 rounded-xl shadow-[0_10px_30px_rgba(23,106,33,0.04)] hover:shadow-[0_20px_40px_rgba(23,106,33,0.08)] transition-all hover:-translate-y-1">
+<div class="aspect-square rounded-lg overflow-hidden mb-4 relative">
+<img class="w-full h-full object-cover" data-alt="minimalist red athletic sneaker on a white background with sharp shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrW3BXHMkKC2CQXUeM7sIYvC8pIi5SKZmI-ZFFwfggtQBA4icapUx3EZri1eE9X-_A89bnN7k55C6REh60UPxR4lQrzvjEXNC3W158_cxCU8GA2XYhTYuoTyvfjglUu2hnTglw300Pgkiq5txGyOpK2VseN1ZLdHvTj5f1Ysh1_KahGm0E1nKCH9sr7rWO3MAqMfp5bDiKl6iXUQKaXQ0iHqAs19UocssG9Xy-IBELHdzrghoSm1FJL0wyLU8pcAfTcQXKmSp8Dmk"/>
+<div class="absolute top-2 right-2 bg-emerald-500 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-wider">Eco-Pass</div>
+</div>
+<h5 class="font-bold text-on-surface truncate">Stellar Runner v2</h5>
+<div class="flex items-center gap-2 mt-2">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="recycling">recycling</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Recycled PET</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-surface-container-lowest p-5 rounded-xl shadow-[0_10px_30px_rgba(23,106,33,0.04)] hover:shadow-[0_20px_40px_rgba(23,106,33,0.08)] transition-all hover:-translate-y-1">
+<div class="aspect-square rounded-lg overflow-hidden mb-4 relative">
+<img class="w-full h-full object-cover" data-alt="studio shot of a minimalist clear glass bottle with a cork stopper containing organic facial oil" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUp3AC-IGlpUOIGdcNcuybn3MlKikf3uAGI2UFuKR58aV7mUcd0V_jAReHpc1dNdaw6zTD0gkKBm2j56RNWdBxBOw5Xjf_u5_zPY70Wojcp0hRJLpqIA0kAe6V5xL-jQiYYyNUBTiLTAoYVlTS2tl8cX-YxnlSZjhRwZ8Qzr8sBlsruePERh7x1CxGdXAHWJKmJwObAlBOCFM4NgeRYvg_NnmwcM7o5VL8xT-hKOPZVLqynnD6ka1TgBxsORq4wkNX7WlXMTVLYdY"/>
+<div class="absolute top-2 right-2 bg-secondary text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-wider">Alert</div>
+</div>
+<h5 class="font-bold text-on-surface truncate">Pure Bloom Serum</h5>
+<div class="flex items-center gap-2 mt-2">
+<span class="material-symbols-outlined text-xs text-secondary" data-icon="warning">warning</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Fragrance Toxins</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group bg-surface-container-lowest p-5 rounded-xl shadow-[0_10px_30px_rgba(23,106,33,0.04)] hover:shadow-[0_20px_40px_rgba(23,106,33,0.08)] transition-all hover:-translate-y-1">
+<div class="aspect-square rounded-lg overflow-hidden mb-4 relative">
+<img class="w-full h-full object-cover" data-alt="modern luxury wristwatch with a wooden face and sustainable leather strap on a minimalist surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdC53TtkJnk0ZPhST-ZeWG1LlqZT2uKTDvbPLNdZq1rPhwv58izHqyBa2SB-fO-btbUE7RlhhILeOW6Mv9SaKXz69eLHuqYxyhJ_tyVAgjOCELXWIKyO4aR6t-LXXcDJqhN_1bG6NbGEFKVM0GZKXLeR2pCfwr_s33_gJxXMY5joxWeKjeVQZqhDx9UcqYgwbsfKuDybM4ICuqubNQvgp2DMao2XvTGZmx3BBUCfI8faOycqGumEtnh1rJvEAtFRFHWZeeU_avHGE"/>
+<div class="absolute top-2 right-2 bg-tertiary text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-wider">Neutral</div>
+</div>
+<h5 class="font-bold text-on-surface truncate">Terra Chrono MK-1</h5>
+<div class="flex items-center gap-2 mt-2">
+<span class="material-symbols-outlined text-xs text-tertiary" data-icon="energy_savings_leaf">energy_savings_leaf</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Solar Kinetic</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group bg-surface-container-lowest p-5 rounded-xl shadow-[0_10px_30px_rgba(23,106,33,0.04)] hover:shadow-[0_20px_40px_rgba(23,106,33,0.08)] transition-all hover:-translate-y-1">
+<div class="aspect-square rounded-lg overflow-hidden mb-4 relative">
+<img class="w-full h-full object-cover" data-alt="neatly folded organic white cotton towel on a minimalist wooden bench in a spa setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2WtqqLTImFXFuVtqiSW0A-UlF1GjP3lMVVdAKsTAclAlyGeRsKphUlA9SxyW2vmuoGXMXJXLLVy3C1iL5pA6fOfW0z19V-Kk_62GCcwTeO2HqUknZiulUV2nLwjoGNJTSa-hnTsIxS1udck6NbPudBRVh7HL_qLJlwaweBKmXSbd2uHWaR3uhe-Y--vOuyQujxSzX_jXZ-6zqSYRQkEYpIrxi3e5POartbvwTZuCd8SHlB7kn_js3WD-NL6jC-9FZFpibZUtm79w"/>
+<div class="absolute top-2 right-2 bg-emerald-500 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-wider">Eco-Pass</div>
+</div>
+<h5 class="font-bold text-on-surface truncate">Heritage Linen Set</h5>
+<div class="flex items-center gap-2 mt-2">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="potted_plant">potted_plant</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Biodegradable</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Recommendations Grid (Sustainability Tips) -->
+<section class="mb-24">
+<h3 class="text-3xl font-extrabold tracking-tight mb-8">Optimization Strategies</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Strategy 1 -->
+<div class="bg-primary-container/30 p-8 rounded-xl relative overflow-hidden group">
+<span class="material-symbols-outlined text-6xl absolute -bottom-2 -right-2 text-primary/10 group-hover:scale-110 transition-transform" data-icon="eco">eco</span>
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-6 text-on-primary">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+</div>
+<h4 class="text-xl font-bold text-primary-dim mb-3">Bio-Curing Shift</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Swap traditional chemical curing with enzymatic bio-processing to reduce toxic wastewater by 84%.</p>
+</div>
+<!-- Strategy 2 -->
+<div class="bg-secondary-container/30 p-8 rounded-xl relative overflow-hidden group">
+<span class="material-symbols-outlined text-6xl absolute -bottom-2 -right-2 text-secondary/10 group-hover:scale-110 transition-transform" data-icon="hub">hub</span>
+<div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-6 text-on-secondary">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+</div>
+<h4 class="text-xl font-bold text-secondary-dim mb-3">Node Localization</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Transition assembly nodes within 500km of raw material source to eliminate Tier-1 logistical carbon spikes.</p>
+</div>
+<!-- Strategy 3 -->
+<div class="bg-tertiary-container/30 p-8 rounded-xl relative overflow-hidden group">
+<span class="material-symbols-outlined text-6xl absolute -bottom-2 -right-2 text-tertiary/10 group-hover:scale-110 transition-transform" data-icon="auto_mode">auto_mode</span>
+<div class="w-12 h-12 bg-tertiary rounded-full flex items-center justify-center mb-6 text-on-tertiary">
+<span class="material-symbols-outlined" data-icon="all_out">all_out</span>
+</div>
+<h4 class="text-xl font-bold text-tertiary-dim mb-3">Modular Lifecycle</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Implement mechanical fastening instead of adhesive bonding to allow 100% component salvageability.</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating Action Button (Shell FAB Contextual) -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="bg-primary text-on-primary h-16 w-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all border-none">
+<span class="material-symbols-outlined text-3xl" data-icon="bolt" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</button>
+</div>
+</body></html>

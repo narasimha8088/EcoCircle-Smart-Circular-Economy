@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#a8afa2",
+                    "surface-container-high": "#dce6d4",
+                    "surface-container-highest": "#d6e0cd",
+                    "on-secondary-container": "#882100",
+                    "inverse-surface": "#0a1008",
+                    "surface-bright": "#f2f9ea",
+                    "surface-tint": "#176a21",
+                    "surface-dim": "#ccd8c4",
+                    "error-dim": "#b92902",
+                    "on-background": "#2a3127",
+                    "surface-container": "#e2ebda",
+                    "secondary-dim": "#972500",
+                    "primary-fixed": "#9df197",
+                    "on-tertiary-fixed-variant": "#003c61",
+                    "inverse-on-surface": "#989f92",
+                    "primary-container": "#9df197",
+                    "tertiary-container": "#5fb7ff",
+                    "on-tertiary-fixed": "#00192d",
+                    "on-surface-variant": "#575e52",
+                    "on-secondary": "#ffefec",
+                    "on-tertiary-container": "#003353",
+                    "secondary-fixed": "#ffc4b4",
+                    "secondary-container": "#ffc4b4",
+                    "secondary": "#ac2c00",
+                    "surface-variant": "#d6e0cd",
+                    "primary-fixed-dim": "#90e28a",
+                    "on-primary-fixed-variant": "#12661e",
+                    "on-primary-fixed": "#00460e",
+                    "primary-dim": "#025d16",
+                    "tertiary-fixed": "#5fb7ff",
+                    "on-error": "#ffefec",
+                    "error": "#b02500",
+                    "surface-container-low": "#ebf3e3",
+                    "on-secondary-fixed-variant": "#992600",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#72796d",
+                    "on-error-container": "#520c00",
+                    "secondary-fixed-dim": "#ffb19b",
+                    "surface": "#f2f9ea",
+                    "on-surface": "#2a3127",
+                    "background": "#f2f9ea",
+                    "error-container": "#f95630",
+                    "tertiary": "#006096",
+                    "on-tertiary": "#ebf3ff",
+                    "tertiary-dim": "#005483",
+                    "inverse-primary": "#9df197",
+                    "primary": "#176a21",
+                    "on-primary": "#d1ffc8",
+                    "on-secondary-fixed": "#671600",
+                    "on-primary-container": "#005c15",
+                    "tertiary-fixed-dim": "#46aaf5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift-only {
+            border: none !important;
+        }
+        .glass-header {
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex flex-col py-8 px-4 z-50">
+<div class="mb-10 px-4">
+<h1 class="text-2xl font-black text-emerald-900 dark:text-emerald-50 tracking-tight">Greenhouse</h1>
+<p class="text-xs font-semibold tracking-widest uppercase text-emerald-800/60 dark:text-emerald-400/60 mt-1">Eco-Manager</p>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Greenhouse Tab (Active) -->
+<a class="flex items-center gap-3 text-emerald-900 dark:text-emerald-100 font-bold border-l-4 border-orange-600 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="eco">eco</span>
+<span>Greenhouse</span>
+</a>
+<!-- Inactive Tabs -->
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="psychology_alt">psychology_alt</span>
+<span>My Garden</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span>Eco-Tasks</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="insert_chart">insert_chart</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02]" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4">
+<button class="w-full py-3 px-4 bg-gradient-to-br from-primary to-primary-container text-on-primary-container font-bold rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Initiative
+            </button>
+<div class="mt-8 flex items-center gap-3 pt-6 border-t border-emerald-900/10">
+<img alt="User profile" class="w-10 h-10 rounded-full object-cover border-2 border-primary-container" data-alt="professional portrait of a person with friendly expression in a modern office environment with warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCP3K9RcoIdC2OlMsWhMKFSNplVCVXaOeNI9-QAJD1RsCojAKFCg2HtG7S_D9K9qh1RY0ZeR7yiknbIy-kY0RLMrosetwXS9QjRZeUKnUY40DIVBkOkyJZxVBjuWRm7ux6nn8uK8sMMfd0eNmPyqR-yKQLaDJGOjTIbjawpJm1ACvIPoyInRznEOUHpa4mQX08Y7AcEdjqVBtxX_Sy6LxN95FOVp8OPXHIIFWJHPewSLp4876L1Pdb-FJPWqnYXT1awPff10vMSEXE"/>
+<div class="overflow-hidden">
+<p class="text-sm font-bold text-emerald-900 truncate">Elara Vance</p>
+<p class="text-[10px] uppercase tracking-wider text-emerald-700/60">Lead Curator</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar (Shared Component) -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex justify-between items-center px-8 w-full tonal-shift-only">
+<div class="flex items-center gap-6">
+<div class="flex items-center bg-surface-container-highest px-4 py-1.5 rounded-full w-80">
+<span class="material-symbols-outlined text-outline text-lg" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-outline" placeholder="Search archive..." type="text"/>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-emerald-900 dark:text-emerald-50 font-bold border-b-2 border-orange-600 pb-1 text-sm" href="#">Overview</a>
+<a class="text-emerald-700/70 dark:text-emerald-400/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors text-sm font-medium" href="#">Resources</a>
+<a class="text-emerald-700/70 dark:text-emerald-400/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors text-sm font-medium" href="#">Community</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-8 pb-12 min-h-screen">
+<!-- Welcome Hero -->
+<section class="mb-10">
+<h2 class="text-4xl font-extrabold text-on-surface tracking-tight mb-2">Morning, Elara.</h2>
+<p class="text-on-surface-variant max-w-2xl leading-relaxed">Your digital greenhouse is thriving. Since your last login, three reforestation goals have been reached and 14 archival tags were successfully validated.</p>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Stewardship Score (High Impact) -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-8 rounded-lg shadow-[0_20px_40px_rgba(23,106,33,0.06)] relative overflow-hidden flex flex-col items-center justify-center text-center">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-tertiary"></div>
+<h3 class="text-xs font-black uppercase tracking-[0.2em] text-outline mb-6">Stewardship Score</h3>
+<div class="relative w-48 h-48 flex items-center justify-center">
+<!-- Custom Circular Progress SVG -->
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-low" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor" stroke-width="12"></circle>
+<circle cx="96" cy="96" fill="transparent" r="88" stroke="url(#gradient-score)" stroke-dasharray="552.92" stroke-dashoffset="138" stroke-linecap="round" stroke-width="12"></circle>
+<defs>
+<lineargradient id="gradient-score" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#176a21"></stop>
+<stop offset="100%" stop-color="#9df197"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-5xl font-black text-primary tracking-tighter">84</span>
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Perfected</span>
+</div>
+</div>
+<div class="mt-8 flex gap-4 w-full">
+<div class="flex-1 bg-surface-container-low p-3 rounded-xl">
+<p class="text-[10px] uppercase font-bold text-outline mb-1">Weekly</p>
+<p class="text-lg font-bold text-primary">+12%</p>
+</div>
+<div class="flex-1 bg-surface-container-low p-3 rounded-xl">
+<p class="text-[10px] uppercase font-bold text-outline mb-1">Global Rank</p>
+<p class="text-lg font-bold text-tertiary">#42</p>
+</div>
+</div>
+</div>
+<!-- Impact Metrics (Modern Card Layout) -->
+<div class="col-span-12 lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Carbon Offset -->
+<div class="bg-primary text-on-primary p-6 rounded-lg relative overflow-hidden group">
+<div class="absolute -right-8 -bottom-8 opacity-10 transform rotate-12 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[120px]" data-icon="cloud_done">cloud_done</span>
+</div>
+<span class="material-symbols-outlined text-primary-container mb-4 block" data-icon="energy_savings_leaf">energy_savings_leaf</span>
+<h4 class="text-sm font-bold uppercase tracking-widest opacity-80 mb-1">Total Carbon Offset</h4>
+<p class="text-4xl font-black mb-4">12.4 <span class="text-lg font-medium opacity-70">tons</span></p>
+<div class="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+<div class="bg-white h-full w-3/4 rounded-full"></div>
+</div>
+<p class="mt-3 text-xs font-medium">75% of your quarterly goal achieved</p>
+</div>
+<!-- Bio-Data Points -->
+<div class="bg-tertiary text-on-tertiary p-6 rounded-lg relative overflow-hidden group">
+<div class="absolute -right-8 -bottom-8 opacity-10 transform rotate-12 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[120px]" data-icon="database">database</span>
+</div>
+<span class="material-symbols-outlined text-tertiary-container mb-4 block" data-icon="biotech">biotech</span>
+<h4 class="text-sm font-bold uppercase tracking-widest opacity-80 mb-1">Bio-Data Synced</h4>
+<p class="text-4xl font-black mb-4">8.9k <span class="text-lg font-medium opacity-70">pts</span></p>
+<div class="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+<div class="bg-white h-full w-1/2 rounded-full"></div>
+</div>
+<p class="mt-3 text-xs font-medium">Real-time sensor feed active</p>
+</div>
+<!-- Community Impact -->
+<div class="bg-secondary text-on-secondary col-span-1 md:col-span-2 p-8 rounded-lg flex flex-col md:flex-row items-center gap-8 shadow-xl">
+<div class="flex-1">
+<h4 class="text-xs font-black uppercase tracking-[0.2em] mb-2 opacity-80">Collective Influence</h4>
+<p class="text-3xl font-black leading-tight mb-4">Your initiatives inspired 1,240 members this week.</p>
+<button class="bg-white text-secondary font-bold px-6 py-2 rounded-full text-sm hover:scale-105 transition-transform">View Outreach Map</button>
+</div>
+<div class="flex -space-x-4">
+<img alt="community" class="w-12 h-12 rounded-full border-4 border-secondary object-cover" data-alt="headshot of a smiling man with a beard and glasses in a brightly lit studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2RAvl_-FvJdW736YlsELWsmJhfhhTirnz5rwKXk_2SfdJs0XXZeUIuZedI33r0KSoAAUpBTn9cauC-sJjryaY6eiRT-5u0jRWFfBZN4Y0y37iyA2jS6teF0pZ4Z-WBJrymP3R9zu14sV2mIT-mJg1NVH532EFAek_47YcJi_-1uTpaPpPr3_1r0cBqoSEUToK3FBGsQliWcCeW7ZzmoibfQDrSu6MdSdknVNANXXRVtiOVOnT68_vggMJ-EQdf_5umSZwiGbYqdw"/>
+<img alt="community" class="w-12 h-12 rounded-full border-4 border-secondary object-cover" data-alt="portrait of a woman with curly hair smiling warmly in natural outdoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1aP4K33Z-ZIP0CVEy8FnIBKadyW41SW9uUd3rqT9JeAi5vtDfPHiowkhI-C3He6P62_S5r-tYYWQuYnUCI3cCYMYyKm5rrwK2tsNWZD-MevfM8ecQaHgUGyb4XaZt3VZXt1Rul9QMXr4MGQ4MQmDvTQnE9PY8XSbTLg_kVpR5RgBthBUNTPFvBfmd_zAmtk3o3Am9wQX814RqWAKPA3nh-IQY3qTsiF22iIlMaA8hMDQEebK8bm3O2DRt-IsWoW_spRkp_GcFyyM"/>
+<img alt="community" class="w-12 h-12 rounded-full border-4 border-secondary object-cover" data-alt="close up profile of a young man with a modern haircut in a stylish urban setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-L8GuY6yjOix36yQEVr0EUALCeZGqNVXLc4_62R4Tste1XgLljw4wvCEUWab62HbPgX3ix-iabGEPCNuyGXtF6AdEDh0c5EO77xAvZ2ZGwi2kRmz0rOgpko-egcvww33bob5Sjm1vn75QJRTiEPfW3Szc2QEeayAojOc-DuwlNoI0Tb3Xnbw1LujRozw8RDLauf_evRr6w-nZJYa_4WnVGWmVyuN0xTdzjXjKRNyCNmgJ76HGbgPiAOu8WAsu_Zzy9yWrGbGFGdA"/>
+<div class="w-12 h-12 rounded-full border-4 border-secondary bg-on-secondary-container flex items-center justify-center text-xs font-black">+1.2k</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity Feed (Status Icons) -->
+<div class="col-span-12 bg-surface-container-low p-8 rounded-lg mt-4">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h3 class="text-2xl font-black text-on-surface tracking-tight">Recent Activity</h3>
+<p class="text-sm text-on-surface-variant">Real-time updates from your greenhouse network.</p>
+</div>
+<button class="text-tertiary font-bold text-sm hover:underline flex items-center gap-1">
+                        Full Audit Log <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="space-y-4">
+<!-- Success Item -->
+<div class="flex items-center gap-6 p-4 bg-surface-container-lowest rounded-xl hover:translate-x-2 transition-transform duration-300">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-on-surface">Amazonia Reforestation Project: Phase 2 Complete</p>
+<p class="text-xs text-on-surface-variant">1,400 saplings successfully cataloged and geotagged.</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-outline uppercase tracking-widest">Success</p>
+<p class="text-[10px] text-outline">2m ago</p>
+</div>
+</div>
+<!-- Alert Item -->
+<div class="flex items-center gap-6 p-4 bg-surface-container-lowest rounded-xl hover:translate-x-2 transition-transform duration-300">
+<div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-on-surface">Data Integrity Alert: Sensor #849-B</p>
+<p class="text-xs text-on-surface-variant">Unusual moisture fluctuation detected in North Quadrant. Review needed.</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-secondary-dim uppercase tracking-widest">Action Required</p>
+<p class="text-[10px] text-outline">45m ago</p>
+</div>
+</div>
+<!-- Info Item -->
+<div class="flex items-center gap-6 p-4 bg-surface-container-lowest rounded-xl hover:translate-x-2 transition-transform duration-300">
+<div class="w-12 h-12 rounded-full bg-tertiary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary" data-icon="info" style="font-variation-settings: 'FILL' 1;">info</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-on-surface">New Resource: Q3 Sustainability Manifesto</p>
+<p class="text-xs text-on-surface-variant">Global insights and new protocol benchmarks now available in the library.</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-tertiary-dim uppercase tracking-widest">Resource</p>
+<p class="text-[10px] text-outline">3h ago</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Featured Image/Map (Asymmetric touch) -->
+<div class="col-span-12 lg:col-span-7 bg-surface-container-highest rounded-lg overflow-hidden h-[400px] relative">
+<img alt="Sustainable Garden" class="w-full h-full object-cover mix-blend-multiply opacity-80" data-alt="dramatic aerial view of a futuristic sustainable garden with geometric circular flower beds and vibrant green foliage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDo0z4WQqV71K7-nlr1lZ7nsvkNyV8h4eNnf_2WosWasY0FYljmfBxDSG9DqxdCp71w3hpLIdwT_7EZIJCEZEYtW5FTvcZMYzHvKsk1XtruuluYqntkMpzzqAyK912nmMdZcnpbnBBp8NSpczDSWMzxoeFNMbOZ9pvjKxTDBaUAEIetriPGJY6YCtiQfg7Tq_jKfcJKaK3bp6Rmm6CDzY7KGDaQC_qbmX67lHOW5Ky5bmdc7QiSizjAa_DiWNNGuTEca_sJfogN6IY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex flex-col justify-end p-10 text-on-primary">
+<h3 class="text-3xl font-black mb-2">North Haven Preserve</h3>
+<p class="max-w-md opacity-90 text-sm">Our most ambitious carbon sequestration site. Currently supporting 40 endemic bird species and expanding by 4% weekly.</p>
+</div>
+</div>
+<!-- Side Metric -->
+<div class="col-span-12 lg:col-span-5 bg-surface-container-lowest p-8 rounded-lg shadow-sm flex flex-col justify-between">
+<div>
+<h3 class="text-xs font-black uppercase tracking-[0.2em] text-outline mb-6">Real-time Flux</h3>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between items-end mb-2">
+<p class="text-sm font-bold text-on-surface">Biodiversity Index</p>
+<p class="text-xl font-black text-primary">0.94</p>
+</div>
+<div class="h-1 w-full bg-surface-container-low rounded-full">
+<div class="bg-primary h-full w-[94%] rounded-full"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<p class="text-sm font-bold text-on-surface">Hydration Level</p>
+<p class="text-xl font-black text-tertiary">68%</p>
+</div>
+<div class="h-1 w-full bg-surface-container-low rounded-full">
+<div class="bg-tertiary h-full w-[68%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl mt-8">
+<p class="text-xs font-bold text-on-secondary-fixed-variant flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-sm" data-icon="auto_awesome">auto_awesome</span>
+                        AI Recommendation
+                    </p>
+<p class="text-sm text-on-surface italic leading-relaxed">"Based on current solar cycles, increasing hydration cycles in Zone 4 by 15% will optimize nutrient absorption."</p>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB (Suppressed based on logic for Dashboard) -->
+<button class="fixed bottom-10 right-10 w-16 h-16 bg-secondary text-on-secondary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+</body></html>

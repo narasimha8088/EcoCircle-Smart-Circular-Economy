@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Panel  EcoCircle</title>
+<meta name="description" content="EcoCircle Admin Panel  manage users, NGOs, listings and platform stats."/>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>
+  tailwind.config = {
+    darkMode:"class",
+    theme:{extend:{
+      fontFamily:{sans:["Manrope","sans-serif"]},
+      colors:{
+        brand:"#176a21","brand-light":"#d1ffc8","brand-dark":"#0d4515",
+        surface:"#f2f9ea","on-surface":"#2a3127"
+      }
+    }}
+  }
+</script>
+<style>
+  body{font-family:'Manrope',sans-serif;}
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;vertical-align:middle;}
+  .tab-btn.active{background:#176a21;color:#d1ffc8;}
+  .tab-btn{transition:all .2s;}
+  .stat-card{transition:transform .2s,box-shadow .2s;}
+  .stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(23,106,33,.15);}
+  .row-hover:hover{background:#f0fdf4;}
+  .badge-verified{background:#d1fae5;color:#065f46;}
+  .badge-pending{background:#fef9c3;color:#854d0e;}
+  .badge-admin{background:#dbeafe;color:#1e40af;}
+  #toast{transition:all .3s;transform:translateY(100px);opacity:0;}
+  #toast.show{transform:translateY(0);opacity:1;}
+</style>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+<!--  SIDEBAR  -->
+<aside class="h-screen w-60 fixed left-0 top-0 bg-emerald-950 flex flex-col py-8 px-4 z-50">
+  <div class="mb-10 px-2">
+    <h1 class="text-xl font-black text-white tracking-tight">EcoCircle</h1>
+    <p class="text-[10px] font-bold tracking-widest uppercase text-emerald-400/70 mt-1">Admin Panel</p>
+  </div>
+  <nav class="flex-1 space-y-1 text-sm">
+    <button onclick="switchTab('overview')"  class="tab-btn w-full flex items-center gap-3 text-emerald-300 px-3 py-2.5 rounded-xl text-left active" id="tab-btn-overview">
+      <span class="material-symbols-outlined text-base">dashboard</span> Overview
+    </button>
+    <button onclick="switchTab('users')"    class="tab-btn w-full flex items-center gap-3 text-emerald-300 px-3 py-2.5 rounded-xl text-left" id="tab-btn-users">
+      <span class="material-symbols-outlined text-base">group</span> Users
+    </button>
+    <button onclick="switchTab('ngos')"     class="tab-btn w-full flex items-center gap-3 text-emerald-300 px-3 py-2.5 rounded-xl text-left" id="tab-btn-ngos">
+      <span class="material-symbols-outlined text-base">volunteer_activism</span> NGOs
+    </button>
+    <button onclick="switchTab('listings')" class="tab-btn w-full flex items-center gap-3 text-emerald-300 px-3 py-2.5 rounded-xl text-left" id="tab-btn-listings">
+      <span class="material-symbols-outlined text-base">storefront</span> Listings
+    </button>
+    <button onclick="switchTab('actions')"  class="tab-btn w-full flex items-center gap-3 text-emerald-300 px-3 py-2.5 rounded-xl text-left" id="tab-btn-actions">
+      <span class="material-symbols-outlined text-base">bolt</span> Eco Activity
+    </button>
+  </nav>
+  <div class="mt-auto px-2 border-t border-emerald-800 pt-4">
+    <p class="text-xs text-emerald-400/60" id="admin-name">Admin</p>
+    <button onclick="Auth.logout()" class="mt-2 w-full flex items-center gap-2 text-red-400 hover:text-red-300 text-xs font-bold py-2 px-3 rounded-xl hover:bg-red-950/30 transition-colors">
+      <span class="material-symbols-outlined text-base">logout</span> Logout
+    </button>
+  </div>
+</aside>
+
+<!--  MAIN  -->
+<main class="ml-60 min-h-screen">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-slate-100 px-8 py-4 flex items-center justify-between">
+    <div>
+      <h2 class="text-lg font-black text-slate-800" id="tab-title">Platform Overview</h2>
+      <p class="text-xs text-slate-500" id="tab-subtitle">Real-time platform statistics</p>
+    </div>
+    <button onclick="refreshAll()" class="flex items-center gap-2 px-4 py-2 bg-emerald-700 text-white font-bold rounded-full text-sm hover:bg-emerald-800 transition-colors">
+      <span class="material-symbols-outlined text-base">refresh</span> Refresh
+    </button>
+  </header>
+
+  <div class="p-8">
+
+    <!--  OVERVIEW TAB  -->
+    <div id="tab-overview">
+      <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mb-8" id="stat-cards">
+        <!-- injected by JS -->
+      </div>
+    </div>
+
+    <!--  USERS TAB  -->
+    <div id="tab-users" class="hidden">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-50 flex items-center justify-between">
+          <h3 class="font-black text-slate-800">All Users</h3>
+          <input id="user-search" oninput="filterUsers()" placeholder="Search name / ID"
+            class="border border-slate-200 rounded-xl px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 w-56"/>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm" id="users-table">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-3 text-left">User</th>
+                <th class="px-6 py-3 text-left">ID</th>
+                <th class="px-6 py-3 text-left">Eco Score</th>
+                <th class="px-6 py-3 text-left">Badge</th>
+                <th class="px-6 py-3 text-left">Streak</th>
+                <th class="px-6 py-3 text-left">Joined</th>
+                <th class="px-6 py-3 text-left">Admin</th>
+                <th class="px-6 py-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="users-body" class="divide-y divide-slate-50">
+              <tr><td colspan="8" class="px-6 py-10 text-center text-slate-400">Loading</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!--  NGOS TAB  -->
+    <div id="tab-ngos" class="hidden">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-50 flex items-center justify-between flex-wrap gap-3">
+          <h3 class="font-black text-slate-800">NGO Registry</h3>
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-amber-700 font-bold bg-amber-50 px-3 py-1 rounded-full border border-amber-200" id="pending-badge">
+               pending verification
+            </span>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm" id="ngos-table">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-3 text-left">NGO Name</th>
+                <th class="px-6 py-3 text-left">Reg No.</th>
+                <th class="px-6 py-3 text-left">Contact</th>
+                <th class="px-6 py-3 text-left">Categories</th>
+                <th class="px-6 py-3 text-left">Open Needs</th>
+                <th class="px-6 py-3 text-left">Status</th>
+                <th class="px-6 py-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ngos-body" class="divide-y divide-slate-50">
+              <tr><td colspan="7" class="px-6 py-10 text-center text-slate-400">Loading</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!--  LISTINGS TAB  -->
+    <div id="tab-listings" class="hidden">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-50">
+          <h3 class="font-black text-slate-800">All Marketplace Listings</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-3 text-left">Title</th>
+                <th class="px-6 py-3 text-left">Category</th>
+                <th class="px-6 py-3 text-left">Type</th>
+                <th class="px-6 py-3 text-left">Price</th>
+                <th class="px-6 py-3 text-left">Status</th>
+                <th class="px-6 py-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="listings-body" class="divide-y divide-slate-50">
+              <tr><td colspan="6" class="px-6 py-10 text-center text-slate-400">Loading</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!--  ECO ACTIVITY TAB  -->
+    <div id="tab-actions" class="hidden">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-50">
+          <h3 class="font-black text-slate-800">Recent Platform Eco-Actions</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Last 50 actions across all users</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-3 text-left">User</th>
+                <th class="px-6 py-3 text-left">Action</th>
+                <th class="px-6 py-3 text-left">Category</th>
+                <th class="px-6 py-3 text-left">Description</th>
+                <th class="px-6 py-3 text-left">Points</th>
+                <th class="px-6 py-3 text-left">Time</th>
+              </tr>
+            </thead>
+            <tbody id="actions-body" class="divide-y divide-slate-50">
+              <tr><td colspan="6" class="px-6 py-10 text-center text-slate-400">Loading</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 bg-emerald-800 text-white px-5 py-3 rounded-2xl shadow-xl text-sm font-bold z-[999] flex items-center gap-2"></div>
+
+<script>
+//  Auth Guard 
+if (!Auth.requireLogin()) throw new Error();
+const me = Auth.user();
+if (!me?.is_admin) {
+  alert('Access denied. Admin only.');
+  window.location.href = 'dashboard.html';
+}
+if (me) document.getElementById('admin-name').textContent = me.name || 'Admin';
+
+//  Tab System 
+const TABS = {
+  overview:  { title:'Platform Overview',      subtitle:'Real-time platform statistics' },
+  users:     { title:'User Management',        subtitle:'Manage all registered users' },
+  ngos:      { title:'NGO Registry',           subtitle:'Verify and manage NGO partners' },
+  listings:  { title:'Marketplace Listings',   subtitle:'Review and moderate listings' },
+  actions:   { title:'Eco Activity Log',       subtitle:'Platform-wide eco action history' },
+};
+let currentTab = 'overview';
+function switchTab(name) {
+  Object.keys(TABS).forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('hidden', t !== name);
+    const btn = document.getElementById('tab-btn-' + t);
+    if (btn) btn.classList.toggle('active', t === name);
+  });
+  document.getElementById('tab-title').textContent    = TABS[name].title;
+  document.getElementById('tab-subtitle').textContent = TABS[name].subtitle;
+  currentTab = name;
+  loadTabData(name);
+}
+
+function loadTabData(name) {
+  if (name === 'overview')  loadStats();
+  if (name === 'users')     loadUsers();
+  if (name === 'ngos')      loadNGOs();
+  if (name === 'listings')  loadListings();
+  if (name === 'actions')   loadActions();
+}
+
+function refreshAll() { loadTabData(currentTab); showToast('Refreshed '); }
+
+//  Toast 
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = `<span class="material-symbols-outlined text-base">check_circle</span> ${msg}`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+//  Overview Stats 
+async function loadStats() {
+  try {
+    const d = await API.get('/admin/stats');
+    const cards = [
+      { icon:'group',              label:'Total Users',       value:d.total_users,       color:'blue' },
+      { icon:'inventory_2',        label:'Products',          value:d.total_products,     color:'emerald' },
+      { icon:'storefront',         label:'Active Listings',   value:d.active_listings,    color:'violet' },
+      { icon:'sell',               label:'Items Sold',        value:d.sold_listings,      color:'amber' },
+      { icon:'volunteer_activism', label:'Total NGOs',        value:d.total_ngos,         color:'teal' },
+      { icon:'verified',           label:'Verified NGOs',     value:d.verified_ngos,      color:'emerald' },
+      { icon:'pending',            label:'Pending NGOs',      value:d.pending_ngos,       color:'orange' },
+      { icon:'eco',                label:'Total Eco Points',  value:(d.total_eco_points||0).toLocaleString(), color:'green' },
+    ];
+    const colorMap = {
+      blue:'bg-blue-50 text-blue-700 border-blue-100',
+      emerald:'bg-emerald-50 text-emerald-700 border-emerald-100',
+      violet:'bg-violet-50 text-violet-700 border-violet-100',
+      amber:'bg-amber-50 text-amber-700 border-amber-100',
+      teal:'bg-teal-50 text-teal-700 border-teal-100',
+      orange:'bg-orange-50 text-orange-700 border-orange-100',
+      green:'bg-green-50 text-green-700 border-green-100',
+    };
+    document.getElementById('stat-cards').innerHTML = cards.map(c => `
+      <div class="stat-card bg-white rounded-2xl p-5 border ${colorMap[c.color]} shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-xl ${colorMap[c.color]} flex items-center justify-center">
+            <span class="material-symbols-outlined text-base">${c.icon}</span>
+          </div>
+          <p class="text-xs font-bold uppercase tracking-wider opacity-70">${c.label}</p>
+        </div>
+        <p class="text-3xl font-black">${c.value ?? 0}</p>
+      </div>`).join('');
+  } catch(e) {
+    document.getElementById('stat-cards').innerHTML = `<div class="col-span-4 text-center py-10 text-red-500"> ${e.message}</div>`;
+  }
+}
+
+//  Users 
+let allUsers = [];
+async function loadUsers() {
+  try {
+    allUsers = await API.get('/admin/users');
+    renderUsers(allUsers);
+  } catch(e) {
+    document.getElementById('users-body').innerHTML = `<tr><td colspan="8" class="px-6 py-10 text-center text-red-500"> ${e.message}</td></tr>`;
+  }
+}
+function filterUsers() {
+  const q = document.getElementById('user-search').value.toLowerCase();
+  renderUsers(allUsers.filter(u => u.name.toLowerCase().includes(q) || (u.user_number||'').toLowerCase().includes(q)));
+}
+function renderUsers(users) {
+  if (!users.length) {
+    document.getElementById('users-body').innerHTML = `<tr><td colspan="8" class="px-6 py-10 text-center text-slate-400">No users found</td></tr>`;
+    return;
+  }
+  document.getElementById('users-body').innerHTML = users.map(u => `
+    <tr class="row-hover">
+      <td class="px-6 py-3">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black flex items-center justify-center flex-shrink-0">
+            ${(u.name||'?').slice(0,2).toUpperCase()}
+          </div>
+          <div>
+            <p class="font-bold text-slate-800">${u.name}</p>
+            <p class="text-xs text-slate-400">${u.email||''}</p>
+          </div>
+        </div>
+      </td>
+      <td class="px-6 py-3 text-xs font-bold text-emerald-700">${u.user_number||''}</td>
+      <td class="px-6 py-3 font-bold text-emerald-700">${u.eco_score||0} pts</td>
+      <td class="px-6 py-3 text-xs">${u.badge_label||''}</td>
+      <td class="px-6 py-3 text-xs">${u.login_streak||0}d </td>
+      <td class="px-6 py-3 text-xs text-slate-500">${u.joined||''}</td>
+      <td class="px-6 py-3">
+        ${u.is_admin
+          ? '<span class="badge-admin text-xs font-bold px-2 py-0.5 rounded-full">Admin</span>'
+          : '<span class="text-xs text-slate-400">User</span>'}
+      </td>
+      <td class="px-6 py-3">
+        <button onclick="toggleAdmin(${u.id}, ${u.is_admin})"
+          class="text-xs font-bold px-3 py-1 rounded-full border ${u.is_admin ? 'border-red-200 text-red-600 hover:bg-red-50' : 'border-blue-200 text-blue-600 hover:bg-blue-50'} transition-colors">
+          ${u.is_admin ? 'Revoke Admin' : 'Make Admin'}
+        </button>
+      </td>
+    </tr>`).join('');
+}
+async function toggleAdmin(uid, isAdmin) {
+  if (!confirm(`${isAdmin ? 'Revoke' : 'Grant'} admin access for this user?`)) return;
+  try {
+    const d = await API.post(`/admin/users/${uid}/toggle-admin`, {});
+    showToast(`Admin status updated for user!`);
+    loadUsers();
+  } catch(e) { showToast('Error: ' + e.message); }
+}
+
+//  NGOs 
+async function loadNGOs() {
+  try {
+    const ngos = await API.get('/admin/ngos');
+    const pending = ngos.filter(n => !n.verified).length;
+    document.getElementById('pending-badge').textContent = `${pending} pending verification`;
+    if (!ngos.length) {
+      document.getElementById('ngos-body').innerHTML = `<tr><td colspan="7" class="px-6 py-10 text-center text-slate-400">No NGOs registered yet</td></tr>`;
+      return;
+    }
+    document.getElementById('ngos-body').innerHTML = ngos.map(n => `
+      <tr class="row-hover">
+        <td class="px-6 py-3">
+          <p class="font-bold text-slate-800">${n.name}</p>
+          <p class="text-xs text-slate-400">${n.address||''}</p>
+        </td>
+        <td class="px-6 py-3 text-xs text-slate-600">${n.registration_no}</td>
+        <td class="px-6 py-3 text-xs">
+          <p>${n.contact_email||''}</p>
+          <p class="text-slate-400">${n.contact_phone||''}</p>
+        </td>
+        <td class="px-6 py-3 text-xs">
+          <div class="flex flex-wrap gap-1">
+            ${(n.category_tags||[]).map(t=>`<span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold">${t}</span>`).join('')}
+          </div>
+        </td>
+        <td class="px-6 py-3 text-center font-bold ${n.open_needs_count > 0 ? 'text-amber-600' : 'text-slate-400'}">${n.open_needs_count}</td>
+        <td class="px-6 py-3">
+          ${n.verified
+            ? '<span class="badge-verified text-xs font-bold px-2 py-0.5 rounded-full"> Verified</span>'
+            : '<span class="badge-pending text-xs font-bold px-2 py-0.5 rounded-full"> Pending</span>'}
+        </td>
+        <td class="px-6 py-3">
+          <div class="flex items-center gap-2">
+            ${!n.verified
+              ? `<button onclick="verifyNGO('${n.ngo_id}', true)"
+                  class="text-xs font-bold px-3 py-1 rounded-full border border-emerald-200 text-emerald-700 hover:bg-emerald-50 transition-colors">
+                   Verify
+                </button>`
+              : `<button onclick="verifyNGO('${n.ngo_id}', false)"
+                  class="text-xs font-bold px-3 py-1 rounded-full border border-amber-200 text-amber-700 hover:bg-amber-50 transition-colors">
+                  Revoke
+                </button>`}
+            <button onclick="deleteNGO('${n.ngo_id}', '${n.name.replace(/'/g,'')}')"
+              class="text-xs font-bold px-3 py-1 rounded-full border border-red-200 text-red-600 hover:bg-red-50 transition-colors">
+               Remove
+            </button>
+          </div>
+        </td>
+      </tr>`).join('');
+  } catch(e) {
+    document.getElementById('ngos-body').innerHTML = `<tr><td colspan="7" class="px-6 py-10 text-center text-red-500"> ${e.message}</td></tr>`;
+  }
+}
+async function verifyNGO(ngoId, verified) {
+  try {
+    const d = await API.post(`/admin/ngos/${ngoId}/verify`, { verified });
+    showToast(d.message);
+    loadNGOs();
+  } catch(e) { showToast('Error: ' + e.message); }
+}
+async function deleteNGO(ngoId, name) {
+  if (!confirm(`Permanently remove NGO "${name}"? This cannot be undone.`)) return;
+  try {
+    const d = await API.delete(`/admin/ngos/${ngoId}`);
+    showToast(d.message);
+    loadNGOs();
+  } catch(e) { showToast('Error: ' + e.message); }
+}
+
+//  Listings 
+async function loadListings() {
+  try {
+    const listings = await API.get('/admin/listings');
+    if (!listings.length) {
+      document.getElementById('listings-body').innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-slate-400">No listings yet</td></tr>`;
+      return;
+    }
+    const statusColor = { active:'bg-emerald-50 text-emerald-700', sold:'bg-slate-100 text-slate-500', expired:'bg-red-50 text-red-600' };
+    document.getElementById('listings-body').innerHTML = listings.map(l => `
+      <tr class="row-hover">
+        <td class="px-6 py-3 font-semibold text-slate-800">${l.title}</td>
+        <td class="px-6 py-3 text-xs text-slate-500">${l.category||''}</td>
+        <td class="px-6 py-3 text-xs capitalize">${l.listing_type}</td>
+        <td class="px-6 py-3 font-bold text-emerald-700">${(l.price||0).toLocaleString('en-IN')}</td>
+        <td class="px-6 py-3">
+          <span class="text-xs font-bold px-2 py-0.5 rounded-full ${statusColor[l.status]||'bg-slate-100 text-slate-600'}">${l.status}</span>
+        </td>
+        <td class="px-6 py-3">
+          ${l.status === 'active'
+            ? `<button onclick="removeListing(${l.id})"
+                class="text-xs font-bold px-3 py-1 rounded-full border border-red-200 text-red-600 hover:bg-red-50 transition-colors">
+                 Remove
+               </button>`
+            : ''}
+        </td>
+      </tr>`).join('');
+  } catch(e) {
+    document.getElementById('listings-body').innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-red-500"> ${e.message}</td></tr>`;
+  }
+}
+async function removeListing(lid) {
+  if (!confirm('Remove this listing from the marketplace?')) return;
+  try {
+    const d = await API.delete(`/admin/listing/${lid}`);
+    showToast(d.message || 'Listing removed');
+    loadListings();
+  } catch(e) { showToast('Error: ' + e.message); }
+}
+
+//  Eco Activity 
+async function loadActions() {
+  try {
+    const data = await API.get('/admin/eco-actions');
+    const actions = data.actions || [];
+    if (!actions.length) {
+      document.getElementById('actions-body').innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-slate-400">No eco actions yet</td></tr>`;
+      return;
+    }
+    const actionEmoji = {
+      donated:'', recycled:'', repaired:'', sold:'', bought:'',
+      listed:'', added_item:'', repair_booked:'', recycle_booked:'', ai_scan:''
+    };
+    document.getElementById('actions-body').innerHTML = actions.map(a => `
+      <tr class="row-hover">
+        <td class="px-6 py-3">
+          <p class="font-bold text-slate-800">${a.user_name||'?'}</p>
+          <p class="text-xs text-slate-400">${a.user_number||''}</p>
+        </td>
+        <td class="px-6 py-3">
+          <span class="text-sm">${actionEmoji[a.action_type]||''}</span>
+          <span class="ml-1 text-xs font-bold text-slate-700 capitalize">${a.action_type.replace('_',' ')}</span>
+        </td>
+        <td class="px-6 py-3 text-xs text-slate-500 capitalize">${a.category||''}</td>
+        <td class="px-6 py-3 text-xs text-slate-600 max-w-xs truncate">${a.description||''}</td>
+        <td class="px-6 py-3 font-bold text-emerald-700">+${a.awarded_pts}</td>
+        <td class="px-6 py-3 text-xs text-slate-400">${timeSince(a.created_at)}</td>
+      </tr>`).join('');
+  } catch(e) {
+    document.getElementById('actions-body').innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-red-500"> ${e.message}</td></tr>`;
+  }
+}
+
+function timeSince(iso) {
+  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (diff < 60)    return 'just now';
+  if (diff < 3600)  return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  return Math.floor(diff/86400) + 'd ago';
+}
+
+//  Init 
+loadStats();
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoCircle — Smart Circular Economy Platform</title>
+    <meta name="description" content="AI-powered platform for sustainable decisions. Reduce, Reuse, Repair, Recycle with EcoCircle." />
+    <meta property="og:title" content="EcoCircle — Smart Circular Economy Platform" />
+    <meta property="og:type" content="website" />
+    <!-- Landing page = the 3D globe app (React + three.js, built bundle in /assets).
+         "Get Started" on it opens /login.html. -->
+    <script type="module" crossorigin src="/assets/index-CneUwnsw.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CQesFPYZ.css" />
+    <style>
+      /* shown for a split second while the bundle loads */
+      #boot { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+              background: #f2f9ea; color: #176a21; font-family: 'Segoe UI', system-ui, sans-serif; z-index: 0; }
+      #boot .ring { width: 38px; height: 38px; border: 3px solid #d6e0cd; border-top-color: #176a21; border-radius: 50%;
+                    animation: bootspin .8s linear infinite; margin-bottom: 14px; }
+      @keyframes bootspin { to { transform: rotate(360deg); } }
+      #root:not(:empty) ~ #boot { display: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="boot"><div class="ring"></div><div>Loading EcoCircle&hellip;</div></div>
+    <noscript><p style="padding:2rem;font-family:sans-serif">EcoCircle needs JavaScript. <a href="/login.html">Continue to login</a></p></noscript>
+  </body>
+</html>

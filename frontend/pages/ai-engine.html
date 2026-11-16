@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Engine  EcoCircle</title>
+<!-- Performance: early connection hints -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://cdn.tailwindcss.com"/>
+<link rel="dns-prefetch" href="https://cdn.socket.io"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#a8afa2",
+                    "surface-container-high": "#dce6d4",
+                    "surface-container-highest": "#d6e0cd",
+                    "on-secondary-container": "#882100",
+                    "inverse-surface": "#0a1008",
+                    "surface-bright": "#f2f9ea",
+                    "surface-tint": "#176a21",
+                    "surface-dim": "#ccd8c4",
+                    "error-dim": "#b92902",
+                    "on-background": "#2a3127",
+                    "surface-container": "#e2ebda",
+                    "secondary-dim": "#972500",
+                    "primary-fixed": "#9df197",
+                    "on-tertiary-fixed-variant": "#003c61",
+                    "inverse-on-surface": "#989f92",
+                    "primary-container": "#9df197",
+                    "tertiary-container": "#5fb7ff",
+                    "on-tertiary-fixed": "#00192d",
+                    "on-surface-variant": "#575e52",
+                    "on-secondary": "#ffefec",
+                    "on-tertiary-container": "#003353",
+                    "secondary-fixed": "#ffc4b4",
+                    "secondary-container": "#ffc4b4",
+                    "secondary": "#ac2c00",
+                    "surface-variant": "#d6e0cd",
+                    "primary-fixed-dim": "#90e28a",
+                    "on-primary-fixed-variant": "#12661e",
+                    "on-primary-fixed": "#00460e",
+                    "primary-dim": "#025d16",
+                    "tertiary-fixed": "#5fb7ff",
+                    "on-error": "#ffefec",
+                    "error": "#b02500",
+                    "surface-container-low": "#ebf3e3",
+                    "on-secondary-fixed-variant": "#992600",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#72796d",
+                    "on-error-container": "#520c00",
+                    "secondary-fixed-dim": "#ffb19b",
+                    "surface": "#f2f9ea",
+                    "on-surface": "#2a3127",
+                    "background": "#f2f9ea",
+                    "error-container": "#f95630",
+                    "tertiary": "#006096",
+                    "on-tertiary": "#ebf3ff",
+                    "tertiary-dim": "#005483",
+                    "inverse-primary": "#9df197",
+                    "primary": "#176a21",
+                    "on-primary": "#d1ffc8",
+                    "on-secondary-fixed": "#671600",
+                    "on-primary-container": "#005c15",
+                    "tertiary-fixed-dim": "#46aaf5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift-only { background-color: var(--tw-bg-opacity); }
+        .no-borders { border: none !important; }
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+<script src="../js/config.js"></script><script src="../js/api.js"></script><script src="../js/nav.js"></script><script src="../js/session_store.js"></script>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!--  SIDEBAR (matches dashboard.html)  -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex flex-col py-8 px-4 z-50">
+  <div class="mb-10 px-4">
+    <h1 class="text-2xl font-black text-emerald-900 tracking-tight">EcoCircle</h1>
+    <p class="text-xs font-semibold tracking-widest uppercase text-emerald-800/60 mt-1">Eco Manager</p>
+  </div>
+  <nav class="flex-1 space-y-1">
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="dashboard.html">
+      <span class="material-symbols-outlined">dashboard</span><span>Dashboard</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="products.html">
+      <span class="material-symbols-outlined">inventory_2</span><span>My Items</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-900 font-bold border-l-4 border-emerald-600 pl-4 py-2.5 bg-emerald-100/60 rounded-r-xl" href="ai-engine.html">
+      <span class="material-symbols-outlined text-emerald-700">psychology</span><span>AI Engine</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="donate.html">
+      <span class="material-symbols-outlined">favorite</span><span>Donate</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="marketplace.html">
+      <span class="material-symbols-outlined">storefront</span><span>Marketplace</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="repair.html">
+      <span class="material-symbols-outlined">build</span><span>Repair</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="recycling.html">
+      <span class="material-symbols-outlined">recycling</span><span>Recycling</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="map.html">
+      <span class="material-symbols-outlined">map</span><span>Map</span>
+    </a>
+    <a class="flex items-center gap-3 text-emerald-700/70 pl-4 py-2.5 hover:bg-emerald-100/50 rounded-r-xl transition-all" href="profile.html">
+      <span class="material-symbols-outlined">person</span><span>Profile</span>
+    </a>
+  </nav>
+  <div class="mt-auto px-2">
+    <a href="products.html" class="w-full py-3 px-4 bg-gradient-to-br from-emerald-700 to-emerald-500 text-white font-bold rounded-xl shadow flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 transition-all text-sm mb-6">
+      <span class="material-symbols-outlined text-sm">add</span> Add New Item
+    </a>
+    <div class="flex items-center gap-3 pt-4 border-t border-emerald-900/10">
+      <div id="sb-avatar" class="w-10 h-10 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-800 font-black text-sm flex-shrink-0">EA</div>
+      <div class="overflow-hidden flex-1">
+        <p class="text-sm font-bold text-emerald-900 truncate" id="sb-user-name">Eco Steward</p>
+        <p class="text-[9px] font-bold tracking-widest text-emerald-800/50 mt-0.5" id="sb-user-id"></p>
+      </div>
+      <button id="nav-logout" class="p-1 hover:bg-emerald-100 rounded-full transition-colors" title="Logout">
+        <span class="material-symbols-outlined text-emerald-700/60 text-lg">logout</span>
+      </button>
+    </div>
+  </div>
+</aside>
+<!--  TOP NAV (matches dashboard.html)  -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 backdrop-blur-xl flex justify-between items-center px-8 border-b border-emerald-100/60">
+  <div class="flex items-center gap-4">
+    <div class="flex items-center bg-surface-container-highest px-4 py-1.5 rounded-full w-72">
+      <span class="material-symbols-outlined text-outline text-lg">search</span>
+      <input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-outline" placeholder="Search your items..." type="text"/>
+    </div>
+  </div>
+  <div class="flex items-center gap-3">
+    <a href="profile.html" class="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-full hover:bg-surface-container-high transition-colors">
+      <div id="top-avatar" class="w-6 h-6 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-800 font-black text-xs">EA</div>
+      <span class="text-sm font-medium text-on-surface" id="top-user-name">Profile</span>
+    </a>
+  </div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pl-64 pt-16 min-h-screen">
+<div class="max-w-6xl mx-auto p-8">
+<!-- Page Header -->
+<section class="mb-12">
+<div class="flex items-start justify-between gap-4 flex-wrap">
+<h2 class="text-5xl font-extrabold text-on-surface tracking-tighter mb-2">Smart Product Analyzer</h2>
+<button id="new-btn" type="button" onclick="startNew()" style="display:none" class="flex items-center gap-2 bg-white border border-emerald-300 text-emerald-800 px-5 py-2.5 rounded-full text-sm font-bold shadow-sm hover:bg-emerald-50 active:scale-95 transition-all" title="Clear everything and start a fresh analysis">
+<span class="material-symbols-outlined text-base">add_circle</span> New
+</button>
+</div>
+<div id="session-banner" class="hidden mt-3 text-sm rounded-xl px-4 py-3 border"></div>
+<p class="text-lg text-on-surface-variant max-w-2xl leading-relaxed">Leverage the Digital Greenhouse's neural engine to dissect material composition, lifecycle impact, and sustainability metrics with organic precision.</p>
+</section>
+<!-- Analysis Section (Asymmetric Layout) -->
+<div id="upload-card">
+<div class="grid grid-cols-12 gap-8 mb-8">
+<!-- Drop Zone (Column 1-7) -->
+<div class="col-span-7">
+
+  <!-- Step 1 -->
+  <p class="text-xs font-black uppercase tracking-widest text-outline mb-2">Step 1 &middot; Describe your item</p>
+  <div class="mb-3">
+    <textarea id="description-input" maxlength="500" rows="2"
+      style="position:relative; z-index:10;"
+      class="w-full bg-white border border-emerald-200 rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant resize-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 shadow-sm"
+      placeholder="Describe your item (age, brand, condition, issues...)  helps AI give better advice"></textarea>
+    <div class="text-[10px] text-on-surface-variant text-right mt-1"><span id="word-count">0</span> words &middot; <span id="char-count">0</span>/500</div>
+  </div>
+
+  <!-- Step 2 label -->
+  <p class="text-xs font-black uppercase tracking-widest text-outline mb-2">Step 2 &middot; Add photos or videos <span class="normal-case font-semibold">(optional if you described the item)</span></p>
+
+  <!-- Drop Zone / Click to Upload -->
+  <div id="drop-zone" style="position:relative;overflow:hidden;" class="relative group rounded-xl overflow-hidden shadow-md bg-surface-container-highest flex flex-col items-center justify-center border-2 border-dashed border-primary/30 hover:border-primary/60 transition-all duration-300 cursor-pointer" style="min-height:220px;">
+    <!-- Hidden file input inside drop zone only -->
+    <input type="file" id="file-input" style="position:absolute; inset:0; opacity:0; z-index:20; cursor:pointer;" accept="image/*,video/mp4,video/webm,video/quicktime,video/*" multiple />
+    <!-- Gradient background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-100/40 via-blue-50/20 to-orange-50/20 pointer-events-none"></div>
+    <!-- Placeholder (shown when no files) -->
+    <div id="upload-placeholder" class="relative z-10 text-center px-8 py-8">
+      <div class="w-16 h-16 bg-white/90 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg text-primary group-hover:scale-110 transition-transform duration-300">
+        <span class="material-symbols-outlined text-4xl">cloud_upload</span>
+      </div>
+      <h3 class="text-lg font-bold text-emerald-900 mb-1">Drop images here or click to upload</h3>
+      <p class="text-sm text-on-surface-variant">PNG, JPG, MP4, WebM supported</p>
+    </div>
+    <!-- Decorative icons -->
+    <span class="material-symbols-outlined absolute top-3 left-3 text-tertiary opacity-15 text-3xl pointer-events-none">filter_center_focus</span>
+    <span class="material-symbols-outlined absolute bottom-3 right-3 text-secondary opacity-15 text-3xl pointer-events-none">auto_awesome</span>
+  </div>
+
+  <!-- Image Preview Gallery (shown after upload) -->
+  <div id="preview-container" class="mt-4" style="display:none;">
+    <div class="flex items-center justify-between mb-2">
+      <p class="text-xs font-bold uppercase tracking-widest text-outline" id="files-summary"></p>
+      <button id="add-more-btn" class="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">add_photo_alternate</span> Add More
+      </button>
+    </div>
+    <!-- Size bar -->
+    <div class="h-1 w-full bg-surface-container rounded-full overflow-hidden mb-3">
+      <div id="size-bar-fill" class="h-full bg-primary rounded-full transition-all duration-500" style="width:0%"></div>
+    </div>
+    <!-- Thumbnails -->
+    <div id="files-gallery" class="grid grid-cols-3 gap-3"></div>
+  </div>
+
+  <!-- Phase 1 Model Status Pills -->
+  <div id="phase1-status" class="mt-3 mb-1 hidden">
+    <p class="text-[10px] font-black uppercase tracking-widest text-outline mb-1.5">Active ML Models</p>
+    <div id="phase1-pills" class="flex flex-wrap gap-1.5"></div>
+  </div>
+
+  <!-- DPDP Act 2023 & Ethical AI Privacy Protection -->
+  <div class="mt-3 p-3 bg-emerald-50/80 border border-emerald-200/90 rounded-xl flex items-start gap-2.5">
+    <input type="checkbox" id="privacy-consent-chk" checked class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4" />
+    <label for="privacy-consent-chk" class="text-xs text-emerald-950 leading-relaxed cursor-pointer select-none">
+      <span class="font-bold flex items-center gap-1 text-emerald-800">
+        <span class="material-symbols-outlined text-sm text-emerald-600">verified_user</span>
+        DPDP Act 2023 Compliant: Privacy Guard Active
+      </span>
+      <span>Automated face and private identity blurring protects background household members before AI vision analysis.</span>
+    </label>
+  </div>
+
+  <!-- What will be sent (live) -->
+  <div id="input-captured" class="mt-4 p-4 bg-white border border-emerald-200 rounded-xl" style="display:none;">
+    <p class="text-[10px] font-black uppercase tracking-widest text-emerald-800 mb-2 flex items-center gap-1">
+      <span class="material-symbols-outlined text-sm">fact_check</span> Input captured &mdash; this is what the AI will analyze
+    </p>
+    <div id="captured-desc" class="text-sm text-on-surface whitespace-pre-wrap break-words"></div>
+    <div id="captured-files" class="text-xs text-on-surface-variant mt-2"></div>
+  </div>
+
+  <!-- Visible error box (the old one lived inside the hidden results section, so errors were never shown) -->
+  <div id="upload-error" role="alert" style="display:none;" class="mt-4"></div>
+
+  <!-- Analyze Button -->
+  <div class="mt-4 flex items-center gap-3">
+    <button id="analyze-btn" type="button" disabled class="disabled:opacity-50 disabled:cursor-not-allowed flex-1 bg-secondary text-on-secondary px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 active:scale-95 transition-all"> Analyze with AI</button>
+  </div>
+  <p id="analyze-hint" class="text-xs text-on-surface-variant mt-2" style="display:none;"></p>
+</div>
+<!-- Your Analysis History (Column 8-12) -->
+<div class="col-span-5 flex flex-col gap-4">
+  <div class="bg-surface-container-low p-5 rounded-xl shadow-sm border-l-4 border-primary h-full">
+    <div class="flex items-center justify-between mb-4">
+      <h4 class="font-bold text-lg flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">history</span>
+        Your Analysis History
+      </h4>
+      <button onclick="clearHistory()" id="clear-history-btn" class="text-xs text-on-surface-variant hover:text-secondary transition-colors hidden">Clear all</button>
+    </div>
+    <div id="ai-history-panel-inline" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+      <!-- Filled by renderAIHistoryInline() -->
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Recommendations Grid (Sustainability Tips) -->
+<section class="mb-24">
+<h3 class="text-3xl font-extrabold tracking-tight mb-8">Optimization Strategies</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Strategy 1 -->
+<div class="bg-primary-container/30 p-8 rounded-xl relative overflow-hidden group">
+<span class="material-symbols-outlined text-6xl absolute -bottom-2 -right-2 text-primary/10 group-hover:scale-110 transition-transform" data-icon="eco">eco</span>
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center mb-6 text-on-primary">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+</div>
+<h4 class="text-xl font-bold text-primary-dim mb-3">Bio-Curing Shift</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Swap traditional chemical curing with enzymatic bio-processing to reduce toxic wastewater by 84%.</p>
+</div>
+<!-- Strategy 2 -->
+<div class="bg-secondary-container/30 p-8 rounded-xl relative overflow-hidden group">
+<span class="material-symbols-outlined text-6xl absolute -bottom-2 -right-2 text-secondary/10 group-hover:scale-110 transition-transform" data-icon="hub">hub</span>
+<div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-6 text-on-secondary">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+</div>
+<h4 class="text-xl font-bold text-secondary-dim mb-3">Node Localization</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Transition assembly nodes within 500km of raw material source to eliminate Tier-1 logistical carbon spikes.</p>
+</div>
+<!-- Strategy 3 -->
+<div class="bg-tertiary-container/30 p-8 rounded-xl relative overflow-hidden group">
+<span class="material-symbols-outlined text-6xl absolute -bottom-2 -right-2 text-tertiary/10 group-hover:scale-110 transition-transform" data-icon="auto_mode">auto_mode</span>
+<div class="w-12 h-12 bg-tertiary rounded-full flex items-center justify-center mb-6 text-on-tertiary">
+<span class="material-symbols-outlined" data-icon="all_out">all_out</span>
+</div>
+<h4 class="text-xl font-bold text-tertiary-dim mb-3">Modular Lifecycle</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Implement mechanical fastening instead of adhesive bonding to allow 100% component salvageability.</p>
+</div>
+</div>
+</section>
+</div>
+</div><!-- /upload-card -->
+
+<!--  REAL RESULTS SECTION (shown after AI analysis)  -->
+<div id="results-section" style="display:none;" class="mb-16">
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-3xl font-extrabold tracking-tight">Analysis Results</h3>
+    <button onclick="resetForm()" class="flex items-center gap-2 text-on-surface-variant border border-outline-variant px-4 py-2 rounded-full text-sm font-semibold hover:bg-surface-container transition-colors">
+      <span class="material-symbols-outlined text-base">add_circle</span> New
+    </button>
+  </div>
+  <!-- Saved to My Items + tracking -->
+  <div id="saved-item-card" class="hidden bg-emerald-50 border border-emerald-300 rounded-xl p-4 mb-6">
+    <div class="flex items-center gap-4 flex-wrap">
+      <div class="w-11 h-11 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined">inventory_2</span></div>
+      <div class="flex-1 min-w-[200px]">
+        <p class="text-xs font-black uppercase tracking-widest text-emerald-800" id="saved-item-title">Added to My Items</p>
+        <p class="text-sm text-on-surface-variant mt-0.5" id="saved-item-sub"></p>
+      </div>
+      <div class="flex gap-2 flex-wrap" id="saved-item-actions"></div>
+    </div>
+  </div>
+  <!-- What the AI received -->
+  <div id="result-input-card" class="bg-white border border-emerald-200 rounded-xl p-5 mb-6" style="display:none;">
+    <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+      <p class="text-xs font-black uppercase tracking-widest text-emerald-800 flex items-center gap-1"><span class="material-symbols-outlined text-sm">fact_check</span> What the AI received</p>
+      <span id="ri-mode" class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full"></span>
+    </div>
+    <div id="ri-notice" class="hidden text-xs bg-amber-50 border border-amber-200 text-amber-900 rounded-lg p-3 mb-3"></div>
+    <p class="text-[10px] font-black uppercase tracking-widest text-outline mb-1">Your description</p>
+    <p id="ri-desc" class="text-sm text-on-surface whitespace-pre-wrap break-words mb-3"></p>
+    <div id="ri-chips" class="flex flex-wrap gap-2 mb-3"></div>
+    <p id="ri-files" class="text-xs text-on-surface-variant mb-3"></p>
+    <div class="grid md:grid-cols-2 gap-3">
+      <div class="bg-surface-container-low rounded-lg p-3"><p class="text-[10px] font-black uppercase tracking-widest text-outline mb-1">How the AI understood it</p><p id="ri-understanding" class="text-sm text-on-surface-variant"></p></div>
+      <div class="bg-surface-container-low rounded-lg p-3"><p class="text-[10px] font-black uppercase tracking-widest text-outline mb-1">Description vs. photo</p><p id="ri-vs" class="text-sm text-on-surface-variant"></p></div>
+    </div>
+    <p id="ri-assumed" class="hidden text-xs text-on-surface-variant mt-3"></p>
+  </div>
+
+  <div class="grid grid-cols-12 gap-6">
+    <!-- Media gallery -->
+    <div class="col-span-12 lg:col-span-5">
+      <!-- Uploaded Images Gallery (prominent display like other AI tools) -->
+      <div id="result-media-gallery" class="mb-4 space-y-2"></div>
+      <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-emerald-50">
+        <h4 id="result-product-name" class="text-2xl font-black text-on-surface mb-2">Product Name</h4>
+        <p id="result-condition" class="text-sm text-on-surface-variant mb-4"></p>
+        <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl mb-3">
+          <span class="material-symbols-outlined text-primary">category</span>
+          <span id="result-material"><span class="font-semibold">Material:</span> <span></span></span>
+        </div>
+        <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl mb-3">
+          <span class="material-symbols-outlined text-tertiary">energy_savings_leaf</span>
+          <p id="result-eco-insight" class="text-sm text-on-surface-variant"></p>
+        </div>
+        <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl mb-3">
+          <span class="material-symbols-outlined text-secondary">co2</span>
+          <p id="result-carbon" class="text-sm text-on-surface-variant"></p>
+        </div>
+        <p id="result-value" class="text-sm font-semibold text-on-surface-variant"></p>
+      </div>
+    </div>
+    <!-- Score + Recommendation -->
+    <div class="col-span-12 lg:col-span-7 flex flex-col gap-6">
+      <!-- Score ring -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-emerald-50 flex items-center gap-6">
+        <div class="relative w-28 h-28 flex-shrink-0">
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="transparent" stroke="#e2ebda" stroke-width="8"></circle>
+            <circle id="score-circle" cx="50" cy="50" r="42" fill="transparent" stroke="#176a21"
+              stroke-width="8" stroke-linecap="round"
+              stroke-dasharray="263.9" stroke-dashoffset="263.9"
+              style="transition:stroke-dashoffset 1.2s ease"></circle>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <span id="result-score" class="text-2xl font-black text-primary">0</span>
+            <span class="text-[10px] text-on-surface-variant font-bold">/ 100</span>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs font-black uppercase tracking-widest text-outline mb-1">Sustainability Score</p>
+          <div class="flex items-center gap-3 mb-2">
+            <span id="result-rec-icon" class="text-3xl"></span>
+            <div>
+              <p id="result-rec-action" class="text-xl font-black text-on-surface"></p>
+              <p id="result-rec-reason" class="text-sm text-on-surface-variant"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Error box -->
+      <div id="error-box" style="display:none;"></div>
+      <!-- Repair tips -->
+      <div id="repair-tips-card" class="bg-amber-50 border border-amber-200 rounded-xl p-5" style="display:none;">
+        <h5 class="font-bold text-amber-900 mb-3 flex items-center gap-2"><span></span> Repair Tips</h5>
+        <ul id="repair-tips-list" class="space-y-2 text-sm text-amber-800 list-none pl-0"></ul>
+      </div>
+      <!-- Action buttons injected by JS into results-section via renderResults() -->
+    </div>
+  </div>
+</div>
+
+<!--  PHASE 1 ML INSIGHTS (shown after AI analysis when models ran)  -->
+<div id="phase1-insights-section" style="display:none;" class="mb-8">
+  <div class="flex items-center gap-3 mb-4">
+    <span class="material-symbols-outlined text-tertiary text-2xl">model_training</span>
+    <div>
+      <h3 class="text-xl font-extrabold tracking-tight">Phase 1 ML Pipeline Insights</h3>
+      <p class="text-xs text-on-surface-variant">Structured data extracted by CLIP, YOLOv8, EasyOCR &amp; Material Classifier</p>
+    </div>
+    <span id="p1-pipeline-ms" class="ml-auto text-[10px] font-bold bg-surface-container text-outline px-2 py-1 rounded-full"></span>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- CLIP Category -->
+    <div id="p1-clip-card" class="bg-primary-container/30 border border-primary/10 rounded-xl p-4 hidden">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-primary text-lg">category</span>
+        <p class="text-[10px] font-black uppercase tracking-widest text-primary-dim">CLIP Category</p>
+      </div>
+      <p id="p1-clip-category" class="text-lg font-black text-on-surface capitalize"></p>
+      <p id="p1-clip-conf" class="text-xs text-on-surface-variant mt-0.5"></p>
+    </div>
+    <!-- YOLOv8 Damage -->
+    <div id="p1-yolo-card" class="bg-amber-50 border border-amber-200/60 rounded-xl p-4 hidden">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-amber-600 text-lg">warning</span>
+        <p class="text-[10px] font-black uppercase tracking-widest text-amber-700">Damage Detection</p>
+      </div>
+      <p id="p1-yolo-severity" class="text-lg font-black text-amber-900 capitalize"></p>
+      <p id="p1-yolo-object" class="text-xs text-amber-700 mt-0.5"></p>
+    </div>
+    <!-- EasyOCR Brand -->
+    <div id="p1-ocr-card" class="bg-tertiary-container/30 border border-tertiary/10 rounded-xl p-4 hidden">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-tertiary text-lg">document_scanner</span>
+        <p class="text-[10px] font-black uppercase tracking-widest text-tertiary-dim">OCR Detected</p>
+      </div>
+      <p id="p1-ocr-brand" class="text-lg font-black text-on-surface"></p>
+      <p id="p1-ocr-model" class="text-xs text-on-surface-variant mt-0.5 font-mono"></p>
+    </div>
+    <!-- Material -->
+    <div id="p1-mat-card" class="bg-surface-container-highest border border-outline-variant/30 rounded-xl p-4 hidden">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-on-surface-variant text-lg">texture</span>
+        <p class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Material</p>
+      </div>
+      <p id="p1-mat-label" class="text-lg font-black text-on-surface capitalize"></p>
+      <div class="mt-1.5 flex items-center gap-2">
+        <div class="flex-1 h-1.5 bg-surface-container rounded-full overflow-hidden">
+          <div id="p1-mat-recyclebar" class="h-full bg-emerald-500 rounded-full" style="width:0%"></div>
+        </div>
+        <span id="p1-mat-recycle" class="text-[10px] font-bold text-emerald-700"></span>
+      </div>
+      <p id="p1-mat-co2" class="text-xs text-on-surface-variant mt-0.5"></p>
+    </div>
+  </div>
+  <!-- Material eco note -->
+  <div id="p1-eco-note" class="mt-3 text-xs text-on-surface-variant bg-surface-container-low rounded-xl p-3 hidden"></div>
+</div>
+
+<!-- Analysis history is now shown inline in the right panel above -->
+
+
+<!--  MAP SECTION (shown after AI analysis)  -->
+<section id="nearby-map-section" style="display:none;" class="mb-16">
+  <div class="flex items-center gap-3 mb-4">
+    <span class="material-symbols-outlined text-emerald-700 text-3xl">location_on</span>
+    <div>
+      <h3 class="text-2xl font-extrabold tracking-tight" id="map-section-title">Nearby Facilities</h3>
+      <p class="text-sm text-on-surface-variant" id="map-section-sub">AI-recommended locations near you based on the analysis</p>
+    </div>
+  </div>
+  <!-- Location prompt -->
+  <div id="location-prompt" class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 flex items-center gap-4 mb-4">
+    <span class="text-3xl"></span>
+    <div class="flex-1">
+      <p class="font-bold text-emerald-900 text-sm">Share your location for nearby results</p>
+      <p class="text-xs text-on-surface-variant">We'll find the closest facilities for your item based on the AI recommendation.</p>
+    </div>
+    <button onclick="requestLocation()" class="bg-emerald-700 text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-emerald-800 transition-colors flex-shrink-0"> Use My Location</button>
+  </div>
+  <!-- Map embed container -->
+  <div id="map-embed-container" style="display:none;">
+    <div class="rounded-xl overflow-hidden shadow-lg border border-emerald-100 mb-4" style="height:380px;">
+      <iframe id="map-iframe" src="" width="100%" height="380" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+    <!-- Nearby quick links -->
+    <div id="nearby-links" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+  </div>
+  <!-- Manual search fallback -->
+  <div id="map-manual" style="display:none;" class="bg-white border border-emerald-100 rounded-xl p-5">
+    <p class="text-sm font-semibold text-on-surface mb-3"> Search manually for nearby facilities:</p>
+    <div id="manual-links" class="flex flex-wrap gap-2"></div>
+  </div>
+</section>
+
+
+
+</main>
+<!-- Floating Action Button (Shell FAB Contextual) -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="bg-primary text-on-primary h-16 w-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all border-none">
+<span class="material-symbols-outlined text-3xl" data-icon="bolt" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</button>
+</div>
+<script>
+if(!Auth.requireLogin()) throw new Error();
+initNavbar();
+const sidebarUser = Auth.user();
+if(sidebarUser) {
+  const initials = (sidebarUser.name||'EA').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const sbName = document.getElementById('sb-user-name');
+  const sbAvatar = document.getElementById('sb-avatar');
+  const topAvatar = document.getElementById('top-avatar');
+  const topName = document.getElementById('top-user-name');
+  const sbId = document.getElementById('sb-user-id');
+  if(sbName) sbName.textContent = sidebarUser.name || 'Eco Steward';
+  if(sbAvatar) sbAvatar.textContent = initials;
+  if(sbId) sbId.textContent = sidebarUser.user_number ? 'ID: ' + sidebarUser.user_number : '';
+  if(topAvatar) topAvatar.textContent = initials;
+  if(topName) topName.textContent = sidebarUser.name?.split(' ')[0] || 'Profile';
+}
+
+//  State 
+let selectedFiles = []; // Array of File objects
+const MAX_TOTAL_SIZE = 50 * 1024 * 1024; // 50MB
+
+//  Element References 
+const dropZone   = document.getElementById('drop-zone');
+const fileInput  = document.getElementById('file-input');
+const previewContainer = document.getElementById('preview-container');
+const uploadPlaceholder = document.getElementById('upload-placeholder');
+const analyzeBtn = document.getElementById('analyze-btn');
+const descInput  = document.getElementById('description-input');
+const charCount  = document.getElementById('char-count');
+
+// ════════════════════════════════════════════════════════════════════════
+//  Persistent session: everything you add / every result stays until you press "New",
+//  even if you switch to another page and come back.
+// ════════════════════════════════════════════════════════════════════════
+const _sessUser = Auth.user();
+const SESSION_KEY = 'ai_session_' + (_sessUser ? _sessUser.id : 'guest');
+const LAST_ANALYSIS_KEY = 'eco_last_analysis_' + (_sessUser ? _sessUser.id : 'guest');
+let analysisRef = null;        // id shared with the server so one item is never added twice
+let analysisPending = false;   // true while a request is running
+let lastResult = null;         // last AI result (re-shown when you return)
+let lastDescription = '';
+let currentProductId = null;   // the My Items entry created from the analysis
+let _saveTimer = null;
+
+function newRef() { return 'a' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+function saveSession() { clearTimeout(_saveTimer); _saveTimer = setTimeout(_saveSessionNow, 300); }
+async function _saveSessionNow() {
+  clearTimeout(_saveTimer);
+  const has = descInput.value.trim() || selectedFiles.length || lastResult || analysisPending;
+  try {
+    if (!has) { await EcoStore.del(SESSION_KEY); }
+    else {
+      await EcoStore.put(SESSION_KEY, {
+        description: descInput.value, files: EcoStore.packFiles(selectedFiles), ref: analysisRef,
+        result: lastResult, resultDescription: lastDescription, pending: analysisPending,
+        productId: currentProductId, savedAt: Date.now(),
+      });
+    }
+  } catch (e) { console.warn('[AI] could not save session', e); }
+  updateNewBtn();
+}
+let _leaving = false;
+window.addEventListener('pagehide', () => { _leaving = true; _saveSessionNow(); });
+window.addEventListener('pageshow', () => { _leaving = false; });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') _saveSessionNow(); });
+
+function updateNewBtn() {
+  const btn = document.getElementById('new-btn');
+  if (!btn) return;
+  const has = descInput.value.trim() || selectedFiles.length || lastResult || analysisPending;
+  btn.style.display = has ? 'flex' : 'none';
+}
+
+function showBanner(msg, kind) {
+  const b = document.getElementById('session-banner');
+  if (!b) return;
+  if (!msg) { b.classList.add('hidden'); b.textContent = ''; return; }
+  const styles = {
+    info:  'bg-blue-50 border-blue-200 text-blue-900',
+    ok:    'bg-emerald-50 border-emerald-200 text-emerald-900',
+    warn:  'bg-amber-50 border-amber-200 text-amber-900',
+  };
+  b.className = 'mt-3 text-sm rounded-xl px-4 py-3 border ' + (styles[kind] || styles.info);
+  b.textContent = msg;
+}
+
+async function startNew() {
+  const draftOnly = !lastResult && (descInput.value.trim() || selectedFiles.length);
+  if (draftOnly && !confirm('Discard what you entered and start a new analysis?')) return;
+  await resetForm();
+}
+
+// Rebuild the page from the saved session
+async function restoreSession() {
+  let s = null;
+  try { s = await EcoStore.get(SESSION_KEY); } catch (e) { s = null; }
+  if (!s) { updateNewBtn(); return; }
+  analysisRef = s.ref || null;
+  currentProductId = s.productId || null;
+  if (s.description) { descInput.value = s.description; descInput.dispatchEvent(new Event('input')); }
+  if (Array.isArray(s.files) && s.files.length) {
+    selectedFiles = EcoStore.unpackFiles(s.files).filter(f => f && kindOf(f));
+    renderGallery(); updateAnalyzeBtn();
+  }
+  if (s.result) {
+    lastResult = s.result; lastDescription = s.resultDescription || '';
+    renderResults(s.result, lastDescription, { restored: true });
+    showBanner('Welcome back \u2014 your last analysis is still here. Press \u201cNew\u201d when you want to start a fresh one.', 'ok');
+  } else if (s.pending && analysisRef) {
+    recoverPending();
+  } else if (s.description || selectedFiles.length) {
+    showBanner('Your draft was restored. Press \u201cNew\u201d to clear it.', 'info');
+  }
+  updateNewBtn();
+}
+
+// The user left while the AI was still working: the server keeps going and saves the item,
+// so we ask for the finished result instead of making them start over.
+async function recoverPending() {
+  analysisPending = true;
+  analyzeBtn.disabled = true;
+  analyzeBtn.innerHTML = '<span class="spinner"></span> Recovering your analysis\u2026';
+  showBanner('Your analysis was still running when you left this page. Recovering the result\u2026', 'info');
+  for (let i = 0; i < 40; i++) {                       // about two minutes
+    try {
+      const r = await API.get('/products/by-analysis/' + encodeURIComponent(analysisRef));
+      if (r && r.found && r.analysis) {
+        const data = r.analysis;
+        data.saved_product = { id: r.product.id, created: false, lifecycle_stage: r.product.lifecycle_stage, name: r.product.name };
+        analysisPending = false; lastResult = data; lastDescription = descInput.value.trim();
+        analyzeBtn.innerHTML = ' Analyze with AI';
+        renderResults(data, lastDescription, { restored: true });
+        showBanner('Your analysis finished while you were away \u2014 it is shown below and already saved in My Items.', 'ok');
+        await _saveSessionNow();
+        return;
+      }
+    } catch (e) { /* not ready yet (404) */ }
+    await sleep(3000);
+  }
+  analysisPending = false;
+  analyzeBtn.innerHTML = ' Analyze with AI';
+  updateAnalyzeBtn();
+  showBanner('We could not recover that analysis. Your description and files are back \u2014 press \u201cAnalyze with AI\u201d to run it again.', 'warn');
+  await _saveSessionNow();
+}
+
+analyzeBtn.addEventListener('click', () => { analyzeProduct(); });
+
+//  Description counter 
+descInput.addEventListener('input', () => {
+  charCount.textContent = descInput.value.length;
+  const wc = descInput.value.trim() ? descInput.value.trim().split(/\s+/).length : 0;
+  document.getElementById('word-count').textContent = wc;
+  charCount.style.color = descInput.value.length >= 450 ? '#b02500' : '';
+  updateCaptured();
+  updateAnalyzeBtn();
+  saveSession();
+});
+// Prevent drop zone click from also opening file dialog when user clicks textarea
+descInput.addEventListener('click', (e) => e.stopPropagation());
+descInput.addEventListener('keydown', (e) => e.stopPropagation());
+
+//  File Input change 
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files) addFiles(Array.from(e.target.files));
+});
+
+//  Drag and drop on drop zone 
+dropZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropZone.classList.add('border-primary/80', 'bg-emerald-50');
+});
+dropZone.addEventListener('dragleave', () => {
+  dropZone.classList.remove('border-primary/80', 'bg-emerald-50');
+});
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropZone.classList.remove('border-primary/80', 'bg-emerald-50');
+  if (e.dataTransfer.files) addFiles(Array.from(e.dataTransfer.files));
+});
+
+//  Add more files button 
+document.getElementById('add-more-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  fileInput.value = '';
+  fileInput.click();
+});
+
+const IMG_EXT = /\.(jpe?g|png|webp|gif|bmp|heic|heif|avif)$/i;
+const VID_EXT = /\.(mp4|webm|mov|m4v|avi|mkv|3gp|mpeg|mpg)$/i;
+// Browsers sometimes leave file.type empty (e.g. .mov/.mkv, some Windows setups) -> fall back to the extension
+function kindOf(file) {
+  const t = (file.type || '').toLowerCase();
+  if (t.startsWith('image/')) return 'image';
+  if (t.startsWith('video/')) return 'video';
+  if (IMG_EXT.test(file.name)) return 'image';
+  if (VID_EXT.test(file.name)) return 'video';
+  return null;
+}
+
+function addFiles(newFiles) {
+  const rejected = [];
+  for (const file of newFiles) {
+    if (!kindOf(file)) { rejected.push(file.name); continue; }
+    if (selectedFiles.some(f => f.name === file.name && f.size === file.size)) continue;
+    selectedFiles.push(file);
+  }
+  const totalSize = selectedFiles.reduce((s, f) => s + f.size, 0);
+  if (rejected.length) {
+    showError(`Not supported: ${rejected.join(', ')}. Use JPG, PNG, WebP, MP4, WebM or MOV.`);
+  } else if (totalSize > MAX_TOTAL_SIZE) {
+    showError(`Total file size (${formatFileSize(totalSize)}) exceeds the 50MB limit. Remove some files.`);
+  } else {
+    hideError();
+  }
+  fileInput.value = '';          // allow picking the same file again after removing it
+  renderGallery();
+  updateAnalyzeBtn();
+  saveSession();
+}
+
+function removeFile(index) {
+  selectedFiles.splice(index, 1);
+  renderGallery();
+  updateAnalyzeBtn();
+  hideError();
+  saveSession();
+}
+
+let galleryUrls = [];
+function renderGallery() {
+  const gallery  = document.getElementById('files-gallery');
+  const summary  = document.getElementById('files-summary');
+  const sizeBar  = document.getElementById('size-bar-fill');
+  const totalSize = selectedFiles.reduce((s, f) => s + f.size, 0);
+  const imgCount  = selectedFiles.filter(f => kindOf(f) === 'image').length;
+  const vidCount  = selectedFiles.filter(f => kindOf(f) === 'video').length;
+
+  galleryUrls.forEach(u => URL.revokeObjectURL(u));
+  galleryUrls = [];
+  gallery.innerHTML = '';
+  selectedFiles.forEach((file, i) => {
+    const isVideo = kindOf(file) === 'video';
+    const url = URL.createObjectURL(file);
+    galleryUrls.push(url);
+
+    const card = document.createElement('div');
+    card.style.cssText = 'display:flex;flex-direction:column;gap:4px;min-width:0;';
+
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'position:relative;border-radius:0.75rem;overflow:hidden;background:#e2ebda;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border:2px solid #d6e0cd;';
+
+    const media = document.createElement(isVideo ? 'video' : 'img');
+    media.src = url;
+    if (isVideo) { media.muted = true; media.preload = 'metadata'; media.controls = true; media.playsInline = true; }
+    else { media.alt = file.name; }
+    media.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+    wrapper.appendChild(media);
+
+    const tag = document.createElement('div');
+    tag.style.cssText = 'position:absolute;top:4px;left:4px;background:rgba(23,106,33,0.9);color:#fff;font-size:0.6rem;font-weight:800;padding:2px 7px;border-radius:999px;letter-spacing:0.04em;';
+    tag.textContent = isVideo ? 'VIDEO' : 'PHOTO';
+    wrapper.appendChild(tag);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.title = 'Remove';
+    removeBtn.setAttribute('aria-label', 'Remove ' + file.name);
+    removeBtn.style.cssText = 'position:absolute;top:4px;right:4px;width:24px;height:24px;background:rgba(0,0,0,0.65);color:#fff;border:none;border-radius:50%;font-size:0.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;';
+    removeBtn.textContent = '\u2715';
+    removeBtn.onclick = (e) => { e.stopPropagation(); removeFile(i); };
+    wrapper.appendChild(removeBtn);
+    card.appendChild(wrapper);
+
+    const cap = document.createElement('div');
+    cap.style.cssText = 'font-size:0.68rem;line-height:1.2;color:#575e52;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+    cap.title = file.name;
+    cap.textContent = file.name + ' \u00b7 ' + formatFileSize(file.size);
+    card.appendChild(cap);
+
+    gallery.appendChild(card);
+  });
+
+  const parts = [];
+  if (imgCount) parts.push(`<strong>${imgCount}</strong> photo${imgCount > 1 ? 's' : ''}`);
+  if (vidCount) parts.push(`<strong>${vidCount}</strong> video${vidCount > 1 ? 's' : ''}`);
+  summary.innerHTML = selectedFiles.length ? `Uploaded: ${parts.join(' + ')} &middot; ${formatFileSize(totalSize)} / 50 MB` : '';
+
+  const pct = Math.min((totalSize / MAX_TOTAL_SIZE) * 100, 100);
+  sizeBar.style.width = pct + '%';
+  sizeBar.style.background = pct > 90 ? '#b02500' : pct > 70 ? '#d4a528' : '#176a21';
+
+  // The drop zone stays visible so more files can always be added; it just shrinks once files exist.
+  const has = selectedFiles.length > 0;
+  previewContainer.style.display = has ? 'block' : 'none';
+  uploadPlaceholder.style.display = '';
+  dropZone.style.minHeight = has ? '110px' : '220px';
+  const h = uploadPlaceholder.querySelector('h3');
+  const sub = uploadPlaceholder.querySelector('p');
+  if (h) h.textContent = has ? 'Drop or click to add more' : 'Drop photos or videos here, or click to upload';
+  if (sub) sub.textContent = has ? 'Your files are shown below' : 'PNG, JPG, WebP, MP4, WebM, MOV supported';
+  updateCaptured();
+}
+
+function updateAnalyzeBtn() {
+  const totalSize = selectedFiles.reduce((s, f) => s + f.size, 0);
+  const hasText = descInput.value.trim().length >= 3;
+  // A description alone is enough; so are photos alone.
+  analyzeBtn.disabled = (!hasText && selectedFiles.length === 0) || totalSize > MAX_TOTAL_SIZE;
+}
+
+// Live preview of exactly what will be sent
+function updateCaptured() {
+  const box = document.getElementById('input-captured');
+  const text = descInput.value.trim();
+  const n = selectedFiles.length;
+  if (!text && n === 0) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  const dEl = document.getElementById('captured-desc');
+  dEl.textContent = text ? '\u201c' + text + '\u201d' : 'No description entered.';
+  dEl.style.opacity = text ? '1' : '0.6';
+  const fEl = document.getElementById('captured-files');
+  if (n === 0) { fEl.textContent = 'No photos or videos added \u2014 the analysis will use your description only.'; }
+  else { fEl.textContent = n + ' file' + (n > 1 ? 's' : '') + ': ' + selectedFiles.map(f => f.name + ' (' + kindOf(f) + ')').join(', '); }
+}
+
+function esc(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+//  Analyze Function 
+async function analyzeProduct() {
+  const description = descInput.value.trim();
+  if (selectedFiles.length === 0 && description.length < 3) {
+    showError('Please describe your item (at least a few words) and/or add a photo or video.');
+    return;
+  }
+  const hasVideo = selectedFiles.some(f => kindOf(f) === 'video');
+  const btn = analyzeBtn;
+  if (btn.dataset.busy === '1') return;   // ignore double clicks
+  btn.dataset.busy = '1';
+  btn.disabled = true;
+  const t0 = Date.now();
+  const label = hasVideo ? 'Processing media & analyzing' : 'Analyzing with AI';
+  const tick = () => { btn.innerHTML = `<span class="spinner"></span> ${label}\u2026 ${Math.round((Date.now() - t0) / 1000)}s`; };
+  tick();
+  const tickTimer = setInterval(tick, 1000);
+  const hint = document.getElementById('analyze-hint');
+  if (hint) { hint.textContent = 'Please keep this tab open. The first analysis can take up to a minute while the AI models load.'; hint.style.display = 'block'; }
+  hideError();
+  showBanner('', '');
+
+  // Remember that a request is running (and keep the files) BEFORE sending, so leaving the
+  // page mid-analysis never loses anything.
+  if (!analysisRef) analysisRef = newRef();
+  analysisPending = true;
+  await _saveSessionNow();
+
+  const formData = new FormData();
+  selectedFiles.forEach(file => formData.append('media', file));
+  formData.append('description', description);
+  formData.append('analysis_ref', analysisRef);
+
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), hasVideo ? 330000 : 220000);
+  try {
+    const token = localStorage.getItem('sce_token');
+    const response = await fetch(CONFIG.API_BASE + '/ai/vision-analyze', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData,
+      signal: ctrl.signal
+    });
+    if (response.status === 401 || response.status === 422) {
+      Auth.clear(); window.location.href = 'login.html'; return;
+    }
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || data.msg || `Analysis failed (HTTP ${response.status}).`);
+    analysisPending = false;
+    lastResult = data; lastDescription = description;
+    renderResults(data, description);
+    await _saveSessionNow();
+  } catch (e) {
+    if (!_leaving) { analysisPending = false; _saveSessionNow(); }   // a real failure (not just navigating away)
+    showError(e.name === 'AbortError' ? 'The analysis took too long. Run \u201cpython check_gemini.py\u201d in the backend terminal to see whether your network, key or model is the problem.'
+              : (e instanceof TypeError ? 'Cannot reach the server. Make sure the backend is running on port 5000.' : e.message));
+  } finally {
+    clearTimeout(timer);
+    clearInterval(tickTimer);
+    if (hint) hint.style.display = 'none';
+    btn.dataset.busy = '0';
+    btn.innerHTML = ' Analyze with AI';
+    updateAnalyzeBtn();
+  }
+}
+
+function saveAnalysisToHistory(data) {
+  const user = Auth.user();
+  const userId = user ? user.id : 'guest';
+  const historyKey = 'eco_ai_history_' + userId;
+  const notifsKey = 'eco_notifications_' + userId;
+
+  const history = JSON.parse(localStorage.getItem(historyKey) || '[]');
+  history.unshift({
+    product: data.product_name || 'Unknown Product',
+    action: data.recommendation || 'Analyze',
+    score: data.sustainability_score || 0,
+    time: new Date().toISOString(),
+    material: data.material || '',
+    value: data.estimated_value || '',
+  });
+  localStorage.setItem(historyKey, JSON.stringify(history.slice(0, 10)));
+
+  // Add to dashboard notifications
+  const notifs = JSON.parse(localStorage.getItem(notifsKey) || '[]');
+  const recIcons = { Repair: '', Resell: '', Recycle: '', Donate: '', 'Keep Using': '' };
+  notifs.unshift({ icon: '', title: `AI analyzed: ${data.product_name}`, sub: `Recommended: ${data.recommendation}  Score: ${data.sustainability_score}/100`, time: new Date().toISOString(), read: false });
+  localStorage.setItem(notifsKey, JSON.stringify(notifs.slice(0, 20)));
+}
+
+//  Render AI History (Inline Panel) 
+function renderAIHistoryInline() {
+  const user = Auth.user();
+  const userId = user ? user.id : 'guest';
+  const history = JSON.parse(localStorage.getItem('eco_ai_history_' + userId) || '[]');
+  const container = document.getElementById('ai-history-panel-inline');
+  const clearBtn = document.getElementById('clear-history-btn');
+  if (!container) return;
+
+  if (!history.length) {
+    if (clearBtn) clearBtn.classList.add('hidden');
+    container.innerHTML = `
+      <div style="opacity:0.5; pointer-events:none; filter:grayscale(100%); margin-bottom:1rem;">
+        <div style="display:flex;align-items:center;gap:0.625rem;padding:0.6rem 0.75rem;background:#fff;border-radius:0.75rem;border:1px dashed #a8afa2;margin-bottom:0.375rem;">
+          <div style="width:2.25rem;height:2.25rem;background:#e2ebda;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;"></div>
+          <div style="flex:1;min-width:0;">
+            <p style="font-weight:800;font-size:0.8rem;color:#2a3127;margin:0;">Example: Broken Blender</p>
+            <div style="display:flex;align-items:center;gap:0.375rem;margin-top:0.1rem;">
+              <span style="font-size:0.65rem;font-weight:700;color:#d97706;background:#d9770618;padding:0.1rem 0.4rem;border-radius:9999px;">Repair</span>
+              <span style="font-size:0.65rem;color:#72796d;">45/100</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;padding:0.5rem 1rem;">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;"></div>
+        <p style="font-weight:800;font-size:0.9rem;color:#176a21;margin:0 0 0.5rem;">No analyses yet</p>
+        <p style="font-size:0.75rem;color:#575e52;margin:0 0 1.25rem;line-height:1.5;">Scan your first item to get real AI sustainability insights here.</p>
+        <div style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1rem;background:#e2ebda;border-radius:9999px;font-size:0.75rem;font-weight:700;color:#176a21;">
+           Try it above
+        </div>
+      </div>`;
+    return;
+  }
+
+  if (clearBtn) clearBtn.classList.remove('hidden');
+  const recIcons = { Repair: '', Resell: '', Recycle: '', Donate: '', 'Keep Using': '' };
+  const recColors = { Repair: '#d97706', Resell: '#2563eb', Recycle: '#16a34a', Donate: '#dc2626', 'Keep Using': '#176a21' };
+  container.innerHTML = history.map(h => `
+    <div style="display:flex;align-items:center;gap:0.625rem;padding:0.6rem 0.75rem;background:#fff;border-radius:0.75rem;border:1px solid #e2ebda;margin-bottom:0.375rem;">
+      <div style="width:2.25rem;height:2.25rem;background:#e2ebda;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">${recIcons[h.action] || ''}</div>
+      <div style="flex:1;min-width:0;">
+        <p style="font-weight:800;font-size:0.8rem;color:#2a3127;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(h.product)}</p>
+        <div style="display:flex;align-items:center;gap:0.375rem;margin-top:0.1rem;">
+          <span style="font-size:0.65rem;font-weight:700;color:${recColors[h.action]||'#176a21'};background:${recColors[h.action]||'#176a21'}18;padding:0.1rem 0.4rem;border-radius:9999px;">${esc(h.action)}</span>
+          <span style="font-size:0.65rem;color:#72796d;">${h.score}/100</span>
+        </div>
+      </div>
+      <span style="font-size:0.65rem;color:#a8afa2;flex-shrink:0;">${timeSinceAI(h.time)}</span>
+    </div>`).join('');
+}
+
+function clearHistory() {
+  if (!confirm('Clear your entire AI analysis history?')) return;
+  const user = Auth.user();
+  const userId = user ? user.id : 'guest';
+  localStorage.removeItem('eco_ai_history_' + userId);
+  renderAIHistoryInline();
+}
+
+function timeSinceAI(iso) {
+  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  return Math.floor(diff/86400) + 'd ago';
+}
+
+//  Render Results 
+function renderResults(data, submittedDescription, opts) {
+  opts = opts || {};
+  // Save to history first (not when we are just re-showing a restored result)
+  if (!opts.restored) saveAnalysisToHistory(data);
+  renderInputCard(data, submittedDescription || '');
+  renderSavedItemCard(data, submittedDescription || '');
+  updateNewBtn();
+
+  document.getElementById('upload-card').style.display = 'none';
+  document.getElementById('results-section').style.display = 'block';
+
+  // Build result media gallery  show images prominently
+  const gallery = document.getElementById('result-media-gallery');
+  gallery.innerHTML = '';
+  if (selectedFiles.length === 0) {
+    gallery.style.display = 'none';
+  } else {
+    gallery.style.display = 'block';
+    // Show first image large, rest as thumbnails
+    const firstFile = selectedFiles[0];
+    const isFirstVideo = (kindOf(firstFile) === 'video');
+
+    // Main large preview
+    const mainWrap = document.createElement('div');
+    mainWrap.style.cssText = 'border-radius:1rem;overflow:hidden;background:#e2ebda;border:2px solid #d6e0cd;margin-bottom:0.5rem;position:relative;';
+
+    if (isFirstVideo) {
+      const vid = document.createElement('video');
+      vid.src = URL.createObjectURL(firstFile);
+      vid.controls = true;
+      vid.style.cssText = 'width:100%;max-height:280px;object-fit:contain;display:block;background:#000;';
+      mainWrap.appendChild(vid);
+    } else {
+      const img = document.createElement('img');
+      img.alt = firstFile.name;
+      img.style.cssText = 'width:100%;max-height:280px;object-fit:contain;display:block;background:#f2f9ea;';
+      const reader = new FileReader();
+      reader.onload = (ev) => { img.src = ev.target.result; };
+      reader.readAsDataURL(firstFile);
+      mainWrap.appendChild(img);
+    }
+
+    // File name badge
+    const nameBadge = document.createElement('div');
+    nameBadge.style.cssText = 'position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.65);color:#fff;font-size:0.65rem;font-weight:700;padding:3px 8px;border-radius:999px;max-width:90%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+    nameBadge.textContent = `${isFirstVideo ? '' : ''} ${firstFile.name}`;
+    mainWrap.appendChild(nameBadge);
+    gallery.appendChild(mainWrap);
+
+    // Additional thumbnails (if more than 1 file)
+    if (selectedFiles.length > 1) {
+      const thumbRow = document.createElement('div');
+      thumbRow.style.cssText = 'display:grid;grid-template-columns:repeat(4,1fr);gap:0.375rem;';
+      selectedFiles.slice(1).forEach((file) => {
+        const isVideo = kindOf(file) === 'video';
+        const tw = document.createElement('div');
+        tw.style.cssText = 'border-radius:0.5rem;overflow:hidden;background:#e2ebda;aspect-ratio:1;border:2px solid #d6e0cd;';
+        if (isVideo) {
+          const vid = document.createElement('video');
+          vid.src = URL.createObjectURL(file);
+          vid.muted = true;
+          vid.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+          tw.appendChild(vid);
+        } else {
+          const img = document.createElement('img');
+          img.alt = file.name;
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+          const reader2 = new FileReader();
+          reader2.onload = (ev) => { img.src = ev.target.result; };
+          reader2.readAsDataURL(file);
+          tw.appendChild(img);
+        }
+        thumbRow.appendChild(tw);
+      });
+      gallery.appendChild(thumbRow);
+    }
+  }
+
+  document.getElementById('result-product-name').textContent = data.product_name || 'Unknown Product';
+  { const spans = document.getElementById('result-material').querySelectorAll('span'); spans[spans.length - 1].textContent = data.material || 'Unknown'; }
+  document.getElementById('result-condition').textContent = ' Condition: ' + (data.condition_assessment || 'N/A');
+
+  // Recommendation
+  const recIcons = {
+    'Repair': '', 'Resell': '', 'Recycle': '',
+    'Donate': '', 'Keep Using': ''
+  };
+  const action = data.recommendation || 'Analyze';
+  document.getElementById('result-rec-icon').textContent = recIcons[action] || '';
+  document.getElementById('result-rec-action').textContent = action;
+  document.getElementById('result-rec-reason').textContent = data.reason || '';
+
+  // Sustainability Score
+  const score = data.sustainability_score || 0;
+  document.getElementById('result-score').textContent = score;
+  const circumference = 2 * Math.PI * 42;
+  const offset = circumference - (score / 100) * circumference;
+  const scoreCircle = document.getElementById('score-circle');
+  let ringColor = '#c44a3f';
+  if (score >= 70) ringColor = '#5a8a3c';
+  else if (score >= 50) ringColor = '#d4a528';
+  scoreCircle.setAttribute('stroke', ringColor);
+  setTimeout(() => { if (scoreCircle.isConnected) scoreCircle.style.strokeDashoffset = offset; }, 100);
+
+  document.getElementById('result-value').textContent = ' Estimated Value: ' + (data.estimated_value || 'N/A');
+  document.getElementById('result-carbon').textContent = data.carbon_impact || 'N/A';
+  document.getElementById('result-eco-insight').textContent = data.eco_insight || 'N/A';
+
+  // Repair Tips
+  const tipsCard = document.getElementById('repair-tips-card');
+  const tipsList = document.getElementById('repair-tips-list');
+  if (data.repair_tips && data.repair_tips !== 'N/A' && data.recommendation === 'Repair') {
+    tipsCard.style.display = 'block';
+    const tips = data.repair_tips.split(/\d+[\.\)]\s*/).filter(t => t.trim().length > 0);
+    if (tips.length === 0) tips.push(data.repair_tips);
+    tipsList.innerHTML = tips.map((tip, i) =>
+      `<li><span class="tip-bullet">${i + 1}</span><span>${esc(tip.trim())}</span></li>`
+    ).join('');
+  } else {
+    tipsCard.style.display = 'none';
+  }
+
+  if (!opts.restored) document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  else window.scrollTo({ top: 0 });
+
+  //  Phase 1 ML Insights 
+  renderPhase1Insights(data.phase1 || null);
+
+  // Show action buttons after result renders
+  setTimeout(() => {
+    if (!document.getElementById('results-section')) return;   // user already left this tab
+    const existing = document.getElementById('result-actions');
+    if (!existing) {
+      const actions = document.createElement('div');
+      actions.id = 'result-actions';
+      actions.style.cssText = 'display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.5rem;padding:1.25rem;background:#f2f9ea;border-radius:1rem;';
+      actions.innerHTML = `
+        <p style="width:100%;font-size:0.75rem;font-weight:800;color:#72796d;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 0.5rem;">Next Steps</p>
+        <a href="donate.html${currentProductId ? '?item=' + currentProductId : ''}" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;background:#176a21;color:#fff;border-radius:0.625rem;font-size:0.8rem;font-weight:700;text-decoration:none;"> Donate to NGO</a>
+        <a href="marketplace.html" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;background:#006096;color:#fff;border-radius:0.625rem;font-size:0.8rem;font-weight:700;text-decoration:none;"> List on Marketplace</a>
+        <a href="repair.html" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;background:#ebf3e3;color:#176a21;border-radius:0.625rem;font-size:0.8rem;font-weight:700;text-decoration:none;"> Find Repair Shop</a>
+        <a href="map.html" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1rem;background:#ebf3e3;color:#006096;border-radius:0.625rem;font-size:0.8rem;font-weight:700;text-decoration:none;"> Find Recycler</a>
+      `;
+      document.getElementById('results-section').appendChild(actions);
+    }
+    // Refresh inline history panel
+    renderAIHistoryInline();
+    // Show nearby map section (pass AI facility hint for custom query)
+    showMapSection(data.recommendation || '', data.nearby_facility_hint || '', { noScroll: !!opts.restored });
+  }, 300);
+}
+
+// "Added to My Items" card: the analyzed item is saved by the server and tracked from now on.
+async function renderSavedItemCard(data, description) {
+  const card = document.getElementById('saved-item-card');
+  const title = document.getElementById('saved-item-title');
+  const sub = document.getElementById('saved-item-sub');
+  const actions = document.getElementById('saved-item-actions');
+  if (!card) return;
+  let saved = data.saved_product && data.saved_product.id ? data.saved_product : null;
+
+  if (!saved) {   // server could not save it during the analysis - try once more from here
+    try {
+      const r = await API.post('/products/from-analysis', { analysis: data, description: description, analysis_ref: analysisRef || newRef() });
+      saved = { id: r.product.id, created: r.created, lifecycle_stage: r.product.lifecycle_stage, name: r.product.name };
+      data.saved_product = saved;
+    } catch (e) {
+      card.className = 'bg-amber-50 border border-amber-300 rounded-xl p-4 mb-6';
+      title.textContent = 'Could not add this item to My Items';
+      sub.textContent = e.message || 'Please try again.';
+      actions.innerHTML = '<button type="button" class="px-4 py-2 rounded-full bg-emerald-700 text-white text-xs font-bold">Retry</button>';
+      actions.firstChild.onclick = () => renderSavedItemCard(data, description);
+      card.classList.remove('hidden');
+      return;
+    }
+  }
+  currentProductId = saved.id;
+  card.className = 'bg-emerald-50 border border-emerald-300 rounded-xl p-4 mb-6';
+  title.textContent = saved.created === false ? 'In My Items \u00b7 tracked' : 'Added to My Items \u00b7 now tracked';
+  sub.textContent = (saved.name || data.product_name || 'Your item') + ' \u00b7 Stage: ' + (saved.lifecycle_stage || 'In Use') +
+    ' \u00b7 AI suggests: ' + (data.recommendation || 'n/a') + '. Its progress (listed, donated, recycled\u2026) is recorded automatically.';
+  actions.innerHTML =
+    '<a href="products.html?highlight=' + saved.id + '" class="px-4 py-2 rounded-full bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800">View in My Items</a>' +
+    '<a href="donate.html?item=' + saved.id + '" class="px-4 py-2 rounded-full bg-white border border-emerald-300 text-emerald-800 text-xs font-bold hover:bg-emerald-50">Donate it</a>';
+  card.classList.remove('hidden');
+
+  // The Next Steps links (built a moment later) need the item id too, and the Donate page can pre-fill from this
+  try {
+    localStorage.setItem(LAST_ANALYSIS_KEY, JSON.stringify({
+      product_id: saved.id, name: data.product_name || saved.name || '', category: data.category || '',
+      condition: data.condition_assessment || '', recommendation: data.recommendation || '',
+      description: description || '', at: Date.now(),
+    }));
+  } catch (_) {}
+  _saveSessionNow();
+}
+
+//  Reset Form  (the "New" button)
+async function resetForm() {
+  lastResult = null; lastDescription = ''; analysisRef = null; analysisPending = false; currentProductId = null;
+  clearTimeout(_saveTimer);
+  try { await EcoStore.del(SESSION_KEY); } catch (e) {}
+  try { localStorage.removeItem(LAST_ANALYSIS_KEY); } catch (e) {}
+  const oldActions = document.getElementById('result-actions'); if (oldActions) oldActions.remove();
+  const savedCard = document.getElementById('saved-item-card'); if (savedCard) savedCard.classList.add('hidden');
+  showBanner('', '');
+  document.getElementById('upload-card').style.display = 'block';
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('nearby-map-section').style.display = 'none';
+
+  selectedFiles = [];
+  fileInput.value = '';
+  renderGallery();   // clears thumbnails, revokes object URLs, restores the drop zone
+  document.getElementById('result-media-gallery').innerHTML = '';
+  const p1sec = document.getElementById('phase1-insights-section');
+  if (p1sec) p1sec.style.display = 'none';
+
+  descInput.value = '';
+  charCount.textContent = '0';
+  updateCaptured();
+  document.getElementById('result-input-card').style.display = 'none';
+  analyzeBtn.disabled = true;
+  analyzeBtn.innerHTML = ' Analyze with AI';
+  document.getElementById('score-circle').style.strokeDashoffset = '263.9';
+
+  hideError();
+  updateNewBtn();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+//  Error helpers 
+function showError(msg) {
+  const html = `<div class="error-box" style="background:#fff1ef;border:1px solid #f1b5aa;color:#8a1f10;border-radius:0.75rem;padding:0.75rem 1rem;font-size:0.85rem;font-weight:600;">${esc(msg)}</div>`;
+  ['upload-error', 'error-box'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.display = 'block'; el.innerHTML = html; }
+  });
+  const up = document.getElementById('upload-error');
+  if (up && up.offsetParent !== null) up.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function hideError() {
+  ['upload-error', 'error-box'].forEach(id => { const el = document.getElementById(id); if (el) { el.style.display = 'none'; el.innerHTML = ''; } });
+}
+
+// Shows the user exactly what the analyzer took and how it was read
+function renderInputCard(data, submittedDescription) {
+  const card = document.getElementById('result-input-card');
+  const ir = data.input_received || {};
+  const modeLabel = { 'image+text': 'Photo + description', 'text-only': 'Description only', 'image-only': 'Photo only' }[ir.mode] || 'Analysis';
+  document.getElementById('ri-mode').textContent = modeLabel + (data._model ? ' \u00b7 ' + data._model : '');
+  const notice = document.getElementById('ri-notice');
+  const noticeText = [data._notice, data._error_detail ? ('Technical detail: ' + data._error_detail) : ''].concat(ir.notes || []).filter(Boolean).map(t => String(t).trim()).map(t => /[.!?]$/.test(t) ? t : t + '.').join(' ');
+  if (noticeText) { notice.textContent = noticeText; notice.classList.remove('hidden'); } else { notice.classList.add('hidden'); }
+  const desc = ir.description || submittedDescription;
+  const dEl = document.getElementById('ri-desc');
+  dEl.textContent = desc ? desc : 'No description provided.';
+  dEl.style.opacity = desc ? '1' : '0.6';
+  document.getElementById('ri-chips').innerHTML = (ir.understood || []).map(f =>
+    `<span style="background:#e8f5e0;color:#176a21;border:1px solid #c9e4bb;border-radius:999px;padding:2px 10px;font-size:0.72rem;font-weight:700;">${esc(f.label)}: ${esc(f.value)}</span>`).join('');
+  const files = ir.files || [];
+  document.getElementById('ri-files').textContent = files.length
+    ? 'Media analyzed: ' + files.map(f => `${f.name} (${f.kind}, ${f.size_kb} KB)`).join(', ')
+    : 'No photos or videos were analyzed.';
+  document.getElementById('ri-understanding').textContent = data.input_understanding || '\u2014';
+  document.getElementById('ri-vs').textContent = data.description_vs_image || '\u2014';
+  const as = document.getElementById('ri-assumed');
+  if (ir.assumed && ir.assumed.length) { as.textContent = 'Not stated, so defaults were used: ' + ir.assumed.join('; ') + '. Add these to your description for a more accurate result.'; as.classList.remove('hidden'); }
+  else { as.classList.add('hidden'); }
+  card.style.display = 'block';
+}
+
+//  Init 
+renderAIHistoryInline();
+restoreSession();
+
+//  Map / Nearby Facilities 
+let _currentRecommendation = '';
+
+// Map config per recommendation type
+const MAP_CONFIG = {
+  'Recycle':    { title: 'Nearby Recycling Centers',      sub: 'AI recommends recycling  find the closest drop-off points',  emoji: '', queries: ['recycling center', 'e-waste collection', 'scrap dealer'] },
+  'Repair':     { title: 'Nearby Repair Shops',           sub: 'AI recommends repair  find certified repair technicians nearby', emoji: '', queries: ['electronics repair shop', 'mobile repair', 'appliance repair center'] },
+  'Donate':     { title: 'Nearby Donation Centers',       sub: 'AI recommends donation  find NGOs and collection points near you', emoji: '', queries: ['donation center NGO', 'charity drop-off', 'thrift store'] },
+  'Resell':     { title: 'Nearby Resale & Thrift Stores', sub: 'AI recommends reselling  find second-hand shops and buyers',    emoji: '', queries: ['second hand shop', 'thrift store', 'pawn shop'] },
+  'Keep Using': { title: 'Nearby Eco Stores',             sub: 'Keep using it! Find eco-friendly accessories and upgrades nearby', emoji: '', queries: ['eco store', 'sustainable products shop', 'green store'] },
+};
+
+function showMapSection(recommendation, facilityHint, opts) {
+  opts = opts || {};
+  _currentRecommendation = recommendation;
+  const cfg = JSON.parse(JSON.stringify(MAP_CONFIG[recommendation] || MAP_CONFIG['Recycle']));
+  // If AI gave a specific facility hint, prepend it as primary query
+  if (facilityHint && facilityHint.trim()) {
+    cfg.queries.unshift(facilityHint.trim());
+    cfg.queries = cfg.queries.slice(0, 3); // keep max 3
+    cfg.sub = `AI recommends finding a ${facilityHint} near you`;
+  }
+  document.getElementById('map-section-title').textContent = cfg.emoji + ' ' + cfg.title;
+  document.getElementById('map-section-sub').textContent = cfg.sub;
+  document.getElementById('nearby-map-section').style.display = 'block';
+  document.getElementById('location-prompt').style.display = 'flex';
+  document.getElementById('map-embed-container').style.display = 'none';
+  document.getElementById('map-manual').style.display = 'none';
+  // Build manual search links as fallback
+  buildManualLinks(cfg);
+  // Store cfg for requestLocation to use
+  window._activeCfg = cfg;
+  if (!opts.noScroll) document.getElementById('nearby-map-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function requestLocation() {
+  const cfg = window._activeCfg || MAP_CONFIG[_currentRecommendation] || MAP_CONFIG['Recycle'];
+  const btn = document.querySelector('#location-prompt button');
+  if (btn) {
+    btn.textContent = 'Locating...';
+    btn.disabled = true;
+  }
+  
+  if (window.GlobalLocation) {
+    window.GlobalLocation.get(false).then(pos => {
+      showNearbyMap(pos.lat, pos.lng, cfg);
+      if (btn) btn.textContent = ' Location Found!';
+    }).catch(err => {
+      if (btn) {
+        btn.textContent = ' Use My Location';
+        btn.disabled = false;
+      }
+      showManualFallback(cfg);
+    });
+  } else {
+    // Fallback if config.js not loaded
+    if (!navigator.geolocation) {
+      showManualFallback(cfg);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        showNearbyMap(pos.coords.latitude, pos.coords.longitude, cfg);
+        if (btn) btn.textContent = ' Location Found!';
+      },
+      () => {
+        if (btn) {
+          btn.textContent = ' Use My Location';
+          btn.disabled = false;
+        }
+        showManualFallback(cfg);
+      },
+      { timeout: 10000, enableHighAccuracy: true }
+    );
+  }
+}
+
+function showNearbyMap(lat, lng, cfg) {
+  const query = encodeURIComponent(cfg.queries[0]);
+  // Use Google Maps embed (no API key needed for basic search)
+  const gmapsUrl = `https://maps.google.com/maps?q=${query}+near+${lat},${lng}&output=embed&z=13`;
+  const iframe = document.getElementById('map-iframe');
+  iframe.src = gmapsUrl;
+  document.getElementById('location-prompt').style.display = 'none';
+  document.getElementById('map-embed-container').style.display = 'block';
+  // Build quick-link cards
+  buildFacilityCards(lat, lng, cfg);
+}
+
+function buildFacilityCards(lat, lng, cfg) {
+  const container = document.getElementById('nearby-links');
+  const colors = ['border-emerald-200 bg-emerald-50', 'border-blue-200 bg-blue-50', 'border-amber-200 bg-amber-50'];
+  container.innerHTML = cfg.queries.map((q, i) => {
+    const gmapsLink = `https://www.google.com/maps/search/${encodeURIComponent(q)}/@${lat},${lng},14z`;
+    return `
+      <a href="${gmapsLink}" target="_blank" rel="noopener"
+         class="flex items-center gap-3 p-4 rounded-xl border ${colors[i]} hover:scale-[1.02] transition-all cursor-pointer no-underline">
+        <span class="text-2xl">${['','',''][i]}</span>
+        <div>
+          <p class="font-bold text-sm text-on-surface capitalize">${q}</p>
+          <p class="text-xs text-on-surface-variant">Open in Google Maps </p>
+        </div>
+      </a>`;
+  }).join('');
+}
+
+function buildManualLinks(cfg) {
+  const container = document.getElementById('manual-links');
+  container.innerHTML = cfg.queries.map(q => {
+    const link = `https://www.google.com/maps/search/${encodeURIComponent(q + ' near me')}`;
+    return `<a href="${link}" target="_blank" rel="noopener"
+      class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-xs font-semibold hover:bg-emerald-200 transition-colors">
+       ${q} near me
+    </a>`;
+  }).join('');
+}
+
+function showManualFallback(cfg) {
+  document.getElementById('location-prompt').style.display = 'none';
+  document.getElementById('map-manual').style.display = 'block';
+}
+
+//  Phase 1 ML Insights Renderer 
+function renderPhase1Insights(phase1) {
+  const section = document.getElementById('phase1-insights-section');
+  if (!section) return;
+
+  if (!phase1 || (!phase1.detected_category && !phase1.damage_severity && !phase1.brand && !phase1.material)) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+
+  // Pipeline timing
+  const msEl = document.getElementById('p1-pipeline-ms');
+  if (msEl && phase1.pipeline_ms) msEl.textContent = ` ${phase1.pipeline_ms}ms`;
+
+  // CLIP Category Card
+  const clipCard = document.getElementById('p1-clip-card');
+  if (phase1.detected_category) {
+    clipCard.classList.remove('hidden');
+    document.getElementById('p1-clip-category').textContent = phase1.detected_category;
+    const conf = phase1.category_confidence;
+    document.getElementById('p1-clip-conf').textContent = conf ? `${(conf * 100).toFixed(0)}% confidence` : '';
+  }
+
+  // YOLOv8 Damage Card
+  const yoloCard = document.getElementById('p1-yolo-card');
+  if (phase1.damage_severity) {
+    yoloCard.classList.remove('hidden');
+    const sevColors = { none: '#16a34a', minor: '#d97706', moderate: '#ea580c', severe: '#dc2626' };
+    const sevEl = document.getElementById('p1-yolo-severity');
+    sevEl.textContent = phase1.damage_severity.charAt(0).toUpperCase() + phase1.damage_severity.slice(1);
+    sevEl.style.color = sevColors[phase1.damage_severity] || '#2a3127';
+    const objEl = document.getElementById('p1-yolo-object');
+    if (phase1.detected_object && phase1.detected_object !== 'unknown') {
+      objEl.textContent = `Detected: ${phase1.detected_object}`;
+    }
+    if (phase1.damage_summary) {
+      yoloCard.title = phase1.damage_summary;
+    }
+  }
+
+  // EasyOCR Card
+  const ocrCard = document.getElementById('p1-ocr-card');
+  if (phase1.brand || phase1.model_number) {
+    ocrCard.classList.remove('hidden');
+    document.getElementById('p1-ocr-brand').textContent = phase1.brand || '';
+    document.getElementById('p1-ocr-model').textContent = phase1.model_number ? `Model: ${phase1.model_number}` : '';
+  }
+
+  // Material Card
+  const matCard = document.getElementById('p1-mat-card');
+  if (phase1.material) {
+    matCard.classList.remove('hidden');
+    document.getElementById('p1-mat-label').textContent = phase1.material;
+    const recycle = phase1.recyclability || 0;
+    document.getElementById('p1-mat-recyclebar').style.width = recycle + '%';
+    document.getElementById('p1-mat-recyclebar').style.background = recycle >= 70 ? '#16a34a' : recycle >= 40 ? '#d97706' : '#dc2626';
+    document.getElementById('p1-mat-recycle').textContent = `${recycle}/100 recyclability`;
+    if (phase1.co2_factor_kg) {
+      document.getElementById('p1-mat-co2').textContent = `CO factor: ${phase1.co2_factor_kg} kg/kg`;
+    }
+    // Eco note
+    const ecoNoteEl = document.getElementById('p1-eco-note');
+    if (phase1.material_eco_note) {
+      ecoNoteEl.classList.remove('hidden');
+      ecoNoteEl.textContent = ' ' + phase1.material_eco_note;
+    }
+  }
+}
+
+//  Model Health / Phase 1 Status Pills 
+async function loadModelHealth() {
+  try {
+    const data = await API.get('/ai/models/health');
+    const statusEl = document.getElementById('phase1-status');
+    const pillsEl  = document.getElementById('phase1-pills');
+    if (!statusEl || !pillsEl) return;
+
+    const models = data.models || {};
+    const pillDefs = {
+      'clip_category_classifier': { label: 'CLIP', icon: '' },
+      'yolov8_damage_detector':   { label: 'YOLOv8', icon: '' },
+      'easyocr_text_extractor':   { label: 'EasyOCR', icon: '' },
+      'material_classifier':      { label: 'Material AI', icon: '' },
+    };
+
+    const pills = Object.entries(pillDefs).map(([key, def]) => {
+      const available = models[key]?.available;
+      const color = available
+        ? 'background:#e8f5e9;color:#1b5e20;border:1px solid #a5d6a7;'
+        : 'background:#f5f5f5;color:#9e9e9e;border:1px solid #e0e0e0;';
+      return `<span style="${color}font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:9999px;display:inline-flex;align-items:center;gap:3px;">
+        ${def.icon} ${def.label}
+        <span style="font-size:0.55rem;opacity:0.7;">${available ? '' : ''}</span>
+      </span>`;
+    }).join('');
+
+    pillsEl.innerHTML = pills;
+    statusEl.classList.remove('hidden');
+  } catch(e) {
+    // Silently fail  models health is non-critical
+  }
+}
+
+// Load model health on page init
+loadModelHealth();
+renderAIHistoryInline();
+</script>
+</body></html>

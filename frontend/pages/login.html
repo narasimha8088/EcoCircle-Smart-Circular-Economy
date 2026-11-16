@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In  Smart Circular Economy</title>
+<meta name="description" content="Sign in to EcoCircle with face recognition or password. Secure, fast, and privacy-first authentication.">
+
+<!-- Backend scripts -->
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+<!-- Tailwind config -->
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "on-secondary":                "#ffffff",
+          "surface-container-highest":   "#e5e2da",
+          "background":                  "#fcf9f0",
+          "on-tertiary-fixed-variant":   "#7e2c10",
+          "on-surface-variant":          "#44483f",
+          "tertiary-fixed-dim":          "#ffb59e",
+          "error-container":             "#ffdad6",
+          "secondary-fixed":             "#d9ee56",
+          "tertiary":                    "#310800",
+          "primary-fixed":               "#cfebbe",
+          "on-tertiary-container":       "#de7452",
+          "surface-variant":             "#e5e2da",
+          "surface-bright":              "#fcf9f0",
+          "error":                       "#ba1a1a",
+          "primary-container":           "#1b3012",
+          "on-background":               "#1c1c17",
+          "secondary-fixed-dim":         "#bdd13c",
+          "inverse-surface":             "#31312b",
+          "surface-container":           "#f1eee5",
+          "on-secondary-fixed":          "#191e00",
+          "on-primary-container":        "#809972",
+          "on-error-container":          "#93000a",
+          "secondary-container":         "#d9ee56",
+          "tertiary-container":          "#541400",
+          "on-surface":                  "#1c1c17",
+          "surface":                     "#fcf9f0",
+          "primary-fixed-dim":           "#b4cea3",
+          "primary":                     "#071b02",
+          "surface-container-low":       "#f6f3ea",
+          "on-primary-fixed-variant":    "#364d2c",
+          "outline":                     "#74796f",
+          "on-tertiary-fixed":           "#3a0b00",
+          "on-tertiary":                 "#ffffff",
+          "inverse-on-surface":          "#f4f1e8",
+          "surface-tint":                "#4d6541",
+          "on-secondary-container":      "#5e6b00",
+          "on-primary":                  "#ffffff",
+          "on-error":                    "#ffffff",
+          "tertiary-fixed":              "#ffdbd0",
+          "inverse-primary":             "#b4cea3",
+          "surface-container-high":      "#ebe8df",
+          "secondary":                   "#586400",
+          "outline-variant":             "#c4c8bc",
+          "surface-container-lowest":    "#ffffff",
+          "on-secondary-fixed-variant":  "#424b00",
+          "surface-dim":                 "#dddad1",
+          "on-primary-fixed":            "#0c2005"
+        },
+        borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+        spacing: {
+          "margin-mobile":      "16px",
+          "margin-desktop":     "64px",
+          "container-padding":  "40px",
+          "gutter":             "24px",
+          "unit":               "8px"
+        },
+        fontFamily: {
+          "label-md":           ["Hanken Grotesk"],
+          "headline-lg-mobile": ["EB Garamond"],
+          "body-md":            ["Hanken Grotesk"],
+          "headline-md":        ["EB Garamond"],
+          "body-lg":            ["Hanken Grotesk"],
+          "headline-lg":        ["EB Garamond"]
+        },
+        fontSize: {
+          "label-md":           ["14px", { lineHeight:"1.2",  letterSpacing:"0.05em", fontWeight:"600" }],
+          "headline-lg-mobile": ["32px", { lineHeight:"1.2",  fontWeight:"600" }],
+          "body-md":            ["16px", { lineHeight:"1.5",  fontWeight:"400" }],
+          "headline-md":        ["32px", { lineHeight:"1.2",  fontWeight:"500" }],
+          "body-lg":            ["18px", { lineHeight:"1.6",  fontWeight:"400" }],
+          "headline-lg":        ["48px", { lineHeight:"1.1",  letterSpacing:"-0.02em", fontWeight:"600" }]
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  /*  Material Symbols fix  */
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block; vertical-align: middle;
+  }
+
+  /*  Mesh background  */
+  .mesh-bg {
+    background-color: #fcf9f0;
+    background-image:
+      radial-gradient(at 0% 0%,    rgba(212,233,82,0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(27,48,18,0.08)  0px, transparent 50%);
+  }
+
+  /*  Parchment texture  */
+  .parchment-texture {
+    background-image: radial-gradient(#ebe8df 0.5px, transparent 0.5px);
+    background-size: 24px 24px;
+    background-color: #fcf9f0;
+  }
+
+  /*  Inner depth on left panel  */
+  .inner-depth { box-shadow: inset -10px 0 30px rgba(0,0,0,0.1); }
+
+  /*  Mode switch slide  */
+  @media (min-width: 768px) {
+    .brand-pane {
+      transition: transform 0.6s cubic-bezier(0.4,0,0.2,1), border-radius 0.6s cubic-bezier(0.4,0,0.2,1);
+      border-radius: 0 40px 40px 100px; z-index: 20;
+    }
+    #right-panel { transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); z-index: 10; }
+    #auth-card.register-mode .brand-pane { transform: translateX(100%); border-radius: 40px 0 100px 40px; }
+    #auth-card.register-mode #right-panel { transform: translateX(-100%); }
+  }
+
+  /*  Fade transitions  */
+  .fade-content { transition: opacity 0.4s ease, transform 0.4s ease; }
+  .fade-hidden  { opacity:0; transform:translateY(10px); pointer-events:none; position:absolute; width:100%; visibility:hidden; }
+
+  /*  Reveal section  */
+  .reveal-section { max-height:0; overflow:hidden; transition: max-height 0.6s cubic-bezier(0.4,0,0.2,1); }
+  .reveal-section.active { max-height: 900px; }
+
+  /*  Alert  */
+  .auth-alert { display:none; padding:10px 14px; border-radius:8px; font-size:14px; font-weight:600; text-align:center; margin-bottom:16px; }
+  .auth-alert.error   { background:#fce4e4; color:#b00000; border:1px solid #f8cbcb; display:block; }
+  .auth-alert.success { background:#eef9ee; color:#2d6a3f; border:1px solid #d4edda; display:block; }
+
+  /*  Spinner  */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner { display:inline-block; width:16px; height:16px; border:2px solid rgba(7,27,2,0.15); border-top-color:#071b02; border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:6px; }
+
+  /* 
+     FACE CAMERA STYLES
+   */
+
+  /* Outer ring that pulses while scanning */
+  .face-ring-wrap {
+    position: relative;
+    width: 220px; height: 220px;
+    margin: 0 auto;
+  }
+
+  /* Animated scanning ring */
+  @keyframes ring-spin {
+    from { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: -691; }
+  }
+  @keyframes ring-pulse {
+    0%,100% { opacity: 0.4; }
+    50%      { opacity: 1; }
+  }
+  .scan-ring {
+    position: absolute; inset: 0;
+    animation: ring-pulse 2s infinite ease-in-out;
+  }
+  .scan-ring.active circle.dashed {
+    animation: ring-spin 3s linear infinite;
+  }
+
+  /* The video element sits inside the ring */
+  #face-video {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 170px; height: 170px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: none;
+    background: #000;
+  }
+  #face-video.visible { display: block; }
+
+  /* Canvas overlay for drawing face detection box */
+  #face-canvas {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 170px; height: 170px;
+    border-radius: 50%;
+    pointer-events: none;
+    display: none;
+  }
+  #face-canvas.visible { display: block; }
+
+  /* Center idle icon */
+  #face-idle-icon {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    transition: opacity 0.4s;
+  }
+  #face-idle-icon.hidden { opacity: 0; pointer-events: none; }
+
+  /* Captured snapshot overlay */
+  #face-snapshot {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 170px; height: 170px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: none;
+    border: 3px solid #d9ee56;
+  }
+  #face-snapshot.visible { display: block; }
+
+  /* Status pill */
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px; border-radius: 999px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+    transition: all 0.3s ease;
+  }
+  .status-pill.idle    { background:#f1eee5; color:#44483f; }
+  .status-pill.loading { background:#fef9c3; color:#713f12; }
+  .status-pill.success { background:#dcfce7; color:#14532d; }
+  .status-pill.error   { background:#fee2e2; color:#7f1d1d; }
+
+  /* Dot blink for loading */
+  @keyframes blink { 0%,80%,100%{opacity:0} 40%{opacity:1} }
+  .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background:currentColor; animation: blink 1.4s infinite both; }
+  .dot:nth-child(2) { animation-delay:.2s; }
+  .dot:nth-child(3) { animation-delay:.4s; }
+
+  /* Model loading bar */
+  #model-bar-wrap { transition: opacity 0.5s; }
+  #model-bar { transition: width 0.4s ease; }
+
+  /* Input underline glow */
+  .input-underline-glow { transition: all 0.3s ease; }
+</style>
+</head>
+
+<body class="mesh-bg font-body-md text-on-background min-h-screen flex flex-col items-center justify-center p-4">
+
+<!-- 
+     MAIN DUAL-PANE CARD
+ -->
+<main class="w-full max-w-[1100px]">
+  <div id="auth-card"
+       class="w-full grid grid-cols-1 md:grid-cols-2 rounded-xl overflow-hidden
+              shadow-[0_20px_50px_rgba(27,48,18,0.12)] parchment-texture relative">
+
+    <!-- LEFT PANEL  Brand -->
+    <div class="brand-pane relative bg-primary-container p-container-padding flex flex-col justify-between
+                overflow-hidden order-2 md:order-1 inner-depth min-h-[400px] md:min-h-0">
+      <div class="absolute inset-0 opacity-20 mix-blend-overlay z-0">
+        <img class="w-full h-full object-cover"
+             src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3h-0E_tnRHPFXD017s7lxh9pqNVCMzbwWHM95_IO6yL1NOMR6BA1atwUOq-xOuSeQAWRo6_Dp_gnJKXz80-ouKVwvkzXW8H1DWg7GEozA03H9TwWMgDWi7sRGIpb73CpcdbawXMA-kEV1HuGdQ7Y79a0ORpQ1iAaoHW_zAwRVNDNQxr6vvoOR0uqKxWyS9Rv0G5bvzZZbrwik-o8Ji49LjmtTmhH5SrQqJULvSNZ19LsxeL3CEk5i4e76Qu66w0FtNcQRnI5lgE8"
+             alt="Lush fern botanical">
+      </div>
+      <div class="relative z-10">
+        <div class="text-secondary-fixed font-['Manrope'] text-xl font-black tracking-tighter">EcoArchive</div>
+      </div>
+      <div class="relative z-10 flex flex-col justify-center flex-grow py-12">
+        <h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-secondary-fixed mb-4">
+          Everything you need, all in one place.
+        </h1>
+        <div id="brand-body-signin" class="fade-content">
+          <p class="font-body-lg text-body-lg text-secondary-fixed/90 max-w-sm">
+            Manage your circular economy journey with a single smart platform.
+          </p>
+        </div>
+        <div id="brand-body-register" class="fade-content fade-hidden">
+          <p class="font-body-lg text-body-lg text-secondary-fixed/90 max-w-sm">
+            Start your journey towards a more organised and focused life.&nbsp;
+          </p>
+        </div>
+      </div>
+      <div class="relative z-10 mt-auto">
+        <div id="brand-cta-signin" class="fade-content">
+          <p class="font-headline-md text-on-primary-container mb-6">Ready to stay organised?</p>
+          <button onclick="toggleMode()"
+                  class="w-fit px-10 py-4 border-2 border-secondary-fixed text-secondary-fixed
+                         font-label-md rounded-full hover:bg-secondary-fixed hover:text-primary
+                         transition-all uppercase tracking-widest font-bold">Sign Up</button>
+        </div>
+        <div id="brand-cta-register" class="fade-content fade-hidden">
+          <p class="font-headline-md text-on-primary-container mb-6">Already has an account?</p>
+          <button onclick="toggleMode()"
+                  class="w-fit px-10 py-4 border-2 border-secondary-fixed text-secondary-fixed
+                         font-label-md rounded-full hover:bg-secondary-fixed hover:text-primary
+                         transition-all uppercase tracking-widest font-bold">Sign In</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL  Form -->
+    <div id="right-panel"
+         class="p-container-padding flex flex-col justify-center order-1 md:order-2 min-h-[600px] relative">
+
+      <div class="auth-alert" id="auth-alert"></div>
+
+      <!--  SIGN IN VIEW  -->
+      <div id="view-signin" class="w-full max-w-sm mx-auto text-center fade-content">
+
+        <h2 class="font-headline-md text-headline-md text-primary mb-1">Welcome Back</h2>
+        <p class="text-body-md font-body-md text-on-surface-variant mb-6">
+          Access your digital greenhouse
+        </p>
+
+        <!--  AI model loading bar  -->
+        <div id="model-bar-wrap" class="mb-5">
+          <div class="flex justify-between text-xs text-on-surface-variant mb-1">
+            <span id="model-bar-label">Loading face recognition AI</span>
+            <span id="model-bar-pct">0%</span>
+          </div>
+          <div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+            <div id="model-bar" class="h-full rounded-full bg-secondary-fixed" style="width:0%"></div>
+          </div>
+        </div>
+
+        <!--  Face Camera Ring  -->
+        <div class="reveal-section active" id="face-section">
+
+          <!-- Ring + camera + canvas -->
+          <div class="face-ring-wrap mb-3" id="face-ring-wrap">
+
+            <!-- SVG ring -->
+            <svg class="scan-ring w-full h-full absolute inset-0" id="scan-ring-svg" viewBox="0 0 220 220">
+              <!-- static background ring -->
+              <circle cx="110" cy="110" r="108" fill="none" stroke="#e5e2da" stroke-width="2"/>
+              <!-- dashed spinning ring (activates when scanning) -->
+              <circle class="dashed" cx="110" cy="110" r="108" fill="none"
+                      stroke="#d9ee56" stroke-width="3"
+                      stroke-dasharray="16 10" stroke-linecap="round"
+                      stroke-dashoffset="0"/>
+              <!-- solid inner ring -->
+              <circle cx="110" cy="110" r="88" fill="none" stroke="#e5e2da" stroke-width="1" opacity="0.6"/>
+            </svg>
+
+            <!-- Idle icon (hidden once camera is on) -->
+            <div id="face-idle-icon">
+              <span class="material-symbols-outlined text-5xl text-primary" style="font-size:52px">face_retouching_natural</span>
+              <span class="text-xs font-bold text-primary uppercase tracking-widest">Face Login</span>
+            </div>
+
+            <!-- Live camera feed -->
+            <video id="face-video" autoplay muted playsinline></video>
+
+            <!-- Detection canvas overlay -->
+            <canvas id="face-canvas"></canvas>
+
+            <!-- Snapshot after capture -->
+            <img id="face-snapshot" alt="Captured face">
+          </div>
+
+          <!-- Status pill -->
+          <div class="flex justify-center mb-3">
+            <span class="status-pill idle" id="face-status-pill">
+              <span class="material-symbols-outlined text-sm">info</span>
+              Click below to start
+            </span>
+          </div>
+
+          <!-- Action buttons -->
+          <div id="face-btn-group" class="space-y-2">
+            <button id="start-camera-btn" onclick="startCamera()"
+                    class="w-full bg-primary text-on-primary font-label-md py-3 rounded-lg
+                           flex items-center justify-center gap-2 uppercase tracking-widest font-bold
+                           hover:opacity-90 transition-all duration-300 active:scale-[0.98]">
+              <span class="material-symbols-outlined text-xl">videocam</span>
+              Start Camera &amp; Scan Face
+            </button>
+            <button id="retry-btn" onclick="retryFace()" class="hidden
+                    w-full border border-primary text-primary font-label-md py-2.5 rounded-lg
+                    flex items-center justify-center gap-2 uppercase tracking-widest font-bold
+                    hover:bg-primary/5 transition-all duration-300">
+              <span class="material-symbols-outlined text-lg">refresh</span>
+              Try Again
+            </button>
+          </div>
+        </div>
+        <!-- /face-section -->
+
+        <!-- Toggle to credentials -->
+        <button id="credential-toggle"
+                class="text-on-tertiary-fixed-variant text-label-md font-label-md
+                       hover:underline decoration-2 underline-offset-4 transition-all mt-5 mb-2">
+          Use Password instead
+        </button>
+
+        <!--  Credentials Section  -->
+        <div class="reveal-section w-full text-left" id="credentials-section">
+          <div class="space-y-6 mt-2">
+            <div class="relative">
+              <label class="block font-label-md text-label-md text-on-surface-variant mb-2"
+                     for="signin-email">Email Address or User ID</label>
+              <input class="w-full bg-surface-container-low border-none focus:ring-0 px-4 py-3
+                            font-body-md text-primary placeholder:text-outline-variant/50 rounded-t-lg outline-none"
+                     id="signin-email" type="text" placeholder="Email or ECO-XXXX" autocomplete="username">
+              <div class="h-[2px] w-full bg-primary input-underline-glow"></div>
+            </div>
+            <div class="relative">
+              <div class="flex justify-between items-center mb-2">
+                <label class="block font-label-md text-label-md text-on-surface-variant" for="signin-password">Password</label>
+                <a class="font-label-md text-label-md text-tertiary-container hover:underline decoration-tertiary-container transition-all" href="#">Forgot?</a>
+              </div>
+              <div class="relative">
+                <input class="w-full bg-surface-container-low border-none focus:ring-0 pl-4 pr-10 py-3
+                              font-body-md text-primary placeholder:text-outline-variant/50 rounded-t-lg outline-none"
+                       id="signin-password" type="password" placeholder="" autocomplete="current-password">
+                <span class="material-symbols-outlined absolute right-3 top-3 text-on-surface-variant cursor-pointer select-none"
+                      id="signin-pw-toggle">visibility</span>
+                <div class="h-[2px] w-full bg-primary input-underline-glow"></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <input class="w-5 h-5 rounded-sm border-2 border-primary text-primary focus:ring-offset-0 focus:ring-0 cursor-pointer"
+                     id="remember-me" type="checkbox">
+              <label class="font-body-md text-body-md text-on-surface-variant cursor-pointer select-none" for="remember-me">Remember for 30 days</label>
+            </div>
+            <button id="signin-btn" onclick="handleSignin()"
+                    class="w-full bg-secondary-container text-primary-container font-label-md text-label-md
+                           py-4 rounded-lg flex items-center justify-center gap-2
+                           shadow-[0_4px_12px_rgba(212,233,82,0.2)]
+                           hover:shadow-[0_6px_20px_rgba(212,233,82,0.3)]
+                           transition-all duration-300 active:scale-[0.98]
+                           border-b-2 border-primary-container/10 uppercase tracking-widest font-bold">
+              <span>Enter Archive</span>
+              <span class="material-symbols-outlined text-xl">arrow_right_alt</span>
+            </button>
+          </div>
+          <div class="mt-10 space-y-6">
+            <div class="w-full h-px bg-outline-variant/30"></div>
+            <div class="text-center">
+              <p class="font-label-md text-label-md text-on-surface-variant mb-4">Don't have an account?</p>
+              <button onclick="toggleMode()"
+                      class="inline-flex items-center justify-center w-full px-6 py-3
+                             border-2 border-primary text-primary font-['Hanken_Grotesk']
+                             font-bold text-label-md rounded-lg
+                             hover:bg-secondary-container hover:text-primary-container
+                             transition-all duration-300">
+                Sign up for free
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /view-signin -->
+
+      <!--  REGISTER VIEW  -->
+      <div id="view-register" class="w-full max-w-md mx-auto fade-content fade-hidden">
+        <div class="mb-8">
+          <h2 class="font-headline-md text-headline-md text-primary mb-2">Create your account</h2>
+          <p class="text-body-md font-body-md text-on-surface-variant">Begin your journey as a digital archivist.</p>
+        </div>
+        <form class="space-y-6" onsubmit="event.preventDefault(); handleRegister();">
+          <div class="flex flex-col gap-2">
+            <label class="text-label-md font-label-md text-primary-container block mb-2 uppercase tracking-wider">FULL NAME</label>
+            <input id="reg-name"
+                   class="w-full bg-surface-container-low border-b-2 border-primary-container py-3 focus:ring-0 focus:border-secondary transition-colors placeholder:text-outline/50 outline-none px-1"
+                   type="text" placeholder="Elias Thorne" autocomplete="name">
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-label-md font-label-md text-primary-container block mb-2 uppercase tracking-wider">EMAIL</label>
+            <input id="reg-email"
+                   class="w-full bg-surface-container-low border-b-2 border-primary-container py-3 focus:ring-0 focus:border-secondary transition-colors placeholder:text-outline/50 outline-none px-1"
+                   type="email" placeholder="you@ecocircle.earth" autocomplete="email">
+          </div>
+          <div class="flex flex-col gap-2 relative">
+            <label class="text-label-md font-label-md text-primary-container block mb-2 uppercase tracking-wider">CREATE PASSWORD</label>
+            <div class="relative">
+              <input id="reg-password"
+                     class="w-full bg-surface-container-low border-b-2 border-primary-container py-3 focus:ring-0 focus:border-secondary transition-colors outline-none px-1 pr-10"
+                     type="password" placeholder="" autocomplete="new-password">
+              <span class="material-symbols-outlined absolute right-2 bottom-3 text-on-surface-variant cursor-pointer select-none"
+                    id="pw-toggle">visibility</span>
+            </div>
+          </div>
+          <button id="register-btn" type="submit"
+                  class="w-full bg-secondary-fixed text-primary font-label-md py-4 rounded shadow-[0_4px_12px_rgba(217,238,86,0.2)] active:scale-95 transition-all uppercase tracking-widest font-bold">
+            Create Account
+          </button>
+        </form>
+        <div class="relative my-8 text-center">
+          <hr class="border-outline-variant">
+          <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface px-4 font-label-md text-label-md text-outline">OR CONNECT VIA</span>
+        </div>
+        <div class="flex justify-center gap-gutter">
+          <button class="w-12 h-12 rounded-full border-2 border-tertiary-container/30 flex items-center justify-center text-tertiary-container hover:bg-tertiary-container/5 transition-colors">
+            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+              <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.908 3.152-1.928 4.176-1.128 1.128-2.92 2.392-6.392 2.392-5.416 0-9.768-4.384-9.768-9.76s4.352-9.76 9.768-9.76c2.936 0 5.168 1.152 6.72 2.624l2.312-2.312C18.912 2.016 16.192.48 12.48.48 5.68.48 0 6.16 0 12.48S5.68 24.48 12.48 24.48c3.744 0 6.568-1.232 8.76-3.528 2.264-2.264 2.976-5.44 2.976-8.032 0-.768-.064-1.504-.184-2.184h-11.552z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="mt-8 text-center">
+          <button onclick="toggleMode()"
+                  class="font-label-md text-label-md text-on-tertiary-fixed-variant hover:underline underline-offset-4 transition-all">
+             Back to Sign In
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /right-panel -->
+  </div>
+</main>
+
+<a href="index.html"
+   class="mt-6 text-sm text-outline hover:text-primary transition-colors flex items-center gap-2">
+  <span class="material-symbols-outlined text-base">arrow_back</span> Back to Home
+</a>
+
+
+<!-- 
+     face-api.js (CDN  models loaded from jsDelivr)
+ -->
+<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+<script>
+'use strict';
+
+//  Auth guard 
+if (window.Auth && Auth.isLoggedIn()) window.location.href = 'dashboard.html';
+if (window.location.hash === '#register') setTimeout(() => { if(!isRegisterMode) toggleMode(); }, 0);
+
+//  State 
+let isRegisterMode  = false;
+let modelsLoaded    = false;
+let cameraStream    = null;
+let detectInterval  = null;
+let faceCapturing   = false;
+
+//  DOM refs 
+const videoEl     = document.getElementById('face-video');
+const canvasEl    = document.getElementById('face-canvas');
+const snapshotEl  = document.getElementById('face-snapshot');
+const idleIcon    = document.getElementById('face-idle-icon');
+const statusPill  = document.getElementById('face-status-pill');
+const scanRingSvg = document.getElementById('scan-ring-svg');
+const retryBtn    = document.getElementById('retry-btn');
+const startBtn    = document.getElementById('start-camera-btn');
+const modelBarWrap= document.getElementById('model-bar-wrap');
+const modelBar    = document.getElementById('model-bar');
+const modelPct    = document.getElementById('model-bar-pct');
+const modelLabel  = document.getElementById('model-bar-label');
+
+//  face-api model base URL (jsDelivr) 
+const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.14/model';
+
+//  Load models on page load 
+(async function loadModels() {
+  try {
+    setBarProgress(5, 'Loading face detection model');
+    await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
+    setBarProgress(40, 'Loading landmark model');
+    await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+    setBarProgress(75, 'Loading recognition model');
+    await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+    setBarProgress(100, 'Face AI ready ');
+    modelsLoaded = true;
+    setTimeout(() => {
+      modelBarWrap.style.opacity = '0';
+      setTimeout(() => modelBarWrap.style.display = 'none', 500);
+    }, 800);
+    setPill('idle', 'face_retouching_natural', 'Tap below to start face scan');
+    startBtn.disabled = false;
+  } catch(e) {
+    setBarProgress(100, ' Model load failed  password login only');
+    modelBar.style.background = '#fca5a5';
+    startBtn.disabled = true;
+    startBtn.innerHTML = '<span class="material-symbols-outlined text-xl">block</span> Camera unavailable';
+    console.error('face-api model load error:', e);
+  }
+})();
+
+function setBarProgress(pct, label) {
+  modelBar.style.width = pct + '%';
+  modelPct.textContent = pct + '%';
+  if (label) modelLabel.textContent = label;
+}
+
+//  Start Camera 
+async function startCamera() {
+  if (!modelsLoaded) { setPill('error','warning','AI models still loading'); return; }
+  if (faceCapturing) return;
+
+  try {
+    setPill('loading','cached','Requesting camera access');
+    startBtn.innerHTML = '<span class="spinner"></span> Opening camera';
+    startBtn.disabled  = true;
+
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 640 } },
+      audio: false
+    });
+
+    videoEl.srcObject = cameraStream;
+    await new Promise(r => videoEl.onloadedmetadata = r);
+    await videoEl.play();
+
+    // Show camera, hide idle icon
+    videoEl.classList.add('visible');
+    canvasEl.classList.add('visible');
+    idleIcon.classList.add('hidden');
+    canvasEl.width  = videoEl.videoWidth;
+    canvasEl.height = videoEl.videoHeight;
+    scanRingSvg.classList.add('active');
+
+    faceCapturing = true;
+    startBtn.classList.add('hidden');
+    setPill('loading','radar','Scanning for face');
+
+    // Begin detection loop
+    runDetectionLoop();
+
+  } catch(err) {
+    faceCapturing = false;
+    startBtn.disabled = false;
+    startBtn.innerHTML = '<span class="material-symbols-outlined text-xl">videocam</span> Start Camera & Scan Face';
+    if (err.name === 'NotAllowedError') {
+      setPill('error','block','Camera permission denied');
+    } else {
+      setPill('error','error','Camera error: ' + err.message);
+    }
+  }
+}
+
+//  Detection loop 
+let successFrames   = 0;
+let lastDescriptor  = null;
+let descriptorBuf   = [];   // accumulation buffer  same approach as enrolment
+
+async function runDetectionLoop() {
+  const OPTIONS = new faceapi.SsdMobilenetv1Options({ minConfidence: 0.6 });
+
+  detectInterval = setInterval(async () => {
+    if (!faceCapturing || videoEl.readyState < 2) return;
+
+    try {
+      const detection = await faceapi
+        .detectSingleFace(videoEl, OPTIONS)
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+
+      const ctx = canvasEl.getContext('2d');
+      ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+
+      if (!detection) {
+        successFrames = 0;
+        setPill('loading','radar','Looking for your face');
+        return;
+      }
+
+      // Draw detection box on canvas
+      const scaleX = canvasEl.width  / videoEl.videoWidth;
+      const scaleY = canvasEl.height / videoEl.videoHeight;
+      const box = detection.detection.box;
+      ctx.strokeStyle = '#d9ee56';
+      ctx.lineWidth   = 2;
+      ctx.shadowColor = '#d9ee56';
+      ctx.shadowBlur  = 8;
+      ctx.strokeRect(box.x * scaleX, box.y * scaleY, box.width * scaleX, box.height * scaleY);
+
+      // Accumulate descriptors for averaging
+      descriptorBuf.push(Array.from(detection.descriptor));
+      if (descriptorBuf.length > 6) descriptorBuf.shift();
+
+      // Average all accumulated frames for a stable descriptor
+      if (descriptorBuf.length >= 3) {
+        const avg = new Array(128).fill(0);
+        descriptorBuf.forEach(d => d.forEach((v, i) => avg[i] += v));
+        avg.forEach((v, i) => avg[i] = v / descriptorBuf.length);
+        lastDescriptor = avg;
+      } else {
+        lastDescriptor = Array.from(detection.descriptor);
+      }
+
+      // Count stable frames before authenticating
+      successFrames++;
+      const confidence = Math.min(100, Math.round(detection.detection.score * 100));
+      const framesNeeded = 5;
+      if (successFrames < framesNeeded) {
+        setPill('loading','face_retouching_natural', `Face detected (${confidence}%)  hold still ${successFrames}/${framesNeeded}`);
+      }
+
+      if (successFrames >= framesNeeded) {
+        // Stable averaged descriptor ready  authenticate
+        clearInterval(detectInterval);
+        await captureAndAuthenticate(detection);
+      }
+
+    } catch(e) {
+      console.warn('Detection frame error:', e);
+    }
+  }, 200);
+}
+
+//  Capture snapshot & call API 
+async function captureAndAuthenticate(detection) {
+  faceCapturing = false;
+  stopCamera();
+  scanRingSvg.classList.remove('active');
+
+  // Take snapshot from video
+  const snapCanvas = document.createElement('canvas');
+  snapCanvas.width  = videoEl.videoWidth  || 170;
+  snapCanvas.height = videoEl.videoHeight || 170;
+  snapCanvas.getContext('2d').drawImage(videoEl, 0, 0);
+  snapshotEl.src = snapCanvas.toDataURL('image/jpeg', 0.8);
+  snapshotEl.classList.add('visible');
+  videoEl.classList.remove('visible');
+  canvasEl.classList.remove('visible');
+
+  setPill('loading','fingerprint','Verifying identity');
+
+  try {
+    const descriptor = Array.isArray(lastDescriptor) ? lastDescriptor : Array.from(lastDescriptor);
+    const result = await window.API.post('/auth/face/login', { descriptor });
+
+    if (window.Auth) Auth.save(result.token, result.user);
+    const userName = result.user?.name?.split(' ')[0] || 'back';
+    setPill('success', 'check_circle', `Welcome back, ${userName}! Redirecting`);
+    retryBtn.classList.add('hidden');
+
+    // Green glow ring
+    scanRingSvg.querySelector('.dashed').style.stroke = '#22c55e';
+
+    setTimeout(() => window.location.href = 'dashboard.html', 900);
+
+  } catch(err) {
+    snapshotEl.classList.remove('visible');
+    idleIcon.classList.remove('hidden');
+    const msg = err.message || 'Face not recognised';
+    if (msg.includes('enrolled') || msg.includes('enroll')) {
+      setPill('error','person_off','Not enrolled  use password or enrol from Profile');
+    } else if (msg.includes('ambiguous')) {
+      // Two users look similar  prompt for email hint
+      setPill('error','help','Ambiguous face  switch to password mode to log in');
+    } else {
+      setPill('error','face_retouching_off', 'Not recognised  try again or use password');
+    }
+    retryBtn.classList.remove('hidden');
+    startBtn.classList.add('hidden');
+  }
+}
+
+//  Retry 
+function retryFace() {
+  successFrames   = 0;
+  lastDescriptor  = null;
+  faceCapturing   = false;
+  clearInterval(detectInterval);
+  snapshotEl.classList.remove('visible');
+  idleIcon.classList.remove('hidden');
+  retryBtn.classList.add('hidden');
+  startBtn.classList.remove('hidden');
+  startBtn.disabled = false;
+  startBtn.innerHTML = '<span class="material-symbols-outlined text-xl">videocam</span> Start Camera & Scan Face';
+  setPill('idle','face_retouching_natural','Tap below to start face scan');
+}
+
+//  Stop camera tracks 
+function stopCamera() {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach(t => t.stop());
+    cameraStream = null;
+  }
+  videoEl.srcObject = null;
+}
+
+//  Status pill helper 
+function setPill(type, icon, text) {
+  statusPill.className = 'status-pill ' + type;
+  const dots = (type === 'loading')
+    ? ' <span class="dot"></span><span class="dot"></span><span class="dot"></span>'
+    : '';
+  statusPill.innerHTML = `<span class="material-symbols-outlined text-sm">${icon}</span>${text}${dots}`;
+}
+
+//  Credential reveal toggle 
+const credToggleBtn = document.getElementById('credential-toggle');
+const credSection   = document.getElementById('credentials-section');
+const faceSection   = document.getElementById('face-section');
+
+credToggleBtn.addEventListener('click', () => {
+  const isCredActive = credSection.classList.contains('active');
+  if (isCredActive) {
+    credSection.classList.remove('active');
+    faceSection.classList.add('active');
+    credToggleBtn.textContent = 'Use Password instead';
+    retryFace();
+  } else {
+    stopCamera();
+    clearInterval(detectInterval);
+    faceCapturing = false;
+    faceSection.classList.remove('active');
+    credSection.classList.add('active');
+    credToggleBtn.textContent = 'Use Face Login instead';
+  }
+});
+
+//  Neuromorphic Mode Switch 
+function toggleMode() {
+  isRegisterMode = !isRegisterMode;
+  const authCard = document.getElementById('auth-card');
+
+  if (isRegisterMode) {
+    authCard.classList.add('register-mode');
+    document.getElementById('brand-body-signin').classList.add('fade-hidden');
+    document.getElementById('brand-body-register').classList.remove('fade-hidden');
+    document.getElementById('brand-cta-signin').classList.add('fade-hidden');
+    document.getElementById('brand-cta-register').classList.remove('fade-hidden');
+    document.getElementById('view-signin').classList.add('fade-hidden');
+    document.getElementById('view-register').classList.remove('fade-hidden');
+    stopCamera(); clearInterval(detectInterval); faceCapturing = false;
+  } else {
+    authCard.classList.remove('register-mode');
+    document.getElementById('brand-body-signin').classList.remove('fade-hidden');
+    document.getElementById('brand-body-register').classList.add('fade-hidden');
+    document.getElementById('brand-cta-signin').classList.remove('fade-hidden');
+    document.getElementById('brand-cta-register').classList.add('fade-hidden');
+    document.getElementById('view-signin').classList.remove('fade-hidden');
+    document.getElementById('view-register').classList.add('fade-hidden');
+  }
+  clearAlert();
+}
+
+//  Password visibility 
+document.getElementById('pw-toggle').addEventListener('click', function() {
+  const pw = document.getElementById('reg-password');
+  pw.type = (pw.type === 'password') ? 'text' : 'password';
+  this.textContent = (pw.type === 'password') ? 'visibility' : 'visibility_off';
+});
+document.getElementById('signin-pw-toggle').addEventListener('click', function() {
+  const pw = document.getElementById('signin-password');
+  pw.type = (pw.type === 'password') ? 'text' : 'password';
+  this.textContent = (pw.type === 'password') ? 'visibility' : 'visibility_off';
+});
+
+//  Alert helpers 
+function showAlert(msg, type = 'error') {
+  const el = document.getElementById('auth-alert');
+  el.textContent = msg; el.className = 'auth-alert ' + type;
+}
+function clearAlert() {
+  const el = document.getElementById('auth-alert');
+  el.textContent = ''; el.className = 'auth-alert';
+}
+
+//  Password Sign In 
+async function handleSignin() {
+  const email    = document.getElementById('signin-email').value.trim();
+  const password = document.getElementById('signin-password').value;
+  const btn      = document.getElementById('signin-btn');
+  clearAlert();
+  if (!email || !password) { showAlert('Please fill all fields.'); return; }
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spinner"></span> Entering Archive...';
+  try {
+    const data = await window.API.post('/auth/login', { email, password });
+    if (window.Auth) window.Auth.save(data.token, data.user);
+    showAlert('Welcome back! Redirecting', 'success');
+    setTimeout(() => window.location.href = 'dashboard.html', 800);
+  } catch(err) {
+    showAlert(err.message || 'Login failed.');
+    btn.disabled  = false;
+    btn.innerHTML = '<span>Enter Archive</span><span class="material-symbols-outlined text-xl">arrow_right_alt</span>';
+  }
+}
+
+//  Register 
+async function handleRegister() {
+  const name     = document.getElementById('reg-name').value.trim();
+  const email    = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const btn      = document.getElementById('register-btn');
+  clearAlert();
+  if (!name || !email || !password) { showAlert('Please fill all fields.'); return; }
+  if (password.length < 6) { showAlert('Password must be at least 6 characters.'); return; }
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spinner"></span> Archiving...';
+  try {
+    const data = await window.API.post('/auth/register', { name, email, password });
+    if (window.Auth) window.Auth.save(data.token, data.user);
+    showAlert('Account created! Redirecting', 'success');
+    setTimeout(() => window.location.href = 'dashboard.html', 800);
+  } catch(err) {
+    showAlert(err.message || 'Registration failed.');
+    btn.disabled  = false;
+    btn.innerHTML = 'Create Account';
+  }
+}
+
+// Cleanup camera on page unload
+window.addEventListener('beforeunload', () => { stopCamera(); clearInterval(detectInterval); });
+</script>
+</body>
+</html>

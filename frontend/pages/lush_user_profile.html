@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#a8afa2",
+                    "surface-container-high": "#dce6d4",
+                    "surface-container-highest": "#d6e0cd",
+                    "on-secondary-container": "#882100",
+                    "inverse-surface": "#0a1008",
+                    "surface-bright": "#f2f9ea",
+                    "surface-tint": "#176a21",
+                    "surface-dim": "#ccd8c4",
+                    "error-dim": "#b92902",
+                    "on-background": "#2a3127",
+                    "surface-container": "#e2ebda",
+                    "secondary-dim": "#972500",
+                    "primary-fixed": "#9df197",
+                    "on-tertiary-fixed-variant": "#003c61",
+                    "inverse-on-surface": "#989f92",
+                    "primary-container": "#9df197",
+                    "tertiary-container": "#5fb7ff",
+                    "on-tertiary-fixed": "#00192d",
+                    "on-surface-variant": "#575e52",
+                    "on-secondary": "#ffefec",
+                    "on-tertiary-container": "#003353",
+                    "secondary-fixed": "#ffc4b4",
+                    "secondary-container": "#ffc4b4",
+                    "secondary": "#ac2c00",
+                    "surface-variant": "#d6e0cd",
+                    "primary-fixed-dim": "#90e28a",
+                    "on-primary-fixed-variant": "#12661e",
+                    "on-primary-fixed": "#00460e",
+                    "primary-dim": "#025d16",
+                    "tertiary-fixed": "#5fb7ff",
+                    "on-error": "#ffefec",
+                    "error": "#b02500",
+                    "surface-container-low": "#ebf3e3",
+                    "on-secondary-fixed-variant": "#992600",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#72796d",
+                    "on-error-container": "#520c00",
+                    "secondary-fixed-dim": "#ffb19b",
+                    "surface": "#f2f9ea",
+                    "on-surface": "#2a3127",
+                    "background": "#f2f9ea",
+                    "error-container": "#f95630",
+                    "tertiary": "#006096",
+                    "on-tertiary": "#ebf3ff",
+                    "tertiary-dim": "#005483",
+                    "inverse-primary": "#9df197",
+                    "primary": "#176a21",
+                    "on-primary": "#d1ffc8",
+                    "on-secondary-fixed": "#671600",
+                    "on-primary-container": "#005c15",
+                    "tertiary-fixed-dim": "#46aaf5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .tonal-shift-only { border: none !important; }
+        .glass-effect { backdrop-filter: blur(12px); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl shadow-[0_20px_40px_rgba(23,106,33,0.06)] z-50 flex flex-col h-full py-8 px-4 font-manrope tracking-tight font-semibold">
+<div class="mb-12 px-4">
+<h1 class="text-2xl font-black text-emerald-900 dark:text-emerald-50">Greenhouse</h1>
+<p class="text-xs text-emerald-800 dark:text-emerald-400 opacity-70">Eco-Manager</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02] rounded-lg" href="#">
+<span class="material-symbols-outlined">eco</span>
+<span>Greenhouse</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02] rounded-lg" href="#">
+<span class="material-symbols-outlined">psychology_alt</span>
+<span>My Garden</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02] rounded-lg" href="#">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+<span>Eco-Tasks</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-700/70 dark:text-emerald-400/60 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02] rounded-lg" href="#">
+<span class="material-symbols-outlined">insert_chart</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 text-emerald-900 dark:text-emerald-100 font-bold border-l-4 border-orange-600 pl-4 py-2 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50 transition-transform duration-200 hover:scale-[1.02] rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4 pt-8">
+<button class="w-full py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold shadow-lg transition-transform active:scale-95">
+                New Initiative
+            </button>
+<div class="mt-8 flex items-center gap-3">
+<img alt="User profile" class="w-10 h-10 rounded-full border-2 border-primary-container" data-alt="Close up portrait of a young woman with a warm smile outdoors with soft sunlight and green foliage background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhK0KGgm1NfmEm2L29pn5GYBZWXbXn-fd_RFtfSHdQrH0-rqCJc7NpylrqFEeB51IR8fAkxgq80IAbP6zEsKRIUT8HUXsAzaWEST-6By50PECidC59Mt4YgJqxA7BiwZzUsknUwbXaz6ifRwpY4xZO7aaoVDnMpj93IGgT3c_3lVbWq2dmrjht64uWZRbhDENut_VNxI35AeGRaqFJVOZRciWvApUay1QuEUxsVeWSq_fdyuO6Sk1vZ6x4lqwqLvNFUkYGwoOeW5c"/>
+<div>
+<p class="text-sm font-bold text-on-surface">Alex Rivera</p>
+<p class="text-xs text-on-surface-variant">Archivist Level 4</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar Anchor -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-xl flex justify-between items-center px-8 w-full font-manrope text-sm font-medium">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold text-emerald-900 dark:text-emerald-50 tracking-tight">Lush Archive</span>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined">search</span>
+<input class="bg-surface-container-highest border-none rounded-full py-2 pl-10 pr-4 w-64 focus:ring-2 focus:ring-primary" placeholder="Search archive..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="flex gap-6">
+<a class="text-emerald-700/70 dark:text-emerald-400/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="#">Overview</a>
+<a class="text-emerald-700/70 dark:text-emerald-400/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors" href="#">Resources</a>
+<a class="text-emerald-900 dark:text-emerald-50 font-bold border-b-2 border-orange-600 pb-1" href="#">Community</a>
+</nav>
+<div class="flex gap-4">
+<button class="material-symbols-outlined text-emerald-800 dark:text-emerald-400 hover:scale-110 transition-transform">notifications</button>
+<button class="material-symbols-outlined text-emerald-800 dark:text-emerald-400 hover:scale-110 transition-transform">account_circle</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 pb-12 px-8 min-h-screen">
+<div class="max-w-6xl mx-auto space-y-8">
+<!-- Header Section (Bento Style) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Profile Summary Card -->
+<div class="lg:col-span-1 bg-surface-container-low p-8 rounded-xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-110 transition-transform duration-500"></div>
+<div class="relative z-10 flex flex-col items-center text-center">
+<img alt="User profile" class="w-32 h-32 rounded-xl border-4 border-surface-container-highest shadow-xl mb-6 object-cover" data-alt="Professional and vibrant portrait of a young woman smiling, soft garden lighting in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9CSB7MRlgSFzVNSQkzE4oJGSZg0Z7HDXgUCtRX8zjy-iaeGz80bcz8baFVvWFETGTBikYF5fWNCilzbH4w24Sy9Yclzh2YpHFTfH-KWx28Vw6m6EwwfO3J-qZiK20E7tu1W8R7X_h42qyf5L5VqrfuLyUzqyF_Pdw0M1q2SXZ-dclzI4TkNUrV5bw4h0sCXPQVEokRWWKLEVK8muZDfrGgQGsCwz-5fyq66sEQwmQvfNh5hwMRFsKdEedbAbHJTbgWYWqx9clOEw"/>
+<h2 class="text-3xl font-extrabold text-on-surface tracking-tighter">Alex Rivera</h2>
+<span class="mt-2 px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold uppercase tracking-widest">Master Cultivator</span>
+<p class="mt-4 text-on-surface-variant leading-relaxed font-medium">
+                            Turning urban waste into digital vitalism since 2022. Dedicated to the preservation of local mycelium networks.
+                        </p>
+<div class="mt-8 flex gap-4 w-full">
+<div class="flex-1 bg-surface-container p-4 rounded-lg">
+<p class="text-xs font-bold text-outline uppercase">Level</p>
+<p class="text-2xl font-black text-primary">42</p>
+</div>
+<div class="flex-1 bg-surface-container p-4 rounded-lg">
+<p class="text-xs font-bold text-outline uppercase">Rank</p>
+<p class="text-2xl font-black text-secondary">#14</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Total Reclaimed Value (High Energy) -->
+<div class="lg:col-span-2 bg-gradient-to-br from-primary to-primary-dim p-8 rounded-xl shadow-xl flex flex-col justify-between relative overflow-hidden">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/leaf.png')] opacity-10"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-on-primary text-lg font-bold opacity-80">Total Reclaimed Value</h3>
+<p class="text-5xl md:text-7xl font-black text-on-primary mt-2 tracking-tighter">$14,285.60</p>
+</div>
+<span class="bg-primary-container text-on-primary-container px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">trending_up</span>
+                                +24% this month
+                            </span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+<div class="bg-on-primary/10 backdrop-blur-md p-4 rounded-lg border border-on-primary/10">
+<p class="text-[10px] font-black text-on-primary/60 uppercase tracking-widest">CO2 Offset</p>
+<p class="text-xl font-bold text-on-primary">2.4 Tons</p>
+</div>
+<div class="bg-on-primary/10 backdrop-blur-md p-4 rounded-lg border border-on-primary/10">
+<p class="text-[10px] font-black text-on-primary/60 uppercase tracking-widest">Water Saved</p>
+<p class="text-xl font-bold text-on-primary">12k Liters</p>
+</div>
+<div class="bg-on-primary/10 backdrop-blur-md p-4 rounded-lg border border-on-primary/10">
+<p class="text-[10px] font-black text-on-primary/60 uppercase tracking-widest">Bio-Mass</p>
+<p class="text-xl font-bold text-on-primary">850 Kg</p>
+</div>
+<div class="bg-on-primary/10 backdrop-blur-md p-4 rounded-lg border border-on-primary/10">
+<p class="text-[10px] font-black text-on-primary/60 uppercase tracking-widest">Renewable</p>
+<p class="text-xl font-bold text-on-primary">94%</p>
+</div>
+</div>
+</div>
+<div class="relative z-10 mt-8 pt-8 border-t border-on-primary/10 flex justify-between items-center">
+<p class="text-on-primary/80 font-medium">Eco-Impact Score: <span class="text-on-primary font-bold">98/100</span></p>
+<button class="bg-surface-container-lowest text-primary px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg">Download Certificate</button>
+</div>
+</div>
+</div>
+<!-- Trajectory & Badges -->
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+<!-- Multi-Colored EcoScore Trajectory -->
+<div class="lg:col-span-3 bg-surface-container-lowest p-8 rounded-xl shadow-sm space-y-6">
+<div class="flex justify-between items-center">
+<h3 class="text-xl font-black tracking-tight">EcoScore Trajectory</h3>
+<div class="flex gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<span class="w-3 h-3 rounded-full bg-tertiary"></span>
+</div>
+</div>
+<div class="h-64 flex items-end justify-between gap-2">
+<!-- Simulated Organic Graph Bars -->
+<div class="w-full bg-surface-container-low rounded-t-lg relative group h-[40%]" title="Jan">
+<div class="absolute bottom-0 w-full bg-tertiary rounded-t-lg transition-all group-hover:h-full h-[60%]"></div>
+</div>
+<div class="w-full bg-surface-container-low rounded-t-lg relative group h-[55%]" title="Feb">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg transition-all group-hover:h-full h-[75%]"></div>
+</div>
+<div class="w-full bg-surface-container-low rounded-t-lg relative group h-[45%]" title="Mar">
+<div class="absolute bottom-0 w-full bg-secondary rounded-t-lg transition-all group-hover:h-full h-[40%]"></div>
+</div>
+<div class="w-full bg-surface-container-low rounded-t-lg relative group h-[70%]" title="Apr">
+<div class="absolute bottom-0 w-full bg-tertiary-container rounded-t-lg transition-all group-hover:h-full h-[90%]"></div>
+</div>
+<div class="w-full bg-surface-container-low rounded-t-lg relative group h-[85%]" title="May">
+<div class="absolute bottom-0 w-full bg-primary-container rounded-t-lg transition-all group-hover:h-full h-[65%]"></div>
+</div>
+<div class="w-full bg-surface-container-low rounded-t-lg relative group h-[95%]" title="Jun">
+<div class="absolute bottom-0 w-full bg-secondary-container rounded-t-lg transition-all group-hover:h-full h-[80%]"></div>
+</div>
+<div class="w-full bg-surface-container-low rounded-t-lg relative group h-[75%]" title="Jul">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg transition-all group-hover:h-full h-[100%]"></div>
+</div>
+</div>
+<div class="flex justify-between text-xs font-bold text-outline uppercase tracking-widest pt-2">
+<span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
+</div>
+</div>
+<!-- Achievement Badges -->
+<div class="lg:col-span-2 bg-surface-container-highest p-8 rounded-xl relative overflow-hidden">
+<h3 class="text-xl font-black mb-8">Achievements</h3>
+<div class="grid grid-cols-3 gap-6">
+<!-- Badge 1 -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+</div>
+<p class="text-[10px] font-black text-center uppercase leading-tight">Hydration Master</p>
+</div>
+<!-- Badge 2 -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shadow-lg group-hover:-rotate-12 transition-transform">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<p class="text-[10px] font-black text-center uppercase leading-tight">Thermal Efficient</p>
+</div>
+<!-- Badge 3 -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">compost</span>
+</div>
+<p class="text-[10px] font-black text-center uppercase leading-tight">Soil Guardian</p>
+</div>
+<!-- Badge 4 -->
+<div class="flex flex-col items-center gap-2 group opacity-50 grayscale">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center border-2 border-dashed border-outline">
+<span class="material-symbols-outlined text-3xl">solar_power</span>
+</div>
+<p class="text-[10px] font-black text-center uppercase leading-tight">Sun King</p>
+</div>
+<!-- Badge 5 -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center shadow-lg group-hover:translate-y-[-4px] transition-transform">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">cyclone</span>
+</div>
+<p class="text-[10px] font-black text-center uppercase leading-tight">Air Purifier</p>
+</div>
+<!-- Badge 6 -->
+<div class="flex flex-col items-center gap-2 group">
+<div class="w-16 h-16 rounded-full bg-orange-100 text-orange-700 flex items-center justify-center shadow-lg group-hover:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<p class="text-[10px] font-black text-center uppercase leading-tight">Top 1% Club</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Archival History Table -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden">
+<div class="p-8 flex justify-between items-center border-b border-outline-variant/10">
+<h3 class="text-xl font-black">Archival History</h3>
+<button class="text-primary font-bold flex items-center gap-2 hover:underline">
+                        View Full Logs <span class="material-symbols-outlined">arrow_right_alt</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 text-xs font-black text-outline uppercase tracking-widest">
+<th class="px-8 py-4">Action Identity</th>
+<th class="px-8 py-4">Category</th>
+<th class="px-8 py-4">Reclaimed Value</th>
+<th class="px-8 py-4">Date Archetype</th>
+<th class="px-8 py-4">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">recycling</span>
+</div>
+<div>
+<p class="font-bold">Polymer Reclamation Unit 04</p>
+<p class="text-xs text-on-surface-variant">Central District Facility</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-[10px] font-black uppercase tracking-wider">Industrial</span>
+</td>
+<td class="px-8 py-6 font-mono font-bold text-primary">+$450.20</td>
+<td class="px-8 py-6 text-on-surface-variant text-sm">Oct 24, 2023</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2 text-primary font-bold text-sm">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                                        Verified
+                                    </div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">compost</span>
+</div>
+<div>
+<p class="font-bold">Organic Waste Synthesis</p>
+<p class="text-xs text-on-surface-variant">Home Garden Batch #82</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black uppercase tracking-wider">Residential</span>
+</td>
+<td class="px-8 py-6 font-mono font-bold text-primary">+$85.00</td>
+<td class="px-8 py-6 text-on-surface-variant text-sm">Oct 21, 2023</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2 text-primary font-bold text-sm">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                                        Verified
+                                    </div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div>
+<p class="font-bold">Solar Grid Feedback</p>
+<p class="text-xs text-on-surface-variant">North Sector Exchange</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-[10px] font-black uppercase tracking-wider">Energy</span>
+</td>
+<td class="px-8 py-6 font-mono font-bold text-primary">+$1,120.45</td>
+<td class="px-8 py-6 text-on-surface-variant text-sm">Oct 18, 2023</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2 text-tertiary font-bold text-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                                        Processing
+                                    </div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action for Mobile (Hidden on Web) -->
+<button class="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-secondary text-on-secondary rounded-full shadow-2xl flex items-center justify-center z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>
